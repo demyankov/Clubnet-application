@@ -98,7 +98,7 @@ export const HeaderMegaMenu: FC = () => {
   };
 
   return (
-    <Box pb={120}>
+    <Box pb={60}>
       <Header height={60} px="md">
         <Group position="apart" sx={{ height: '100%' }} className={classes.inner}>
           <DiReact size={40} />
