@@ -160,12 +160,16 @@ export const HeaderMegaMenu: FC = () => {
           <Link onClick={closeDrawer} to="/" className={classes.link}>
             Home
           </Link>
-          <Link onClick={closeDrawer} to="/profile" className={classes.link}>
-            Profile
-          </Link>
-          <Link onClick={closeDrawer} to="/dashboard" className={classes.link}>
-            Dashboard
-          </Link>
+          {isAuth && (
+            <Link onClick={closeDrawer} to="/profile" className={classes.link}>
+              Profile
+            </Link>
+          )}
+          {isAuth && (
+            <Link onClick={closeDrawer} to="/dashboard" className={classes.link}>
+              Dashboard
+            </Link>
+          )}
 
           <Divider my="sm" color={theme.colorScheme === 'dark' ? 'dark.5' : 'gray.1'} />
 
