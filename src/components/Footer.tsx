@@ -1,6 +1,6 @@
 import { FC } from 'react';
 
-import { createStyles, Container, Group, ActionIcon, rem } from '@mantine/core';
+import { createStyles, Container, Group, ActionIcon, rem, Text } from '@mantine/core';
 import { DiReact } from 'react-icons/di';
 import { VscGithub } from 'react-icons/vsc';
 
@@ -36,6 +36,7 @@ export const FooterSocial: FC = () => {
     <div className={classes.footer}>
       <Container className={classes.inner}>
         <DiReact size={40} />
+        <Text>crafted with love by thelastandrew</Text>
         <Group spacing={0} className={classes.links} position="right" noWrap>
           <ActionIcon
             size="lg"
