@@ -111,9 +111,11 @@ export const HeaderMegaMenu: FC = () => {
             <Link to="/" className={classes.link}>
               Home
             </Link>
-            <Link to="/dashboard" className={classes.link}>
-              Dashboard
-            </Link>
+            {isAuth && (
+              <Link to="/dashboard" className={classes.link}>
+                Dashboard
+              </Link>
+            )}
           </Group>
 
           {!isAuth && (
@@ -129,7 +131,7 @@ export const HeaderMegaMenu: FC = () => {
 
           {isAuth && (
             <Group className={classes.hiddenMobile}>
-              <Avatar src={null} alt="no image here" />
+              <Avatar component={Link} to="/profile" src={null} alt="no image here" />
               <Text fz="xl">{email}</Text>
               <Button onClick={handleLogOut}>Log out</Button>
             </Group>
@@ -157,6 +159,9 @@ export const HeaderMegaMenu: FC = () => {
 
           <Link onClick={closeDrawer} to="/" className={classes.link}>
             Home
+          </Link>
+          <Link onClick={closeDrawer} to="/profile" className={classes.link}>
+            Profile
           </Link>
           <Link onClick={closeDrawer} to="/dashboard" className={classes.link}>
             Dashboard
