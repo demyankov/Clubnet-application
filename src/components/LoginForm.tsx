@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, useState } from 'react';
 
 import {
   TextInput,
@@ -10,11 +10,21 @@ import {
   Button,
   Anchor,
   Stack,
+  Loader,
 } from '@mantine/core';
 import { useForm } from '@mantine/form';
-import { Link } from 'react-router-dom';
+import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+import { useDispatch } from 'react-redux';
+import { useNavigate, Link } from 'react-router-dom';
+
+import s from 'components/form.module.css';
+import { setUser } from 'store/userSlice';
 
 export const LoginForm: FC<PaperProps> = (props) => {
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const form = useForm({
     initialValues: {
       email: '',
@@ -24,17 +34,45 @@ export const LoginForm: FC<PaperProps> = (props) => {
     validate: {
       email: (val) => (/^\S+@\S+$/.test(val) ? null : 'Invalid email'),
       password: (val) =>
-        val.length <= 6 ? 'Password should include at least 6 characters' : null,
+        val.length < 6 ? 'Password should include at least 6 characters' : null,
     },
   });
 
+  const handleSubmit = (): void => {
+    form.clearErrors();
+    setIsLoading(true);
+    const auth = getAuth();
+
+    signInWithEmailAndPassword(auth, form.values.email, form.values.password)
+      .then(async ({ user }) => {
+        dispatch(
+          setUser({
+            email: user.email,
+            id: user.uid,
+            token: await user.getIdToken(),
+          }),
+        );
+        setIsLoading(false);
+        navigate('/');
+      })
+      .catch(() => {
+        setIsLoading(false);
+        form.setErrors({ common: 'Invalid email or password' });
+      });
+  };
+
   return (
-    <Paper radius="md" p="xl" withBorder {...props}>
+    <Paper radius="md" p="xl" withBorder {...props} pos="relative">
+      {isLoading && (
+        <div className={s.loader}>
+          <Loader size="xl" />
+        </div>
+      )}
       <Text size="lg" weight={500}>
         Welcome to App, login with
       </Text>
 
-      <form onSubmit={form.onSubmit(() => {})}>
+      <form onSubmit={form.onSubmit(handleSubmit)}>
         <Stack>
           <TextInput
             required
@@ -59,6 +97,7 @@ export const LoginForm: FC<PaperProps> = (props) => {
             }
             radius="md"
           />
+          {form.errors && <Text c="#fa5252">{form.errors.common}</Text>}
         </Stack>
 
         <Group position="apart" mt="xl">

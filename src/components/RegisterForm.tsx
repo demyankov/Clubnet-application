@@ -58,6 +58,7 @@ export const RegisterForm: FC<PaperProps> = (props) => {
         navigate('/');
       })
       .catch((error) => {
+        setIsLoading(false);
         const errorCode = error.code;
 
         if (errorCode === 'auth/email-already-in-use') {
