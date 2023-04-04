@@ -6,6 +6,7 @@ import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { useDispatch } from 'react-redux';
 import { Routes, Route } from 'react-router-dom';
 
+import { mockData } from 'assets/mockData';
 import { FooterSocial } from 'components/Footer';
 import s from 'components/form.module.css';
 import { HeaderMegaMenu } from 'components/Header';
@@ -18,7 +19,7 @@ import Register from 'pages/Register';
 import { setUser } from 'store/slices/userSlice';
 
 const App: FC = () => {
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [colorScheme, setColorScheme] = useLocalStorage<ColorScheme>({
     key: 'app-theme',
     defaultValue: 'dark',
@@ -64,7 +65,7 @@ const App: FC = () => {
           <Route index element={<Home />} />
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/dashboard" element={<Dashboard data={mockData.data} />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
