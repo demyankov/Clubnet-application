@@ -18,9 +18,7 @@ export const LoginForm: FC<PaperProps> = (props) => {
   const form = useForm({
     initialValues: {
       email: '',
-      name: '',
       password: '',
-      terms: true,
     },
 
     validate: {

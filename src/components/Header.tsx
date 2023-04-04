@@ -11,10 +11,14 @@ import {
   Drawer,
   ScrollArea,
   rem,
+  Text,
+  Avatar,
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { DiReact } from 'react-icons/di';
 import { Link } from 'react-router-dom';
+
+import { useAuth } from 'hooks/useAuth';
 
 const useStyles = createStyles((theme) => ({
   link: {
@@ -39,19 +43,6 @@ const useStyles = createStyles((theme) => ({
       backgroundColor:
         theme.colorScheme === 'dark' ? theme.colors.dark[6] : theme.colors.gray[0],
     }),
-  },
-
-  subLink: {
-    width: '100%',
-    padding: `${theme.spacing.xs} ${theme.spacing.md}`,
-    borderRadius: theme.radius.md,
-
-    ...theme.fn.hover({
-      backgroundColor:
-        theme.colorScheme === 'dark' ? theme.colors.dark[7] : theme.colors.gray[0],
-    }),
-
-    '&:active': theme.activeStyles,
   },
 
   dropdownFooter: {
@@ -83,6 +74,7 @@ export const HeaderMegaMenu: FC = () => {
   const [drawerOpened, { toggle: toggleDrawer, close: closeDrawer }] =
     useDisclosure(false);
   const { classes, theme } = useStyles();
+  const { isAuth, email } = useAuth();
 
   return (
     <Box pb={120}>
@@ -99,14 +91,24 @@ export const HeaderMegaMenu: FC = () => {
             </Link>
           </Group>
 
-          <Group className={classes.hiddenMobile}>
-            <Button component={Link} to="/login" variant="default">
-              Log in
-            </Button>
-            <Button component={Link} to="/register">
-              Sign up
-            </Button>
-          </Group>
+          {!isAuth && (
+            <Group className={classes.hiddenMobile}>
+              <Button component={Link} to="/login" variant="default">
+                Log in
+              </Button>
+              <Button component={Link} to="/register">
+                Sign up
+              </Button>
+            </Group>
+          )}
+
+          {isAuth && (
+            <Group className={classes.hiddenMobile}>
+              <Avatar src={null} alt="no image here" />
+              <Text fz="xl">{email}</Text>
+              <Button>Log out</Button>
+            </Group>
+          )}
 
           <Burger
             opened={drawerOpened}
@@ -137,14 +139,27 @@ export const HeaderMegaMenu: FC = () => {
 
           <Divider my="sm" color={theme.colorScheme === 'dark' ? 'dark.5' : 'gray.1'} />
 
-          <Group position="center" grow pb="xl" px="md">
-            <Button onClick={closeDrawer} component={Link} to="/login" variant="default">
-              Log in
-            </Button>
-            <Button onClick={closeDrawer} component={Link} to="/register">
-              Sign up
-            </Button>
-          </Group>
+          {!isAuth && (
+            <Group position="center" grow pb="xl" px="md">
+              <Button
+                onClick={closeDrawer}
+                component={Link}
+                to="/login"
+                variant="default"
+              >
+                Log in
+              </Button>
+              <Button onClick={closeDrawer} component={Link} to="/register">
+                Sign up
+              </Button>
+            </Group>
+          )}
+
+          {isAuth && (
+            <Group position="center" grow pb="xl" px="md">
+              <Button onClick={closeDrawer}>Log out</Button>
+            </Group>
+          )}
         </ScrollArea>
       </Drawer>
     </Box>

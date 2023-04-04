@@ -1,7 +1,7 @@
 import { FC } from 'react';
 
-import s from 'components/auth.module.css';
 import { LoginForm } from 'components/LoginForm';
+import s from 'pages/auth.module.css';
 
 const Login: FC = () => {
   return (

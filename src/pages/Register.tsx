@@ -1,10 +1,17 @@
 import { FC } from 'react';
 
-import s from 'components/auth.module.css';
+import { Navigate } from 'react-router-dom';
+
 import { RegisterForm } from 'components/RegisterForm';
+import { useAuth } from 'hooks/useAuth';
+import s from 'pages/auth.module.css';
 
 const Register: FC = () => {
-  return (
+  const { isAuth } = useAuth();
+
+  return isAuth ? (
+    <Navigate to="/" />
+  ) : (
     <div className={s.authForm}>
       <RegisterForm />
     </div>
