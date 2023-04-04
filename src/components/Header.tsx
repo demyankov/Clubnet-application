@@ -15,10 +15,13 @@ import {
   Avatar,
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
+import { getAuth, signOut } from 'firebase/auth';
 import { DiReact } from 'react-icons/di';
+import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 import { useAuth } from 'hooks/useAuth';
+import { setUser } from 'store/userSlice';
 
 const useStyles = createStyles((theme) => ({
   link: {
@@ -75,6 +78,28 @@ export const HeaderMegaMenu: FC = () => {
     useDisclosure(false);
   const { classes, theme } = useStyles();
   const { isAuth, email } = useAuth();
+  const dispatch = useDispatch();
+
+  const handleLogOut = (): void => {
+    if (drawerOpened) {
+      toggleDrawer();
+    }
+    const auth = getAuth();
+
+    signOut(auth)
+      .then(() => {
+        dispatch(
+          setUser({
+            email: null,
+            token: null,
+            id: null,
+          }),
+        );
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
 
   return (
     <Box pb={120}>
@@ -106,7 +131,7 @@ export const HeaderMegaMenu: FC = () => {
             <Group className={classes.hiddenMobile}>
               <Avatar src={null} alt="no image here" />
               <Text fz="xl">{email}</Text>
-              <Button>Log out</Button>
+              <Button onClick={handleLogOut}>Log out</Button>
             </Group>
           )}
 
@@ -123,7 +148,7 @@ export const HeaderMegaMenu: FC = () => {
         onClose={closeDrawer}
         size="100%"
         padding="md"
-        title="Navigation"
+        title={email}
         className={classes.hiddenDesktop}
         zIndex={1000000}
       >
@@ -157,7 +182,7 @@ export const HeaderMegaMenu: FC = () => {
 
           {isAuth && (
             <Group position="center" grow pb="xl" px="md">
-              <Button onClick={closeDrawer}>Log out</Button>
+              <Button onClick={handleLogOut}>Log out</Button>
             </Group>
           )}
         </ScrollArea>
