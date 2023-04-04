@@ -1,6 +1,12 @@
 import { FC, useEffect, useState } from 'react';
 
-import { Loader, MantineProvider, ColorSchemeProvider, ColorScheme } from '@mantine/core';
+import {
+  Loader,
+  MantineProvider,
+  ColorSchemeProvider,
+  ColorScheme,
+  createStyles,
+} from '@mantine/core';
 import { useLocalStorage } from '@mantine/hooks';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { useDispatch } from 'react-redux';
@@ -8,7 +14,6 @@ import { Routes, Route } from 'react-router-dom';
 
 import { mockData } from 'assets/mockData';
 import { FooterSocial } from 'components/Footer';
-import s from 'components/form.module.css';
 import { HeaderMegaMenu } from 'components/Header';
 import Dashboard from 'pages/Dashboard';
 import Home from 'pages/Home';
@@ -18,6 +23,21 @@ import Profile from 'pages/Profile';
 import Register from 'pages/Register';
 import { setUser } from 'store/slices/userSlice';
 
+const useStyles = createStyles((theme) => ({
+  loader: {
+    position: 'absolute',
+    backgroundColor: theme.colorScheme === 'dark' ? '#00000080' : '#ffffff80',
+    zIndex: 10,
+    left: 0,
+    top: 0,
+    width: '100%',
+    height: '100%',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+}));
+
 const App: FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [colorScheme, setColorScheme] = useLocalStorage<ColorScheme>({
@@ -25,6 +45,7 @@ const App: FC = () => {
     defaultValue: 'dark',
     getInitialValueInEffect: true,
   });
+  const { classes } = useStyles();
 
   const dispatch = useDispatch();
   const toggleColorScheme = (value?: ColorScheme): void =>
@@ -73,7 +94,7 @@ const App: FC = () => {
       </MantineProvider>
     </ColorSchemeProvider>
   ) : (
-    <div className={s.loader}>
+    <div className={classes.loader}>
       <Loader size="xl" />
     </div>
   );
