@@ -18,7 +18,7 @@ import { useDispatch } from 'react-redux';
 import { useNavigate, Link } from 'react-router-dom';
 
 import s from 'components/form.module.css';
-import { setUser } from 'store/userSlice';
+import { setUser } from 'store/slices/userSlice';
 
 export const LoginForm: FC<PaperProps> = (props) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);

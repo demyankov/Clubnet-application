@@ -1,7 +1,7 @@
 import { useSelector } from 'react-redux';
 
 import { RootStateType } from 'store/index';
-import { UserStateType } from 'store/userSlice';
+import { UserStateType } from 'store/slices/userSlice';
 
 interface IUseAuth extends UserStateType {
   isAuth: boolean;

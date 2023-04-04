@@ -20,8 +20,9 @@ import { DiReact } from 'react-icons/di';
 import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 
+import { ThemeToggler } from 'components/ThemeToggler';
 import { useAuth } from 'hooks/useAuth';
-import { setUser } from 'store/userSlice';
+import { setUser } from 'store/slices/userSlice';
 
 const useStyles = createStyles((theme) => ({
   link: {
@@ -118,30 +119,31 @@ export const HeaderMegaMenu: FC = () => {
             )}
           </Group>
 
-          {!isAuth && (
-            <Group className={classes.hiddenMobile}>
-              <Button component={Link} to="/login" variant="default">
-                Log in
-              </Button>
-              <Button component={Link} to="/register">
-                Sign up
-              </Button>
-            </Group>
-          )}
+          <Group className={classes.hiddenMobile}>
+            <ThemeToggler />
+            {!isAuth && (
+              <>
+                <Button component={Link} to="/login" variant="default">
+                  Log in
+                </Button>
+                <Button component={Link} to="/register">
+                  Sign up
+                </Button>
+              </>
+            )}
+            {isAuth && (
+              <>
+                <Avatar component={Link} to="/profile" src={null} alt="no image here" />
+                <Text fz="xl">{email}</Text>
+                <Button onClick={handleLogOut}>Log out</Button>
+              </>
+            )}
+          </Group>
 
-          {isAuth && (
-            <Group className={classes.hiddenMobile}>
-              <Avatar component={Link} to="/profile" src={null} alt="no image here" />
-              <Text fz="xl">{email}</Text>
-              <Button onClick={handleLogOut}>Log out</Button>
-            </Group>
-          )}
-
-          <Burger
-            opened={drawerOpened}
-            onClick={toggleDrawer}
-            className={classes.hiddenDesktop}
-          />
+          <Group className={classes.hiddenDesktop}>
+            <ThemeToggler />
+            <Burger opened={drawerOpened} onClick={toggleDrawer} />
+          </Group>
         </Group>
       </Header>
 
@@ -173,27 +175,24 @@ export const HeaderMegaMenu: FC = () => {
 
           <Divider my="sm" color={theme.colorScheme === 'dark' ? 'dark.5' : 'gray.1'} />
 
-          {!isAuth && (
-            <Group position="center" grow pb="xl" px="md">
-              <Button
-                onClick={closeDrawer}
-                component={Link}
-                to="/login"
-                variant="default"
-              >
-                Log in
-              </Button>
-              <Button onClick={closeDrawer} component={Link} to="/register">
-                Sign up
-              </Button>
-            </Group>
-          )}
-
-          {isAuth && (
-            <Group position="center" grow pb="xl" px="md">
-              <Button onClick={handleLogOut}>Log out</Button>
-            </Group>
-          )}
+          <Group position="center" grow pb="xl" px="md">
+            {!isAuth && (
+              <>
+                <Button
+                  onClick={closeDrawer}
+                  component={Link}
+                  to="/login"
+                  variant="default"
+                >
+                  Log in
+                </Button>
+                <Button onClick={closeDrawer} component={Link} to="/register">
+                  Sign up
+                </Button>
+              </>
+            )}
+            {isAuth && <Button onClick={handleLogOut}>Log out</Button>}
+          </Group>
         </ScrollArea>
       </Drawer>
     </Box>
