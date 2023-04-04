@@ -17,6 +17,7 @@ import {
 import { useDisclosure } from '@mantine/hooks';
 import { getAuth, signOut } from 'firebase/auth';
 import { DiReact } from 'react-icons/di';
+import { IoIosLogOut } from 'react-icons/io';
 import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 
@@ -135,7 +136,9 @@ export const HeaderMegaMenu: FC = () => {
               <>
                 <Avatar component={Link} to="/profile" src={null} alt="no image here" />
                 <Text fz="xl">{email}</Text>
-                <Button onClick={handleLogOut}>Log out</Button>
+                <Button onClick={handleLogOut}>
+                  <IoIosLogOut />
+                </Button>
               </>
             )}
           </Group>
