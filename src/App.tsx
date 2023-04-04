@@ -6,6 +6,7 @@ import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { useDispatch } from 'react-redux';
 import { Routes, Route } from 'react-router-dom';
 
+import { FooterSocial } from 'components/Footer';
 import s from 'components/form.module.css';
 import { HeaderMegaMenu } from 'components/Header';
 import Dashboard from 'pages/Dashboard';
@@ -67,6 +68,7 @@ const App: FC = () => {
           <Route path="/profile" element={<Profile />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
+        <FooterSocial />
       </MantineProvider>
     </ColorSchemeProvider>
   ) : (

@@ -8,6 +8,8 @@ import App from 'App';
 import { store } from 'store';
 import 'firebase';
 
+import 'main.css';
+
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
     <Router>

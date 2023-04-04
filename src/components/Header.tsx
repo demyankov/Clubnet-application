@@ -50,16 +50,10 @@ const useStyles = createStyles((theme) => ({
     }),
   },
 
-  dropdownFooter: {
-    backgroundColor:
-      theme.colorScheme === 'dark' ? theme.colors.dark[7] : theme.colors.gray[0],
-    margin: `calc(${theme.spacing.md} * -1)`,
-    marginTop: theme.spacing.sm,
-    padding: `${theme.spacing.md} calc(${theme.spacing.md} * 2)`,
-    paddingBottom: theme.spacing.xl,
-    borderTop: `${rem(1)} solid ${
-      theme.colorScheme === 'dark' ? theme.colors.dark[5] : theme.colors.gray[1]
-    }`,
+  inner: {
+    maxWidth: rem(960),
+    marginLeft: 'auto',
+    marginRight: 'auto',
   },
 
   hiddenMobile: {
@@ -106,7 +100,7 @@ export const HeaderMegaMenu: FC = () => {
   return (
     <Box pb={120}>
       <Header height={60} px="md">
-        <Group position="apart" sx={{ height: '100%' }}>
+        <Group position="apart" sx={{ height: '100%' }} className={classes.inner}>
           <DiReact size={40} />
 
           <Group sx={{ height: '100%' }} spacing={0} className={classes.hiddenMobile}>
