@@ -21,6 +21,7 @@ import { IoIosLogOut } from 'react-icons/io';
 import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 
+import { LanguageSwitcher } from 'components/LanguageSwitcher';
 import { ThemeToggler } from 'components/ThemeToggler';
 import { useAuth } from 'hooks/useAuth';
 import { setUser } from 'store/slices/userSlice';
@@ -115,6 +116,7 @@ export const HeaderMegaMenu: FC = () => {
           </Group>
 
           <Group className={classes.hiddenMobile}>
+            <LanguageSwitcher />
             <ThemeToggler />
             {!isAuth && (
               <>
@@ -138,6 +140,7 @@ export const HeaderMegaMenu: FC = () => {
           </Group>
 
           <Group className={classes.hiddenDesktop}>
+            <LanguageSwitcher />
             <ThemeToggler />
             <Burger opened={drawerOpened} onClick={toggleDrawer} />
           </Group>
