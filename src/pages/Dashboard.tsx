@@ -10,6 +10,7 @@ import {
   ScrollArea,
   rem,
 } from '@mantine/core';
+import { useTranslation } from 'react-i18next';
 import { Navigate } from 'react-router-dom';
 
 import { useAuth } from 'hooks/useAuth';
@@ -42,8 +43,8 @@ interface TableReviewsProps {
 
 const Dashboard: FC<TableReviewsProps> = ({ data }) => {
   const { isAuth } = useAuth();
-
   const { classes, theme } = useStyles();
+  const { t } = useTranslation();
 
   const rows = data.map((row) => {
     const totalReviews = row.reviews.negative + row.reviews.positive;
@@ -102,11 +103,11 @@ const Dashboard: FC<TableReviewsProps> = ({ data }) => {
       <Table className={classes.inner} verticalSpacing="xs">
         <thead>
           <tr>
-            <th>Book title</th>
-            <th>Year</th>
-            <th>Author</th>
-            <th>Reviews</th>
-            <th>Reviews distribution</th>
+            <th>{t('dashboard.title')}</th>
+            <th>{t('dashboard.year')}</th>
+            <th>{t('dashboard.author')}</th>
+            <th>{t('dashboard.reviews')}</th>
+            <th>{t('dashboard.dist')}</th>
           </tr>
         </thead>
         <tbody>{rows}</tbody>

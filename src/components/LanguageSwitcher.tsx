@@ -2,13 +2,20 @@ import { FC, useState } from 'react';
 
 import { createStyles, UnstyledButton, Menu, Image, Group, rem } from '@mantine/core';
 import { IconChevronDown } from '@tabler/icons-react';
+import { useTranslation } from 'react-i18next';
 
 import ru from 'assets/russia.png';
 import en from 'assets/united-kingdom.png';
 
-const data = [
-  { label: 'EN', image: en },
-  { label: 'РУ', image: ru },
+type LangType = {
+  label: string;
+  image: string;
+  lng: string;
+};
+
+const data: LangType[] = [
+  { label: 'EN', image: en, lng: 'en' },
+  { label: 'РУ', image: ru, lng: 'ru' },
 ];
 
 const useStyles = createStyles((theme, { opened }: { opened: boolean }) => ({
@@ -50,11 +57,26 @@ const useStyles = createStyles((theme, { opened }: { opened: boolean }) => ({
 export const LanguageSwitcher: FC = () => {
   const [opened, setOpened] = useState(false);
   const { classes } = useStyles({ opened });
-  const [selected, setSelected] = useState(data[0]);
+  const [selected, setSelected] = useState(setLang());
+  const { i18n } = useTranslation();
+
+  function setLang(): LangType {
+    const candidate = localStorage.getItem('i18nextLng');
+
+    if (!candidate) return data[0];
+
+    const index = data.map((lang) => lang.lng).indexOf(candidate);
+
+    return data[index];
+  }
+
   const items = data.map((item) => (
     <Menu.Item
       icon={<Image src={item.image} width={15} height={15} />}
-      onClick={() => setSelected(item)}
+      onClick={() => {
+        setSelected(item);
+        i18n.changeLanguage(item.lng);
+      }}
       key={item.label}
     >
       {item.label}

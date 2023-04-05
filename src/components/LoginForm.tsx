@@ -15,6 +15,7 @@ import {
 } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 import { useNavigate, Link } from 'react-router-dom';
 
@@ -40,6 +41,7 @@ export const LoginForm: FC<PaperProps> = (props) => {
   const { classes } = useStyles();
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const form = useForm({
     initialValues: {
@@ -73,7 +75,7 @@ export const LoginForm: FC<PaperProps> = (props) => {
       })
       .catch(() => {
         setIsLoading(false);
-        form.setErrors({ common: 'Invalid email or password' });
+        form.setErrors({ common: t('form.invalid-email-pass').toString() });
       });
   };
 
@@ -85,32 +87,30 @@ export const LoginForm: FC<PaperProps> = (props) => {
         </div>
       )}
       <Text size="lg" weight={500}>
-        Welcome to App, login with
+        {t('form.welcome-login')}
       </Text>
 
       <form onSubmit={form.onSubmit(handleSubmit)}>
         <Stack>
           <TextInput
             required
-            label="Email"
+            label={t('form.email').toString()}
             placeholder="john_doe@mail.org"
             value={form.values.email}
             onChange={(event) => form.setFieldValue('email', event.currentTarget.value)}
-            error={form.errors.email && 'Invalid email'}
+            error={form.errors.email && t('form.invalid-email').toString()}
             radius="md"
           />
 
           <PasswordInput
             required
-            label="Password"
-            placeholder="Your password"
+            label={t('form.pass').toString()}
+            placeholder={t('form.your-pass').toString()}
             value={form.values.password}
             onChange={(event) =>
               form.setFieldValue('password', event.currentTarget.value)
             }
-            error={
-              form.errors.password && 'Password should include at least 6 characters'
-            }
+            error={form.errors.password && t('form.invalid-pass').toString()}
             radius="md"
           />
           {form.errors && <Text c="#fa5252">{form.errors.common}</Text>}
@@ -118,10 +118,10 @@ export const LoginForm: FC<PaperProps> = (props) => {
 
         <Group position="apart" mt="xl">
           <Anchor component={Link} to="/register" type="button" color="dimmed" size="xs">
-            Don&apos;t have an account? Register
+            {t('form.no-acc')}
           </Anchor>
           <Button type="submit" radius="xl">
-            Login
+            {t('form.login')}
           </Button>
         </Group>
       </form>

@@ -1,6 +1,7 @@
 import { FC } from 'react';
 
 import { createStyles, Container, Group, ActionIcon, rem, Text } from '@mantine/core';
+import { useTranslation } from 'react-i18next';
 import { DiReact } from 'react-icons/di';
 import { VscGithub } from 'react-icons/vsc';
 
@@ -31,12 +32,13 @@ const useStyles = createStyles((theme) => ({
 
 export const FooterSocial: FC = () => {
   const { classes } = useStyles();
+  const { t } = useTranslation();
 
   return (
     <div className={classes.footer}>
       <Container className={classes.inner}>
         <DiReact size={40} />
-        <Text>crafted with love by thelastandrew</Text>
+        <Text>{t('footer.crafted')}</Text>
         <Group spacing={0} className={classes.links} position="right" noWrap>
           <ActionIcon
             size="lg"

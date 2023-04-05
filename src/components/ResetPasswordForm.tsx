@@ -13,6 +13,7 @@ import {
 } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { getAuth, updatePassword, User } from 'firebase/auth';
+import { useTranslation } from 'react-i18next';
 
 const useStyles = createStyles((theme) => ({
   loader: {
@@ -34,6 +35,7 @@ export const ResetPasswordForm: FC<PaperProps> = (props) => {
   const [isSuccess, setIsSuccess] = useState<boolean>(false);
   const [isError, setIsError] = useState<boolean>(false);
   const { classes } = useStyles();
+  const { t } = useTranslation();
 
   const form = useForm({
     initialValues: {
@@ -76,45 +78,41 @@ export const ResetPasswordForm: FC<PaperProps> = (props) => {
         </div>
       )}
       <Text size="lg" weight={500}>
-        Reset your password
+        {t('form.welcome-reset')}
       </Text>
 
       <form onSubmit={form.onSubmit(handleSubmit)}>
         <Stack>
           <PasswordInput
             required
-            label="Password"
-            placeholder="Your password"
+            label={t('form.pass').toString()}
+            placeholder={t('form.your-pass').toString()}
             value={form.values.password}
             onChange={(event) =>
               form.setFieldValue('password', event.currentTarget.value)
             }
-            error={
-              form.errors.password && 'Password should include at least 6 characters'
-            }
+            error={form.errors.password && t('form.invalid-pass').toString()}
             radius="md"
           />
 
           <PasswordInput
             required
-            label="Confirm password"
-            placeholder="Confirm password"
+            label={t('form.confirm').toString()}
+            placeholder={t('form.confirm').toString()}
             value={form.values.confirmPassword}
             onChange={(event) =>
               form.setFieldValue('confirmPassword', event.currentTarget.value)
             }
-            error={form.errors.confirmPassword && "Passwords don't match"}
+            error={form.errors.confirmPassword && t('form.invalid-confirm').toString()}
             radius="md"
           />
-          {isSuccess && <Text c="teal.4">Password successfully changed!</Text>}
-          {isError && (
-            <Text c="#fa5252">Password not changed. Re-login and try again</Text>
-          )}
+          {isSuccess && <Text c="teal.4">{t('form.changed')}</Text>}
+          {isError && <Text c="#fa5252">{t('form.not-changed')}</Text>}
         </Stack>
 
         <Group position="center" mt="xl">
           <Button type="submit" radius="xl" disabled={isLoading}>
-            Reset
+            {t('form.reset')}
           </Button>
         </Group>
       </form>

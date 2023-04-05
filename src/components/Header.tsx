@@ -16,6 +16,7 @@ import {
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { getAuth, signOut } from 'firebase/auth';
+import { useTranslation } from 'react-i18next';
 import { DiReact } from 'react-icons/di';
 import { IoIosLogOut } from 'react-icons/io';
 import { useDispatch } from 'react-redux';
@@ -76,6 +77,7 @@ export const HeaderMegaMenu: FC = () => {
   const { classes, theme } = useStyles();
   const { isAuth, email } = useAuth();
   const dispatch = useDispatch();
+  const { t } = useTranslation();
 
   const handleLogOut = (): void => {
     if (drawerOpened) {
@@ -106,11 +108,11 @@ export const HeaderMegaMenu: FC = () => {
 
           <Group sx={{ height: '100%' }} spacing={0} className={classes.hiddenMobile}>
             <Link to="/" className={classes.link}>
-              Home
+              {t('header.home')}
             </Link>
             {isAuth && (
               <Link to="/dashboard" className={classes.link}>
-                Dashboard
+                {t('header.dashboard')}
               </Link>
             )}
           </Group>
@@ -121,10 +123,10 @@ export const HeaderMegaMenu: FC = () => {
             {!isAuth && (
               <>
                 <Button component={Link} to="/login" variant="default">
-                  Log in
+                  {t('header.login')}
                 </Button>
                 <Button component={Link} to="/register">
-                  Sign up
+                  {t('header.signup')}
                 </Button>
               </>
             )}
@@ -160,16 +162,16 @@ export const HeaderMegaMenu: FC = () => {
           <Divider my="sm" color={theme.colorScheme === 'dark' ? 'dark.5' : 'gray.1'} />
 
           <Link onClick={closeDrawer} to="/" className={classes.link}>
-            Home
+            {t('header.home')}
           </Link>
           {isAuth && (
             <Link onClick={closeDrawer} to="/profile" className={classes.link}>
-              Profile
+              {t('header.profile')}
             </Link>
           )}
           {isAuth && (
             <Link onClick={closeDrawer} to="/dashboard" className={classes.link}>
-              Dashboard
+              {t('header.dashboard')}
             </Link>
           )}
 
@@ -184,14 +186,14 @@ export const HeaderMegaMenu: FC = () => {
                   to="/login"
                   variant="default"
                 >
-                  Log in
+                  {t('header.login')}
                 </Button>
                 <Button onClick={closeDrawer} component={Link} to="/register">
-                  Sign up
+                  {t('header.signup')}
                 </Button>
               </>
             )}
-            {isAuth && <Button onClick={handleLogOut}>Log out</Button>}
+            {isAuth && <Button onClick={handleLogOut}>{t('header.logout')}</Button>}
           </Group>
         </ScrollArea>
       </Drawer>

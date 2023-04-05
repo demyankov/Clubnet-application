@@ -13,6 +13,7 @@ import {
   rem,
 } from '@mantine/core';
 import { IconCheck } from '@tabler/icons-react';
+import { useTranslation, Trans } from 'react-i18next';
 
 import image from 'assets/home.svg';
 
@@ -71,6 +72,7 @@ const useStyles = createStyles((theme) => ({
 
 const Home: FC = () => {
   const { classes } = useStyles();
+  const { t } = useTranslation();
 
   return (
     <div>
@@ -78,13 +80,13 @@ const Home: FC = () => {
         <div className={classes.inner}>
           <div className={classes.content}>
             <Title className={classes.title}>
-              A <span className={classes.highlight}>modern</span> React <br /> components
-              library
+              <Trans i18nKey="home.title">
+                A <span className={classes.highlight}>modern</span> React <br />{' '}
+                components library
+              </Trans>
             </Title>
             <Text color="dimmed" mt="md">
-              Build fully functional accessible web applications faster than ever –
-              Mantine includes more than 120 customizable components and hooks to cover
-              you in any situation
+              {t('home.info')}
             </Text>
 
             <List
@@ -98,25 +100,31 @@ const Home: FC = () => {
               }
             >
               <List.Item>
-                <b>TypeScript based</b> – build type safe applications, all components and
-                hooks export types
+                <Trans i18nKey="home.typescript">
+                  <b>TypeScript based</b> – build type safe applications, all components
+                  and hooks export types
+                </Trans>
               </List.Item>
               <List.Item>
-                <b>Free and open source</b> – all packages have MIT license, you can use
-                Mantine in any project
+                <Trans i18nKey="home.free">
+                  <b>Free and open source</b> – all packages have MIT license, you can use
+                  Mantine in any project
+                </Trans>
               </List.Item>
               <List.Item>
-                <b>No annoying focus ring</b> – focus ring will appear only when user
-                navigates with keyboard
+                <Trans i18nKey="home.focus">
+                  <b>No annoying focus ring</b> – focus ring will appear only when user
+                  navigates with keyboard
+                </Trans>
               </List.Item>
             </List>
 
             <Group mt={30}>
               <Button radius="xl" size="md" className={classes.control}>
-                Get started
+                {t('home.start')}
               </Button>
               <Button variant="default" radius="xl" size="md" className={classes.control}>
-                Source code
+                {t('home.source')}
               </Button>
             </Group>
           </div>

@@ -9,12 +9,15 @@ import { store } from 'store';
 import 'firebase';
 
 import 'main.css';
+import 'i18n/i18n';
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
     <Router>
       <Provider store={store}>
-        <App />
+        <React.Suspense>
+          <App />
+        </React.Suspense>
       </Provider>
     </Router>
   </React.StrictMode>,

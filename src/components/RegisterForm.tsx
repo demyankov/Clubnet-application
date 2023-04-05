@@ -15,6 +15,7 @@ import {
 } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
+import { useTranslation, Trans } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 import { useNavigate, Link } from 'react-router-dom';
 
@@ -40,6 +41,7 @@ export const RegisterForm: FC<PaperProps> = (props) => {
   const { classes } = useStyles();
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const form = useForm({
     initialValues: {
@@ -76,9 +78,16 @@ export const RegisterForm: FC<PaperProps> = (props) => {
       .catch((error) => {
         setIsLoading(false);
         const errorCode = error.code;
+        const { email } = form.values;
 
         if (errorCode === 'auth/email-already-in-use') {
-          form.setErrors({ wrongEmail: `Email ${form.values.email} already registered` });
+          form.setErrors({
+            wrongEmail: (
+              <Trans i18nKey="form.already-email">
+                Email {{ email }} already registered
+              </Trans>
+            ),
+          });
         }
       });
   };
@@ -91,47 +100,45 @@ export const RegisterForm: FC<PaperProps> = (props) => {
         </div>
       )}
       <Text size="lg" weight={500}>
-        Welcome to App, register with
+        {t('form.welcome-reg')}
       </Text>
 
       <form onSubmit={form.onSubmit(handleSubmit)}>
         <Stack>
           <TextInput
             required
-            label="Email"
+            label={t('form.email').toString()}
             placeholder="john_doe@mail.org"
             value={form.values.email}
             onChange={(event) => {
               form.clearErrors();
               form.setFieldValue('email', event.currentTarget.value);
             }}
-            error={form.errors.email && 'Invalid email'}
+            error={form.errors.email && t('form.invalid-email').toString()}
             radius="md"
           />
 
           <PasswordInput
             required
-            label="Password"
-            placeholder="Your password"
+            label={t('form.pass').toString()}
+            placeholder={t('form.your-pass').toString()}
             value={form.values.password}
             onChange={(event) =>
               form.setFieldValue('password', event.currentTarget.value)
             }
-            error={
-              form.errors.password && 'Password should include at least 6 characters'
-            }
+            error={form.errors.password && t('form.invalid-pass').toString()}
             radius="md"
           />
 
           <PasswordInput
             required
-            label="Confirm password"
-            placeholder="Confirm password"
+            label={t('form.confirm').toString()}
+            placeholder={t('form.confirm').toString()}
             value={form.values.confirmPassword}
             onChange={(event) =>
               form.setFieldValue('confirmPassword', event.currentTarget.value)
             }
-            error={form.errors.confirmPassword && "Passwords don't match"}
+            error={form.errors.confirmPassword && t('form.invalid-confirm').toString()}
             radius="md"
           />
           {form.errors && <Text c="#fa5252">{form.errors.wrongEmail}</Text>}
@@ -139,10 +146,10 @@ export const RegisterForm: FC<PaperProps> = (props) => {
 
         <Group position="apart" mt="xl">
           <Anchor component={Link} to="/login" type="button" color="dimmed" size="xs">
-            Already have an account? Login
+            {t('form.already')}
           </Anchor>
           <Button type="submit" radius="xl" disabled={isLoading}>
-            Register
+            {t('form.register')}
           </Button>
         </Group>
       </form>

@@ -19,8 +19,12 @@
     "@reduxjs/toolkit": "^1.9.3",
     "@tabler/icons-react": "^2.13.1",
     "firebase": "^9.19.1",
+    "i18next": "^22.4.14",
+    "i18next-browser-languagedetector": "^7.0.1",
+    "i18next-http-backend": "^2.2.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-i18next": "^12.2.0",
     "react-icons": "^4.8.0",
     "react-redux": "^8.0.5",
     "react-router-dom": "^6.10.0"

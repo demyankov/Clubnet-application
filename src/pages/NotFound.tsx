@@ -10,6 +10,7 @@ import {
   SimpleGrid,
   rem,
 } from '@mantine/core';
+import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 
 import image from 'assets/404.svg';
@@ -52,6 +53,7 @@ const useStyles = createStyles((theme) => ({
 
 const NotFound: FC = () => {
   const { classes } = useStyles();
+  const { t } = useTranslation();
 
   return (
     <Container className={classes.root}>
@@ -62,11 +64,9 @@ const NotFound: FC = () => {
       >
         <Image src={image} className={classes.mobileImage} />
         <div>
-          <Title className={classes.title}>Something is not right...</Title>
+          <Title className={classes.title}>{t('404.title')}</Title>
           <Text color="dimmed" size="lg">
-            Page you are trying to open does not exist. You may have mistyped the address,
-            or the page has been moved to another URL. If you think this is an error
-            contact support.
+            {t('404.info')}
           </Text>
           <Button
             variant="outline"
@@ -76,7 +76,7 @@ const NotFound: FC = () => {
             component={Link}
             to="/"
           >
-            Get back to home page
+            {t('404.back')}
           </Button>
         </div>
         <Image src={image} className={classes.desktopImage} />
