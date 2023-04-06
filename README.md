@@ -1,5 +1,7 @@
 # Project for the Frontendiya tournament
 
+### Deployment: https://thelastandrew-frontendiya.netlify.app/
+
 ![](https://i.ibb.co/w0QT8XJ/fr-main.jpg)
 
 
