@@ -15,9 +15,7 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
     <Router>
       <Provider store={store}>
-        <React.Suspense>
-          <App />
-        </React.Suspense>
+        <App />
       </Provider>
     </Router>
   </React.StrictMode>,
