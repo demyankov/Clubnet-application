@@ -8,16 +8,16 @@
 ## Assignment
 
 ### Stack:
-- **Vite**
-- **React**
-- **Typescript**
-- **Mantine UI**
+- **[Vite](https://vitejs.dev/)**
+- **[React](https://react.dev/)**
+- **[Typescript](https://www.typescriptlang.org/)**
+- **[Mantine](https://mantine.dev/)**
 
 ### Used tools:
-- **Firebase**
-- **i18next**
-- **React Router**
-- **Redux Toolkit**
+- **[Firebase](https://firebase.google.com/)**
+- **[i18next](https://www.i18next.com/)**
+- **[React Router](https://reactrouter.com/en/main)**
+- **[Redux Toolkit](https://redux-toolkit.js.org/)**
 
 ### Implemented features:
 - Register with  email and password
