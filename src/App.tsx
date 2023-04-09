@@ -13,14 +13,8 @@ import { useDispatch } from 'react-redux';
 import { Routes, Route } from 'react-router-dom';
 
 import { mockData } from 'assets/mockData';
-import { FooterSocial } from 'components/Footer';
-import { HeaderMegaMenu } from 'components/Header';
-import Dashboard from 'pages/Dashboard';
-import Home from 'pages/Home';
-import Login from 'pages/Login';
-import NotFound from 'pages/NotFound';
-import Profile from 'pages/Profile';
-import Register from 'pages/Register';
+import { HeaderMegaMenu, FooterSocial } from 'components';
+import { Home, Register, Login, Dashboard, Profile, NotFound } from 'pages';
 import { setUser } from 'store/slices/userSlice';
 
 const useStyles = createStyles((theme) => ({

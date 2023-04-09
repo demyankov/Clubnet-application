@@ -41,7 +41,7 @@ interface TableReviewsProps {
   }[];
 }
 
-const Dashboard: FC<TableReviewsProps> = ({ data }) => {
+export const Dashboard: FC<TableReviewsProps> = ({ data }) => {
   const { isAuth } = useAuth();
   const { classes, theme } = useStyles();
   const { t } = useTranslation();
@@ -117,5 +117,3 @@ const Dashboard: FC<TableReviewsProps> = ({ data }) => {
     <Navigate to="/" />
   );
 };
-
-export default Dashboard;

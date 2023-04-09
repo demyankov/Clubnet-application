@@ -2,11 +2,11 @@ import { FC } from 'react';
 
 import { Navigate } from 'react-router-dom';
 
-import { LoginForm } from 'components/LoginForm';
+import { LoginForm } from 'components';
 import { useAuth } from 'hooks/useAuth';
 import s from 'pages/auth.module.css';
 
-const Login: FC = () => {
+export const Login: FC = () => {
   const { isAuth } = useAuth();
 
   return isAuth ? (
@@ -17,5 +17,3 @@ const Login: FC = () => {
     </div>
   );
 };
-
-export default Login;

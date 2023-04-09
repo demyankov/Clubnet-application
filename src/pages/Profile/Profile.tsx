@@ -2,11 +2,11 @@ import { FC } from 'react';
 
 import { Navigate } from 'react-router-dom';
 
-import { ResetPasswordForm } from 'components/ResetPasswordForm';
+import { ResetPasswordForm } from 'components';
 import { useAuth } from 'hooks/useAuth';
 import s from 'pages/auth.module.css';
 
-const Profile: FC = () => {
+export const Profile: FC = () => {
   const { isAuth } = useAuth();
 
   return isAuth ? (
@@ -17,5 +17,3 @@ const Profile: FC = () => {
     <Navigate to="/" />
   );
 };
-
-export default Profile;

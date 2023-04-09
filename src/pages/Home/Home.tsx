@@ -70,7 +70,7 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-const Home: FC = () => {
+export const Home: FC = () => {
   const { classes } = useStyles();
   const { t } = useTranslation();
 
@@ -134,5 +134,3 @@ const Home: FC = () => {
     </div>
   );
 };
-
-export default Home;

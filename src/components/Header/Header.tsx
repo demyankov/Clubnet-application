@@ -22,8 +22,7 @@ import { IoIosLogOut } from 'react-icons/io';
 import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 
-import { LanguageSwitcher } from 'components/LanguageSwitcher';
-import { ThemeToggler } from 'components/ThemeToggler';
+import { LanguageSwitcher, ThemeToggler } from 'components';
 import { useAuth } from 'hooks/useAuth';
 import { setUser } from 'store/slices/userSlice';
 
