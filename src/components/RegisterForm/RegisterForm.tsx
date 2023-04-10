@@ -19,6 +19,7 @@ import { useTranslation, Trans } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 import { useNavigate, Link } from 'react-router-dom';
 
+import { Paths } from 'constants/paths';
 import { setUser } from 'store/slices/userSlice';
 
 const useStyles = createStyles((theme) => ({
@@ -73,7 +74,7 @@ export const RegisterForm: FC<PaperProps> = (props) => {
           }),
         );
         setIsLoading(false);
-        navigate('/');
+        navigate(Paths.home);
       })
       .catch((error) => {
         setIsLoading(false);
@@ -145,7 +146,13 @@ export const RegisterForm: FC<PaperProps> = (props) => {
         </Stack>
 
         <Group position="apart" mt="xl">
-          <Anchor component={Link} to="/login" type="button" color="dimmed" size="xs">
+          <Anchor
+            component={Link}
+            to={Paths.login}
+            type="button"
+            color="dimmed"
+            size="xs"
+          >
             {t('form.already')}
           </Anchor>
           <Button type="submit" radius="xl" disabled={isLoading}>

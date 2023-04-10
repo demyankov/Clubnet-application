@@ -14,6 +14,7 @@ import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 
 import image from 'assets/404.svg';
+import { Paths } from 'constants/paths';
 
 const useStyles = createStyles((theme) => ({
   root: {
@@ -74,7 +75,7 @@ export const NotFound: FC = () => {
             mt="xl"
             className={classes.control}
             component={Link}
-            to="/"
+            to={Paths.home}
           >
             {t('404.back')}
           </Button>

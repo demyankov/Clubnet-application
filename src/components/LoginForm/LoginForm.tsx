@@ -19,6 +19,7 @@ import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 import { useNavigate, Link } from 'react-router-dom';
 
+import { Paths } from 'constants/paths';
 import { setUser } from 'store/slices/userSlice';
 
 const useStyles = createStyles((theme) => ({
@@ -71,7 +72,7 @@ export const LoginForm: FC<PaperProps> = (props) => {
           }),
         );
         setIsLoading(false);
-        navigate('/');
+        navigate(Paths.home);
       })
       .catch(() => {
         setIsLoading(false);
@@ -117,7 +118,13 @@ export const LoginForm: FC<PaperProps> = (props) => {
         </Stack>
 
         <Group position="apart" mt="xl">
-          <Anchor component={Link} to="/register" type="button" color="dimmed" size="xs">
+          <Anchor
+            component={Link}
+            to={Paths.register}
+            type="button"
+            color="dimmed"
+            size="xs"
+          >
             {t('form.no-acc')}
           </Anchor>
           <Button type="submit" radius="xl">

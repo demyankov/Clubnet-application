@@ -13,6 +13,7 @@ import {
 import { useTranslation } from 'react-i18next';
 import { Navigate } from 'react-router-dom';
 
+import { Paths } from 'constants/paths';
 import { useAuth } from 'hooks/useAuth';
 
 const useStyles = createStyles((theme) => ({
@@ -114,6 +115,6 @@ export const Dashboard: FC<TableReviewsProps> = ({ data }) => {
       </Table>
     </ScrollArea>
   ) : (
-    <Navigate to="/" />
+    <Navigate to={Paths.home} />
   );
 };

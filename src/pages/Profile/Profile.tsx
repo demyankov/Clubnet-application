@@ -3,6 +3,7 @@ import { FC } from 'react';
 import { Navigate } from 'react-router-dom';
 
 import { ResetPasswordForm } from 'components';
+import { Paths } from 'constants/paths';
 import { useAuth } from 'hooks/useAuth';
 import s from 'pages/auth.module.css';
 
@@ -14,6 +15,6 @@ export const Profile: FC = () => {
       <ResetPasswordForm />
     </div>
   ) : (
-    <Navigate to="/" />
+    <Navigate to={Paths.home} />
   );
 };

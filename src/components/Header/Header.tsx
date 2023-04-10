@@ -23,6 +23,7 @@ import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 import { LanguageSwitcher, ThemeToggler } from 'components';
+import { Paths } from 'constants/paths';
 import { useAuth } from 'hooks/useAuth';
 import { setUser } from 'store/slices/userSlice';
 
@@ -106,11 +107,11 @@ export const HeaderMegaMenu: FC = () => {
           <DiReact size={40} />
 
           <Group sx={{ height: '100%' }} spacing={0} className={classes.hiddenMobile}>
-            <Link to="/" className={classes.link}>
+            <Link to={Paths.home} className={classes.link}>
               {t('header.home')}
             </Link>
             {isAuth && (
-              <Link to="/dashboard" className={classes.link}>
+              <Link to={Paths.dashboard} className={classes.link}>
                 {t('header.dashboard')}
               </Link>
             )}
@@ -121,17 +122,22 @@ export const HeaderMegaMenu: FC = () => {
             <ThemeToggler />
             {!isAuth && (
               <>
-                <Button component={Link} to="/login" variant="default">
+                <Button component={Link} to={Paths.login} variant="default">
                   {t('header.login')}
                 </Button>
-                <Button component={Link} to="/register">
+                <Button component={Link} to={Paths.register}>
                   {t('header.signup')}
                 </Button>
               </>
             )}
             {isAuth && (
               <>
-                <Avatar component={Link} to="/profile" src={null} alt="no image here" />
+                <Avatar
+                  component={Link}
+                  to={Paths.profile}
+                  src={null}
+                  alt="no image here"
+                />
                 <Text fz="xl">{email}</Text>
                 <Button onClick={handleLogOut}>
                   <IoIosLogOut />
@@ -160,16 +166,16 @@ export const HeaderMegaMenu: FC = () => {
         <ScrollArea h={`calc(100vh - ${rem(60)})`} mx="-md">
           <Divider my="sm" color={theme.colorScheme === 'dark' ? 'dark.5' : 'gray.1'} />
 
-          <Link onClick={closeDrawer} to="/" className={classes.link}>
+          <Link onClick={closeDrawer} to={Paths.home} className={classes.link}>
             {t('header.home')}
           </Link>
           {isAuth && (
-            <Link onClick={closeDrawer} to="/profile" className={classes.link}>
+            <Link onClick={closeDrawer} to={Paths.profile} className={classes.link}>
               {t('header.profile')}
             </Link>
           )}
           {isAuth && (
-            <Link onClick={closeDrawer} to="/dashboard" className={classes.link}>
+            <Link onClick={closeDrawer} to={Paths.dashboard} className={classes.link}>
               {t('header.dashboard')}
             </Link>
           )}
@@ -182,12 +188,12 @@ export const HeaderMegaMenu: FC = () => {
                 <Button
                   onClick={closeDrawer}
                   component={Link}
-                  to="/login"
+                  to={Paths.login}
                   variant="default"
                 >
                   {t('header.login')}
                 </Button>
-                <Button onClick={closeDrawer} component={Link} to="/register">
+                <Button onClick={closeDrawer} component={Link} to={Paths.register}>
                   {t('header.signup')}
                 </Button>
               </>

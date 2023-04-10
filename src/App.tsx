@@ -14,6 +14,7 @@ import { Routes, Route } from 'react-router-dom';
 
 import { mockData } from 'assets/mockData';
 import { HeaderMegaMenu, FooterSocial } from 'components';
+import { Paths } from 'constants/paths';
 import { Home, Register, Login, Dashboard, Profile, NotFound } from 'pages';
 import { setUser } from 'store/slices/userSlice';
 
@@ -78,11 +79,11 @@ const App: FC = () => {
         <HeaderMegaMenu />
         <Routes>
           <Route index element={<Home />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/dashboard" element={<Dashboard data={mockData.data} />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="*" element={<NotFound />} />
+          <Route path={Paths.register} element={<Register />} />
+          <Route path={Paths.login} element={<Login />} />
+          <Route path={Paths.dashboard} element={<Dashboard data={mockData.data} />} />
+          <Route path={Paths.profile} element={<Profile />} />
+          <Route path={Paths.notFound} element={<NotFound />} />
         </Routes>
         <FooterSocial />
       </MantineProvider>
