@@ -1,12 +1,11 @@
 import { FC } from 'react';
 
-import { ResetPasswordForm } from 'components';
-import s from 'pages/auth.module.css';
+import { ResetPasswordForm, FormComponent } from 'components';
 
 export const Profile: FC = () => {
   return (
-    <div className={s.authForm}>
+    <FormComponent>
       <ResetPasswordForm />
-    </div>
+    </FormComponent>
   );
 };

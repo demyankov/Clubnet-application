@@ -1,12 +1,11 @@
 import { FC } from 'react';
 
-import { RegisterForm } from 'components';
-import s from 'pages/auth.module.css';
+import { RegisterForm, FormComponent } from 'components';
 
 export const Register: FC = () => {
   return (
-    <div className={s.authForm}>
+    <FormComponent>
       <RegisterForm />
-    </div>
+    </FormComponent>
   );
 };

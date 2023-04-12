@@ -15,7 +15,7 @@ import { useForm } from '@mantine/form';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
-import { useNavigate, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 import { LoaderScreen } from 'components';
 import { Paths } from 'constants/paths';
@@ -24,7 +24,6 @@ import { setUser } from 'store/slices/userSlice';
 export const LoginForm: FC<PaperProps> = (props) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const { t } = useTranslation();
 
   const form = useForm({
@@ -55,7 +54,6 @@ export const LoginForm: FC<PaperProps> = (props) => {
           }),
         );
         setIsLoading(false);
-        navigate(Paths.home);
       })
       .catch(() => {
         setIsLoading(false);
