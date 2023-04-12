@@ -6,3 +6,5 @@ export * from 'components/RegisterForm/RegisterForm';
 export * from 'components/ResetPasswordForm/ResetPasswordForm';
 export * from 'components/ThemeToggler/ThemeToggler';
 export * from 'components/LoaderScreen/LoaderScreen';
+export * from 'components/PrivateRoute/PrivateRoute';
+export * from 'components/PublicRoute/PublicRoute';

@@ -11,10 +11,6 @@ import {
   rem,
 } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
-import { Navigate } from 'react-router-dom';
-
-import { Paths } from 'constants/paths';
-import { useAuth } from 'hooks/useAuth';
 
 const useStyles = createStyles((theme) => ({
   progressBar: {
@@ -43,7 +39,6 @@ interface TableReviewsProps {
 }
 
 export const Dashboard: FC<TableReviewsProps> = ({ data }) => {
-  const { isAuth } = useAuth();
   const { classes, theme } = useStyles();
   const { t } = useTranslation();
 
@@ -99,7 +94,7 @@ export const Dashboard: FC<TableReviewsProps> = ({ data }) => {
     );
   });
 
-  return isAuth ? (
+  return (
     <ScrollArea>
       <Table className={classes.inner} verticalSpacing="xs">
         <thead>
@@ -114,7 +109,5 @@ export const Dashboard: FC<TableReviewsProps> = ({ data }) => {
         <tbody>{rows}</tbody>
       </Table>
     </ScrollArea>
-  ) : (
-    <Navigate to={Paths.home} />
   );
 };
