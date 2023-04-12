@@ -8,33 +8,17 @@ import {
   PaperProps,
   Button,
   Stack,
-  Loader,
-  createStyles,
 } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { getAuth, updatePassword, User } from 'firebase/auth';
 import { useTranslation } from 'react-i18next';
 
-const useStyles = createStyles((theme) => ({
-  loader: {
-    position: 'absolute',
-    backgroundColor: theme.colorScheme === 'dark' ? '#00000080' : '#ffffff80',
-    zIndex: 10,
-    left: 0,
-    top: 0,
-    width: '100%',
-    height: '100%',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-}));
+import { LoaderScreen } from 'components';
 
 export const ResetPasswordForm: FC<PaperProps> = (props) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isSuccess, setIsSuccess] = useState<boolean>(false);
   const [isError, setIsError] = useState<boolean>(false);
-  const { classes } = useStyles();
   const { t } = useTranslation();
 
   const form = useForm({
@@ -72,11 +56,7 @@ export const ResetPasswordForm: FC<PaperProps> = (props) => {
 
   return (
     <Paper radius="md" p="xl" withBorder {...props} pos="relative">
-      {isLoading && (
-        <div className={classes.loader}>
-          <Loader size="xl" />
-        </div>
-      )}
+      {isLoading && <LoaderScreen />}
       <Text size="lg" weight={500}>
         {t('form.welcome-reset')}
       </Text>

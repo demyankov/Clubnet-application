@@ -5,3 +5,4 @@ export * from 'components/LoginForm/LoginForm';
 export * from 'components/RegisterForm/RegisterForm';
 export * from 'components/ResetPasswordForm/ResetPasswordForm';
 export * from 'components/ThemeToggler/ThemeToggler';
+export * from 'components/LoaderScreen/LoaderScreen';

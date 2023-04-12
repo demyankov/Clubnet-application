@@ -10,8 +10,6 @@ import {
   Button,
   Anchor,
   Stack,
-  Loader,
-  createStyles,
 } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
@@ -19,27 +17,12 @@ import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 import { useNavigate, Link } from 'react-router-dom';
 
+import { LoaderScreen } from 'components';
 import { Paths } from 'constants/paths';
 import { setUser } from 'store/slices/userSlice';
 
-const useStyles = createStyles((theme) => ({
-  loader: {
-    position: 'absolute',
-    backgroundColor: theme.colorScheme === 'dark' ? '#00000080' : '#ffffff80',
-    zIndex: 10,
-    left: 0,
-    top: 0,
-    width: '100%',
-    height: '100%',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-}));
-
 export const LoginForm: FC<PaperProps> = (props) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const { classes } = useStyles();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { t } = useTranslation();
@@ -82,11 +65,7 @@ export const LoginForm: FC<PaperProps> = (props) => {
 
   return (
     <Paper radius="md" p="xl" withBorder {...props} pos="relative">
-      {isLoading && (
-        <div className={classes.loader}>
-          <Loader size="xl" />
-        </div>
-      )}
+      {isLoading && <LoaderScreen />}
       <Text size="lg" weight={500}>
         {t('form.welcome-login')}
       </Text>
