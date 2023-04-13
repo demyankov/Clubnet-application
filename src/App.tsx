@@ -1,9 +1,7 @@
-import { FC, useEffect, useState } from 'react';
+import { FC, useEffect } from 'react';
 
 import { MantineProvider, ColorSchemeProvider, ColorScheme } from '@mantine/core';
 import { useLocalStorage } from '@mantine/hooks';
-import { getAuth, onAuthStateChanged } from 'firebase/auth';
-import { useDispatch } from 'react-redux';
 import { Routes, Route } from 'react-router-dom';
 
 import { mockData } from 'assets/mockData';
@@ -16,48 +14,27 @@ import {
 } from 'components';
 import { Paths } from 'constants/paths';
 import { Home, Register, Login, Dashboard, Profile, NotFound } from 'pages';
-import { setUser } from 'store/slices/userSlice';
+import { useAuth } from 'store';
 
 const App: FC = () => {
-  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [colorScheme, setColorScheme] = useLocalStorage<ColorScheme>({
     key: 'app-theme',
     defaultValue: 'dark',
     getInitialValueInEffect: true,
   });
+  const { isFetching, getUser } = useAuth((state) => ({
+    isFetching: state.isFetching,
+    getUser: state.getUser,
+  }));
 
-  const dispatch = useDispatch();
   const toggleColorScheme = (value?: ColorScheme): void =>
     setColorScheme(value || (colorScheme === 'dark' ? 'light' : 'dark'));
 
   useEffect(() => {
-    setIsLoading(true);
-    const auth = getAuth();
+    getUser();
+  }, [getUser]);
 
-    onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        dispatch(
-          setUser({
-            email: user.email,
-            id: user.uid,
-            token: await user.getIdToken(),
-          }),
-        );
-        setIsLoading(false);
-      } else {
-        dispatch(
-          setUser({
-            email: null,
-            id: null,
-            token: null,
-          }),
-        );
-        setIsLoading(false);
-      }
-    });
-  }, [dispatch]);
-
-  if (isLoading) return <LoaderScreen />;
+  if (isFetching) return <LoaderScreen />;
 
   return (
     <ColorSchemeProvider colorScheme={colorScheme} toggleColorScheme={toggleColorScheme}>

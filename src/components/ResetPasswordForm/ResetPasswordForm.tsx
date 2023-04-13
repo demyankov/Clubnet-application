@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC } from 'react';
 
 import {
   PasswordInput,
@@ -10,15 +10,18 @@ import {
   Stack,
 } from '@mantine/core';
 import { useForm } from '@mantine/form';
-import { getAuth, updatePassword, User } from 'firebase/auth';
 import { useTranslation } from 'react-i18next';
 
 import { LoaderScreen } from 'components';
+import { useAuth } from 'store';
 
 export const ResetPasswordForm: FC<PaperProps> = (props) => {
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [isSuccess, setIsSuccess] = useState<boolean>(false);
-  const [isError, setIsError] = useState<boolean>(false);
+  const { update, isFetching, isError, isUpdated } = useAuth((state) => ({
+    isFetching: state.isFetching,
+    isError: state.isError,
+    isUpdated: state.isUpdated,
+    update: state.update,
+  }));
   const { t } = useTranslation();
 
   const form = useForm({
@@ -36,27 +39,12 @@ export const ResetPasswordForm: FC<PaperProps> = (props) => {
   });
 
   const handleSubmit = (): void => {
-    setIsLoading(true);
-    form.reset();
-    const auth = getAuth();
-    const user = auth.currentUser as User;
-
-    updatePassword(user, form.values.password)
-      .then(() => {
-        setIsLoading(false);
-        setIsSuccess(true);
-        setIsError(false);
-      })
-      .catch(() => {
-        setIsLoading(false);
-        setIsSuccess(false);
-        setIsError(true);
-      });
+    update(form.values.password);
   };
 
   return (
     <Paper radius="md" p="xl" withBorder {...props} pos="relative">
-      {isLoading && <LoaderScreen />}
+      {isFetching && <LoaderScreen />}
       <Text size="lg" weight={500}>
         {t('form.welcome-reset')}
       </Text>
@@ -86,12 +74,12 @@ export const ResetPasswordForm: FC<PaperProps> = (props) => {
             error={form.errors.confirmPassword && t('form.invalid-confirm').toString()}
             radius="md"
           />
-          {isSuccess && <Text c="teal.4">{t('form.changed')}</Text>}
+          {isUpdated && <Text c="teal.4">{t('form.changed')}</Text>}
           {isError && <Text c="#fa5252">{t('form.not-changed')}</Text>}
         </Stack>
 
         <Group position="center" mt="xl">
-          <Button type="submit" radius="xl" disabled={isLoading}>
+          <Button type="submit" radius="xl" disabled={isFetching}>
             {t('form.reset')}
           </Button>
         </Group>

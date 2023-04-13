@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC } from 'react';
 
 import {
   TextInput,
@@ -12,18 +12,19 @@ import {
   Stack,
 } from '@mantine/core';
 import { useForm } from '@mantine/form';
-import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
 import { useTranslation, Trans } from 'react-i18next';
-import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 import { LoaderScreen } from 'components';
 import { Paths } from 'constants/paths';
-import { setUser } from 'store/slices/userSlice';
+import { useAuth } from 'store';
 
 export const RegisterForm: FC<PaperProps> = (props) => {
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const dispatch = useDispatch();
+  const { register, isError, isFetching } = useAuth((state) => ({
+    isFetching: state.isFetching,
+    register: state.register,
+    isError: state.isError,
+  }));
   const { t } = useTranslation();
 
   const form = useForm({
@@ -43,40 +44,22 @@ export const RegisterForm: FC<PaperProps> = (props) => {
   });
 
   const handleSubmit = (): void => {
-    setIsLoading(true);
-    const auth = getAuth();
+    const { email, password } = form.values;
 
-    createUserWithEmailAndPassword(auth, form.values.email, form.values.password)
-      .then(async ({ user }) => {
-        dispatch(
-          setUser({
-            email: user.email,
-            id: user.uid,
-            token: await user.getIdToken(),
-          }),
-        );
-        setIsLoading(false);
-      })
-      .catch((error) => {
-        setIsLoading(false);
-        const errorCode = error.code;
-        const { email } = form.values;
+    register(email, password);
 
-        if (errorCode === 'auth/email-already-in-use') {
-          form.setErrors({
-            wrongEmail: (
-              <Trans i18nKey="form.already-email">
-                Email {{ email }} already registered
-              </Trans>
-            ),
-          });
-        }
+    if (isError) {
+      form.setErrors({
+        wrongEmail: (
+          <Trans i18nKey="form.already-email">Email {{ email }} already registered</Trans>
+        ),
       });
+    }
   };
 
   return (
     <Paper radius="md" p="xl" withBorder {...props} pos="relative">
-      {isLoading && <LoaderScreen />}
+      {isFetching && <LoaderScreen />}
       <Text size="lg" weight={500}>
         {t('form.welcome-reg')}
       </Text>
@@ -132,7 +115,7 @@ export const RegisterForm: FC<PaperProps> = (props) => {
           >
             {t('form.already')}
           </Anchor>
-          <Button type="submit" radius="xl" disabled={isLoading}>
+          <Button type="submit" radius="xl" disabled={isFetching}>
             {t('form.register')}
           </Button>
         </Group>

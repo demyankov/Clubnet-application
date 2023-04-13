@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC } from 'react';
 
 import {
   TextInput,
@@ -12,18 +12,19 @@ import {
   Stack,
 } from '@mantine/core';
 import { useForm } from '@mantine/form';
-import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 import { useTranslation } from 'react-i18next';
-import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 import { LoaderScreen } from 'components';
 import { Paths } from 'constants/paths';
-import { setUser } from 'store/slices/userSlice';
+import { useAuth } from 'store';
 
 export const LoginForm: FC<PaperProps> = (props) => {
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const dispatch = useDispatch();
+  const { login, isFetching, isError } = useAuth((state) => ({
+    login: state.login,
+    isFetching: state.isFetching,
+    isError: state.isError,
+  }));
   const { t } = useTranslation();
 
   const form = useForm({
@@ -41,29 +42,15 @@ export const LoginForm: FC<PaperProps> = (props) => {
 
   const handleSubmit = (): void => {
     form.clearErrors();
-    setIsLoading(true);
-    const auth = getAuth();
-
-    signInWithEmailAndPassword(auth, form.values.email, form.values.password)
-      .then(async ({ user }) => {
-        dispatch(
-          setUser({
-            email: user.email,
-            id: user.uid,
-            token: await user.getIdToken(),
-          }),
-        );
-        setIsLoading(false);
-      })
-      .catch(() => {
-        setIsLoading(false);
-        form.setErrors({ common: t('form.invalid-email-pass').toString() });
-      });
+    login(form.values.email, form.values.password);
+    if (isError) {
+      form.setErrors({ common: t('form.invalid-email-pass').toString() });
+    }
   };
 
   return (
     <Paper radius="md" p="xl" withBorder {...props} pos="relative">
-      {isLoading && <LoaderScreen />}
+      {isFetching && <LoaderScreen />}
       <Text size="lg" weight={500}>
         {t('form.welcome-login')}
       </Text>

@@ -17,7 +17,7 @@
 - **[Firebase](https://firebase.google.com/)**
 - **[i18next](https://www.i18next.com/)**
 - **[React Router](https://reactrouter.com/en/main)**
-- **[Redux Toolkit](https://redux-toolkit.js.org/)**
+- **[Zustand](https://zustand-demo.pmnd.rs//)**
 
 ### Implemented features
 - Register with  email and password

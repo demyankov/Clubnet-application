@@ -15,17 +15,14 @@ import {
   Avatar,
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import { getAuth, signOut } from 'firebase/auth';
 import { useTranslation } from 'react-i18next';
 import { DiReact } from 'react-icons/di';
 import { IoIosLogOut } from 'react-icons/io';
-import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 import { LanguageSwitcher, ThemeToggler } from 'components';
 import { Paths } from 'constants/paths';
-import { useAuth } from 'hooks/useAuth';
-import { setUser } from 'store/slices/userSlice';
+import { useAuth } from 'store';
 
 const useStyles = createStyles((theme) => ({
   link: {
@@ -75,29 +72,20 @@ export const HeaderMegaMenu: FC = () => {
   const [drawerOpened, { toggle: toggleDrawer, close: closeDrawer }] =
     useDisclosure(false);
   const { classes, theme } = useStyles();
-  const { isAuth, email } = useAuth();
-  const dispatch = useDispatch();
+  const { user, removeUser } = useAuth((state) => ({
+    user: state.user,
+    removeUser: state.removeUser,
+  }));
+
+  const { isAuth, email } = user;
+
   const { t } = useTranslation();
 
   const handleLogOut = (): void => {
     if (drawerOpened) {
       toggleDrawer();
     }
-    const auth = getAuth();
-
-    signOut(auth)
-      .then(() => {
-        dispatch(
-          setUser({
-            email: null,
-            token: null,
-            id: null,
-          }),
-        );
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    removeUser();
   };
 
   return (
