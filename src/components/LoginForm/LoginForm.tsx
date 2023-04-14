@@ -17,14 +17,10 @@ import { Link } from 'react-router-dom';
 
 import { LoaderScreen } from 'components';
 import { Paths } from 'constants/paths';
-import { useAuth } from 'store';
+import { useStore } from 'store';
 
 export const LoginForm: FC<PaperProps> = (props) => {
-  const { login, isFetching, isError } = useAuth((state) => ({
-    login: state.login,
-    isFetching: state.isFetching,
-    isError: state.isError,
-  }));
+  const { login, isLoginFetching, isLoginError } = useStore((state) => state);
   const { t } = useTranslation();
 
   const form = useForm({
@@ -43,14 +39,14 @@ export const LoginForm: FC<PaperProps> = (props) => {
   const handleSubmit = (): void => {
     form.clearErrors();
     login(form.values.email, form.values.password);
-    if (isError) {
+    if (isLoginError) {
       form.setErrors({ common: t('form.invalid-email-pass').toString() });
     }
   };
 
   return (
     <Paper radius="md" p="xl" withBorder {...props} pos="relative">
-      {isFetching && <LoaderScreen />}
+      {isLoginFetching && <LoaderScreen />}
       <Text size="lg" weight={500}>
         {t('form.welcome-login')}
       </Text>

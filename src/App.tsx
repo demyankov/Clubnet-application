@@ -14,7 +14,7 @@ import {
 } from 'components';
 import { Paths } from 'constants/paths';
 import { Home, Register, Login, Dashboard, Profile, NotFound } from 'pages';
-import { useAuth } from 'store';
+import { useStore } from 'store';
 
 const App: FC = () => {
   const [colorScheme, setColorScheme] = useLocalStorage<ColorScheme>({
@@ -22,10 +22,8 @@ const App: FC = () => {
     defaultValue: 'dark',
     getInitialValueInEffect: true,
   });
-  const { isFetching, getUser } = useAuth((state) => ({
-    isFetching: state.isFetching,
-    getUser: state.getUser,
-  }));
+
+  const { isFetching, getUser } = useStore((state) => state);
 
   const toggleColorScheme = (value?: ColorScheme): void =>
     setColorScheme(value || (colorScheme === 'dark' ? 'light' : 'dark'));

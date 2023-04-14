@@ -17,14 +17,10 @@ import { Link } from 'react-router-dom';
 
 import { LoaderScreen } from 'components';
 import { Paths } from 'constants/paths';
-import { useAuth } from 'store';
+import { useStore } from 'store';
 
 export const RegisterForm: FC<PaperProps> = (props) => {
-  const { register, isError, isFetching } = useAuth((state) => ({
-    isFetching: state.isFetching,
-    register: state.register,
-    isError: state.isError,
-  }));
+  const { register, isRegFetching, isRegError } = useStore((state) => state);
   const { t } = useTranslation();
 
   const form = useForm({
@@ -48,7 +44,7 @@ export const RegisterForm: FC<PaperProps> = (props) => {
 
     register(email, password);
 
-    if (isError) {
+    if (isRegError) {
       form.setErrors({
         wrongEmail: (
           <Trans i18nKey="form.already-email">Email {{ email }} already registered</Trans>
@@ -59,7 +55,7 @@ export const RegisterForm: FC<PaperProps> = (props) => {
 
   return (
     <Paper radius="md" p="xl" withBorder {...props} pos="relative">
-      {isFetching && <LoaderScreen />}
+      {isRegFetching && <LoaderScreen />}
       <Text size="lg" weight={500}>
         {t('form.welcome-reg')}
       </Text>
@@ -115,7 +111,7 @@ export const RegisterForm: FC<PaperProps> = (props) => {
           >
             {t('form.already')}
           </Anchor>
-          <Button type="submit" radius="xl" disabled={isFetching}>
+          <Button type="submit" radius="xl" disabled={isRegFetching}>
             {t('form.register')}
           </Button>
         </Group>

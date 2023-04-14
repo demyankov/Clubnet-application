@@ -13,15 +13,10 @@ import { useForm } from '@mantine/form';
 import { useTranslation } from 'react-i18next';
 
 import { LoaderScreen } from 'components';
-import { useAuth } from 'store';
+import { useStore } from 'store';
 
 export const ResetPasswordForm: FC<PaperProps> = (props) => {
-  const { update, isFetching, isError, isUpdated } = useAuth((state) => ({
-    isFetching: state.isFetching,
-    isError: state.isError,
-    isUpdated: state.isUpdated,
-    update: state.update,
-  }));
+  const { reset, isResetFetching, isResetError, isUpdated } = useStore((state) => state);
   const { t } = useTranslation();
 
   const form = useForm({
@@ -39,12 +34,13 @@ export const ResetPasswordForm: FC<PaperProps> = (props) => {
   });
 
   const handleSubmit = (): void => {
-    update(form.values.password);
+    reset(form.values.password);
+    form.reset();
   };
 
   return (
     <Paper radius="md" p="xl" withBorder {...props} pos="relative">
-      {isFetching && <LoaderScreen />}
+      {isResetFetching && <LoaderScreen />}
       <Text size="lg" weight={500}>
         {t('form.welcome-reset')}
       </Text>
@@ -75,11 +71,11 @@ export const ResetPasswordForm: FC<PaperProps> = (props) => {
             radius="md"
           />
           {isUpdated && <Text c="teal.4">{t('form.changed')}</Text>}
-          {isError && <Text c="#fa5252">{t('form.not-changed')}</Text>}
+          {isResetError && <Text c="#fa5252">{t('form.not-changed')}</Text>}
         </Stack>
 
         <Group position="center" mt="xl">
-          <Button type="submit" radius="xl" disabled={isFetching}>
+          <Button type="submit" radius="xl" disabled={isResetFetching}>
             {t('form.reset')}
           </Button>
         </Group>

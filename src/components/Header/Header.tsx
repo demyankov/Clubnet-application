@@ -22,7 +22,7 @@ import { Link } from 'react-router-dom';
 
 import { LanguageSwitcher, ThemeToggler } from 'components';
 import { Paths } from 'constants/paths';
-import { useAuth } from 'store';
+import { useStore } from 'store';
 
 const useStyles = createStyles((theme) => ({
   link: {
@@ -72,10 +72,7 @@ export const HeaderMegaMenu: FC = () => {
   const [drawerOpened, { toggle: toggleDrawer, close: closeDrawer }] =
     useDisclosure(false);
   const { classes, theme } = useStyles();
-  const { user, removeUser } = useAuth((state) => ({
-    user: state.user,
-    removeUser: state.removeUser,
-  }));
+  const { user, removeUser } = useStore((state) => state);
 
   const { isAuth, email } = user;
 

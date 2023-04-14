@@ -36,7 +36,7 @@ export const en = {
       'welcome-login': 'Welcome to App, login with',
       'welcome-reset': 'Reset your password',
       already: 'Already have an account? Login',
-      'no-acc': 'Don&apos;t have an account? Register',
+      'no-acc': "Don't have an account? Register",
       register: 'Register',
       login: 'Log in',
       reset: 'Reset',
