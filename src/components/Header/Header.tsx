@@ -22,6 +22,7 @@ import { Link } from 'react-router-dom';
 
 import { LanguageSwitcher, ThemeToggler } from 'components';
 import { Paths } from 'constants/paths';
+import { errorNotification } from 'helpers';
 import { useStore } from 'store';
 
 const useStyles = createStyles((theme) => ({
@@ -78,11 +79,18 @@ export const HeaderMegaMenu: FC = () => {
 
   const { t } = useTranslation();
 
-  const handleLogOut = (): void => {
+  const handleLogOut = async (): Promise<void> => {
     if (drawerOpened) {
       toggleDrawer();
     }
-    removeUser();
+    const isError = await removeUser();
+
+    if (isError) {
+      const title = t('form.error-title').toString();
+      const message = t('form.common-error').toString();
+
+      errorNotification(title, message);
+    }
   };
 
   return (

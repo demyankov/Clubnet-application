@@ -17,10 +17,11 @@ import { Link } from 'react-router-dom';
 
 import { LoaderScreen } from 'components';
 import { Paths } from 'constants/paths';
+import { errorNotification, successNotification } from 'helpers';
 import { useStore } from 'store';
 
 export const LoginForm: FC<PaperProps> = (props) => {
-  const { login, isLoginFetching, isLoginError } = useStore((state) => state);
+  const { login, isLoginFetching } = useStore((state) => state);
   const { t } = useTranslation();
 
   const form = useForm({
@@ -30,17 +31,26 @@ export const LoginForm: FC<PaperProps> = (props) => {
     },
 
     validate: {
-      email: (val) => (/^\S+@\S+$/.test(val) ? null : 'Invalid email'),
-      password: (val) =>
-        val.length < 6 ? 'Password should include at least 6 characters' : null,
+      email: (value) =>
+        /^\S+@\S+$/.test(value) ? null : t('form.invalid-email').toString(),
+      password: (value) => (value.length < 6 ? t('form.invalid-pass').toString() : null),
     },
   });
 
-  const handleSubmit = (): void => {
+  const handleSubmit = async (): Promise<void> => {
     form.clearErrors();
-    login(form.values.email, form.values.password);
+    const isLoginError = await login(form.values.email, form.values.password);
+
     if (isLoginError) {
-      form.setErrors({ common: t('form.invalid-email-pass').toString() });
+      const title = t('form.error-title').toString();
+      const message = t('form.login-error').toString();
+
+      errorNotification(title, message);
+    } else {
+      const title = t('form.success-title').toString();
+      const message = t('form.login-success').toString();
+
+      successNotification(title, message);
     }
   };
 
@@ -57,24 +67,17 @@ export const LoginForm: FC<PaperProps> = (props) => {
             required
             label={t('form.email').toString()}
             placeholder="john_doe@mail.org"
-            value={form.values.email}
-            onChange={(event) => form.setFieldValue('email', event.currentTarget.value)}
-            error={form.errors.email && t('form.invalid-email').toString()}
             radius="md"
+            {...form.getInputProps('email')}
           />
 
           <PasswordInput
             required
             label={t('form.pass').toString()}
             placeholder={t('form.your-pass').toString()}
-            value={form.values.password}
-            onChange={(event) =>
-              form.setFieldValue('password', event.currentTarget.value)
-            }
-            error={form.errors.password && t('form.invalid-pass').toString()}
             radius="md"
+            {...form.getInputProps('password')}
           />
-          {form.errors && <Text c="#fa5252">{form.errors.common}</Text>}
         </Stack>
 
         <Group position="apart" mt="xl">

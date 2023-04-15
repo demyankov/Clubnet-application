@@ -2,6 +2,8 @@ import { FC, useEffect } from 'react';
 
 import { MantineProvider, ColorSchemeProvider, ColorScheme } from '@mantine/core';
 import { useLocalStorage } from '@mantine/hooks';
+import { Notifications } from '@mantine/notifications';
+import { useTranslation } from 'react-i18next';
 import { Routes, Route } from 'react-router-dom';
 
 import { mockData } from 'assets/mockData';
@@ -13,6 +15,7 @@ import {
   PublicRoute,
 } from 'components';
 import { Paths } from 'constants/paths';
+import { errorNotification } from 'helpers';
 import { Home, Register, Login, Dashboard, Profile, NotFound } from 'pages';
 import { useStore } from 'store';
 
@@ -22,6 +25,7 @@ const App: FC = () => {
     defaultValue: 'dark',
     getInitialValueInEffect: true,
   });
+  const { t } = useTranslation();
 
   const { isFetching, getUser } = useStore((state) => state);
 
@@ -29,14 +33,26 @@ const App: FC = () => {
     setColorScheme(value || (colorScheme === 'dark' ? 'light' : 'dark'));
 
   useEffect(() => {
-    getUser();
-  }, [getUser]);
+    const getIsError = async (): Promise<void> => {
+      const isError = await getUser();
+
+      if (isError) {
+        const title = t('form.error-title').toString();
+        const message = t('form.common-error').toString();
+
+        errorNotification(title, message);
+      }
+    };
+
+    getIsError();
+  }, [getUser, t]);
 
   if (isFetching) return <LoaderScreen />;
 
   return (
     <ColorSchemeProvider colorScheme={colorScheme} toggleColorScheme={toggleColorScheme}>
       <MantineProvider theme={{ colorScheme }} withGlobalStyles withNormalizeCSS>
+        <Notifications position="top-right" />
         <HeaderMegaMenu />
         <Routes>
           <Route index element={<Home />} />

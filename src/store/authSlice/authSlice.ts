@@ -10,10 +10,9 @@ type UserType = {
 
 export type AuthSlice = {
   isFetching: boolean;
-  isError: boolean;
   user: UserType;
-  getUser: () => void;
-  removeUser: () => void;
+  getUser: () => Promise<boolean>;
+  removeUser: () => Promise<boolean>;
 };
 
 const userInitialState: UserType = {
@@ -25,13 +24,12 @@ const userInitialState: UserType = {
 
 export const authSlice: StateCreator<AuthSlice, [], [], AuthSlice> = (set) => ({
   isFetching: false,
-  isError: false,
   user: userInitialState,
 
   getUser: async () => {
     set({ isFetching: true });
-    set({ isError: false });
     const auth = getAuth();
+    let isError = false;
 
     try {
       onAuthStateChanged(auth, async (userData) => {
@@ -50,8 +48,12 @@ export const authSlice: StateCreator<AuthSlice, [], [], AuthSlice> = (set) => ({
           });
         }
       });
+
+      return isError;
     } catch (error) {
-      set({ isError: true });
+      isError = true;
+
+      return isError;
     } finally {
       set({ isFetching: false });
     }
@@ -59,14 +61,18 @@ export const authSlice: StateCreator<AuthSlice, [], [], AuthSlice> = (set) => ({
 
   removeUser: async () => {
     set({ isFetching: true });
-    set({ isError: false });
     const auth = getAuth();
+    let isError = false;
 
     try {
       await signOut(auth);
       set({ user: userInitialState });
+
+      return isError;
     } catch (error) {
-      set({ isError: true });
+      isError = true;
+
+      return isError;
     } finally {
       set({ isFetching: false });
     }

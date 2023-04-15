@@ -5,19 +5,17 @@ import { AuthSlice } from 'store/authSlice/authSlice';
 
 export type LoginSlice = {
   isLoginFetching: boolean;
-  isLoginError: boolean;
-  login: (email: string, password: string) => void;
+  login: (email: string, password: string) => Promise<boolean>;
 };
 
 export const loginSlice: StateCreator<LoginSlice & AuthSlice, [], [], LoginSlice> = (
   set,
 ) => ({
   isLoginFetching: false,
-  isLoginError: false,
 
   login: async (email, password) => {
     set({ isLoginFetching: true });
-    set({ isLoginError: false });
+    let isError = false;
     const auth = getAuth();
 
     try {
@@ -31,8 +29,12 @@ export const loginSlice: StateCreator<LoginSlice & AuthSlice, [], [], LoginSlice
           id: userData.user.uid,
         },
       });
+
+      return isError;
     } catch (error) {
-      set({ isLoginError: true });
+      isError = true;
+
+      return isError;
     } finally {
       set({ isLoginFetching: false });
     }

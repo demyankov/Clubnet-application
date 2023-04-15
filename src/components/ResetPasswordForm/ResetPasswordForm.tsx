@@ -13,10 +13,11 @@ import { useForm } from '@mantine/form';
 import { useTranslation } from 'react-i18next';
 
 import { LoaderScreen } from 'components';
+import { errorNotification, successNotification } from 'helpers';
 import { useStore } from 'store';
 
 export const ResetPasswordForm: FC<PaperProps> = (props) => {
-  const { reset, isResetFetching, isResetError, isUpdated } = useStore((state) => state);
+  const { reset, isResetFetching } = useStore((state) => state);
   const { t } = useTranslation();
 
   const form = useForm({
@@ -26,15 +27,27 @@ export const ResetPasswordForm: FC<PaperProps> = (props) => {
     },
 
     validate: {
-      password: (val) =>
-        val.length < 6 ? 'Password should include at least 6 characters' : null,
-      confirmPassword: (val, values) =>
-        val === values.password ? null : "Passwords don't match",
+      password: (value) => (value.length < 6 ? t('form.invalid-pass').toString() : null),
+      confirmPassword: (value, values) =>
+        value === values.password ? null : t('form.invalid-confirm').toString(),
     },
   });
 
-  const handleSubmit = (): void => {
-    reset(form.values.password);
+  const handleSubmit = async (): Promise<void> => {
+    const isError = await reset(form.values.password);
+
+    if (isError) {
+      const title = t('form.error-title').toString();
+      const message = t('form.not-changed').toString();
+
+      errorNotification(title, message);
+    } else {
+      const title = t('form.success-title').toString();
+      const message = t('form.changed').toString();
+
+      successNotification(title, message);
+    }
+
     form.reset();
   };
 
@@ -51,27 +64,17 @@ export const ResetPasswordForm: FC<PaperProps> = (props) => {
             required
             label={t('form.pass').toString()}
             placeholder={t('form.your-pass').toString()}
-            value={form.values.password}
-            onChange={(event) =>
-              form.setFieldValue('password', event.currentTarget.value)
-            }
-            error={form.errors.password && t('form.invalid-pass').toString()}
             radius="md"
+            {...form.getInputProps('password')}
           />
 
           <PasswordInput
             required
             label={t('form.confirm').toString()}
             placeholder={t('form.confirm').toString()}
-            value={form.values.confirmPassword}
-            onChange={(event) =>
-              form.setFieldValue('confirmPassword', event.currentTarget.value)
-            }
-            error={form.errors.confirmPassword && t('form.invalid-confirm').toString()}
             radius="md"
+            {...form.getInputProps('confirmPassword')}
           />
-          {isUpdated && <Text c="teal.4">{t('form.changed')}</Text>}
-          {isResetError && <Text c="#fa5252">{t('form.not-changed')}</Text>}
         </Stack>
 
         <Group position="center" mt="xl">

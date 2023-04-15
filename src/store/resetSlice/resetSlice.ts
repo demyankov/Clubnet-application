@@ -3,26 +3,26 @@ import { StateCreator } from 'zustand';
 
 export type ResetSlice = {
   isResetFetching: boolean;
-  isResetError: boolean;
-  isUpdated: boolean;
-  reset: (password: string) => void;
+  reset: (password: string) => Promise<boolean>;
 };
 
 export const resetSlice: StateCreator<ResetSlice, [], [], ResetSlice> = (set) => ({
   isResetFetching: false,
-  isResetError: false,
-  isUpdated: false,
 
   reset: async (password) => {
+    let isError = false;
+
     set({ isResetFetching: true });
-    set({ isResetError: false });
     const { currentUser } = getAuth();
 
     try {
       await updatePassword(currentUser as User, password);
-      set({ isUpdated: true });
+
+      return isError;
     } catch (error) {
-      set({ isResetError: true });
+      isError = true;
+
+      return isError;
     } finally {
       set({ isResetFetching: false });
     }

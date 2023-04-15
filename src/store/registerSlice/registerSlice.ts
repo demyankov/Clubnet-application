@@ -5,9 +5,7 @@ import { AuthSlice } from 'store/authSlice/authSlice';
 
 export type RegisterSlice = {
   isRegFetching: boolean;
-  isRegError: boolean;
-
-  register: (email: string, password: string) => void;
+  register: (email: string, password: string) => Promise<boolean>;
 };
 
 export const registerSlice: StateCreator<
@@ -17,11 +15,10 @@ export const registerSlice: StateCreator<
   RegisterSlice
 > = (set) => ({
   isRegFetching: false,
-  isRegError: false,
 
   register: async (email, password) => {
     set({ isRegFetching: true });
-    set({ isRegError: false });
+    let isError = false;
     const auth = getAuth();
 
     try {
@@ -35,8 +32,12 @@ export const registerSlice: StateCreator<
           id: userData.user.uid,
         },
       });
+
+      return isError;
     } catch (error) {
-      set({ isRegError: true });
+      isError = true;
+
+      return isError;
     } finally {
       set({ isRegFetching: false });
     }
