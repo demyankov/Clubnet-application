@@ -2,7 +2,6 @@ import { FC } from 'react';
 
 import {
   createStyles,
-  Image,
   Container,
   Title,
   Text,
@@ -13,7 +12,7 @@ import {
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 
-import image from 'assets/404.svg';
+import { ReactComponent as NotFoundImg } from 'assets/404.svg';
 import { Paths } from 'constants/paths';
 
 const useStyles = createStyles((theme) => ({
@@ -63,7 +62,7 @@ export const NotFound: FC = () => {
         cols={2}
         breakpoints={[{ maxWidth: 'sm', cols: 1, spacing: 40 }]}
       >
-        <Image src={image} className={classes.mobileImage} />
+        <NotFoundImg className={classes.mobileImage} />
         <div>
           <Title className={classes.title}>{t('404.title')}</Title>
           <Text color="dimmed" size="lg">
@@ -80,7 +79,7 @@ export const NotFound: FC = () => {
             {t('404.back')}
           </Button>
         </div>
-        <Image src={image} className={classes.desktopImage} />
+        <NotFoundImg className={classes.desktopImage} />
       </SimpleGrid>
     </Container>
   );

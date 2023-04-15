@@ -1,21 +1,26 @@
-import { FC, useState } from 'react';
+import { FC, useState, FunctionComponent, SVGProps } from 'react';
 
-import { createStyles, UnstyledButton, Menu, Image, Group, rem } from '@mantine/core';
+import { createStyles, UnstyledButton, Menu, Group, rem } from '@mantine/core';
 import { IconChevronDown } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
 
-import ru from 'assets/russia.png';
-import en from 'assets/united-kingdom.png';
+import { ReactComponent as EnIcon } from 'assets/en.svg';
+import { ReactComponent as RuIcon } from 'assets/ru.svg';
 
 type LangType = {
   label: string;
-  image: string;
-  lng: string;
+  image: FunctionComponent<SVGProps<SVGSVGElement> & { title?: string | undefined }>;
+  value: string;
 };
 
+enum Language {
+  En = 'en',
+  Ru = 'ru',
+}
+
 const data: LangType[] = [
-  { label: 'EN', image: en, lng: 'en' },
-  { label: 'РУ', image: ru, lng: 'ru' },
+  { label: 'EN', image: EnIcon, value: Language.En },
+  { label: 'РУ', image: RuIcon, value: Language.Ru },
 ];
 
 const useStyles = createStyles((theme, { opened }: { opened: boolean }) => ({
@@ -65,17 +70,17 @@ export const LanguageSwitcher: FC = () => {
 
     if (!candidate) return data[0];
 
-    const index = data.map((lang) => lang.lng).indexOf(candidate);
+    const index = data.map((lang) => lang.value).indexOf(candidate);
 
     return data[index];
   }
 
   const items = data.map((item) => (
     <Menu.Item
-      icon={<Image src={item.image} width={15} height={15} />}
+      icon={<item.image />}
       onClick={() => {
         setSelected(item);
-        i18n.changeLanguage(item.lng);
+        i18n.changeLanguage(item.value);
       }}
       key={item.label}
     >
@@ -94,7 +99,7 @@ export const LanguageSwitcher: FC = () => {
       <Menu.Target>
         <UnstyledButton className={classes.control}>
           <Group spacing="xs">
-            <Image src={selected.image} width={15} height={15} />
+            <selected.image />
             <span className={classes.label}>{selected.label}</span>
           </Group>
           <IconChevronDown size="1rem" className={classes.icon} stroke={1.5} />
