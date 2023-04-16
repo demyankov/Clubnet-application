@@ -7,6 +7,5 @@ export const errorNotification = (title: string, message: ReactNode): void => {
     title,
     message,
     color: 'red',
-    autoClose: 5000,
   });
 };

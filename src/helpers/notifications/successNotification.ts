@@ -7,6 +7,5 @@ export const successNotification = (title: string, message: ReactNode): void => 
     title,
     message,
     color: 'teal',
-    autoClose: 5000,
   });
 };
