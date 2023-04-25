@@ -7,18 +7,18 @@ import { useTranslation } from 'react-i18next';
 import { ReactComponent as EnIcon } from 'assets/en.svg';
 import { ReactComponent as RuIcon } from 'assets/ru.svg';
 
-type LangType = {
+interface ILanguage {
   label: string;
   image: FunctionComponent<SVGProps<SVGSVGElement> & { title?: string | undefined }>;
   value: string;
-};
+}
 
 enum Language {
   En = 'en',
   Ru = 'ru',
 }
 
-const data: LangType[] = [
+const data: ILanguage[] = [
   { label: 'EN', image: EnIcon, value: Language.En },
   { label: 'РУ', image: RuIcon, value: Language.Ru },
 ];
@@ -65,7 +65,7 @@ export const LanguageSwitcher: FC = () => {
   const [selected, setSelected] = useState(setLang());
   const { i18n } = useTranslation();
 
-  function setLang(): LangType {
+  function setLang(): ILanguage {
     const candidate = localStorage.getItem('i18nextLng');
 
     if (!candidate) return data[0];

@@ -1,11 +1,13 @@
 import { FC } from 'react';
 
-import { ResetPasswordForm, FormComponent } from 'components';
+import { Text } from '@mantine/core';
 
-export const Profile: FC = () => {
+const Profile: FC = () => {
   return (
-    <FormComponent>
-      <ResetPasswordForm />
-    </FormComponent>
+    <Text ta="center">
+      Скоро здесь будет страница аккаунта авторизованного пользователя
+    </Text>
   );
 };
+
+export default Profile;

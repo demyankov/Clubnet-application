@@ -1,86 +1,65 @@
-import { FC, useEffect } from 'react';
+import { FC, useEffect, Suspense, lazy } from 'react';
 
 import { Notifications } from '@mantine/notifications';
-import { useTranslation } from 'react-i18next';
-import { Routes, Route } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 
-import { mockData } from 'assets/mockData';
-import {
-  HeaderMegaMenu,
-  FooterSocial,
-  LoaderScreen,
-  PrivateRoute,
-  PublicRoute,
-} from 'components';
+import { HeaderMegaMenu, FooterSocial, RenderContentContainer } from 'components';
+import { LoaderScreen, ProtectedRoute } from 'components/shared';
 import { Paths } from 'constants/paths';
-import { errorNotification } from 'helpers';
-import { Home, Register, Login, Dashboard, Profile, NotFound } from 'pages';
-import { useStore } from 'store';
+import { useAuth } from 'store/store';
+
+const Home = lazy(() => import('pages/Home/Home'));
+const SignIn = lazy(() => import('pages/SignIn/SignIn'));
+const Dashboard = lazy(() => import('pages/Dashboard/Dashboard'));
+const Profile = lazy(() => import('pages/Profile/Profile'));
+const NotFound = lazy(() => import('pages/NotFound/NotFound'));
 
 const App: FC = () => {
-  const { t } = useTranslation();
-
-  const { isFetching, getUser } = useStore((state) => state);
+  const { getUser, isFetching } = useAuth((state) => state);
 
   useEffect(() => {
-    const getIsError = async (): Promise<void> => {
-      const isError = await getUser();
-
-      if (isError) {
-        const title = t('form.error-title').toString();
-        const message = t('form.common-error').toString();
-
-        errorNotification(title, message);
-      }
-    };
-
-    getIsError();
-  }, [getUser, t]);
-
-  if (isFetching) return <LoaderScreen />;
+    getUser();
+  }, [getUser]);
 
   return (
-    <>
+    <RenderContentContainer isFetching={isFetching}>
       <Notifications autoClose={5000} position="top-right" />
+
       <HeaderMegaMenu />
-      <Routes>
-        <Route index element={<Home />} />
-        <Route
-          path={Paths.register}
-          element={
-            <PublicRoute>
-              <Register />
-            </PublicRoute>
-          }
-        />
-        <Route
-          path={Paths.login}
-          element={
-            <PublicRoute>
-              <Login />
-            </PublicRoute>
-          }
-        />
-        <Route
-          path={Paths.dashboard}
-          element={
-            <PrivateRoute>
-              <Dashboard data={mockData.data} />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path={Paths.profile}
-          element={
-            <PrivateRoute>
-              <Profile />
-            </PrivateRoute>
-          }
-        />
-        <Route path={Paths.notFound} element={<NotFound />} />
-      </Routes>
+
+      <Suspense fallback={<LoaderScreen />}>
+        <Routes>
+          <Route path={Paths.home} element={<Home />} />
+          <Route
+            path={Paths.signin}
+            element={
+              <ProtectedRoute>
+                <SignIn />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path={Paths.dashboard}
+            element={
+              <ProtectedRoute isPrivate>
+                <Dashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path={Paths.profile}
+            element={
+              <ProtectedRoute isPrivate>
+                <Profile />
+              </ProtectedRoute>
+            }
+          />
+          <Route path={Paths.notFound} element={<NotFound />} />
+        </Routes>
+      </Suspense>
+
       <FooterSocial />
-    </>
+    </RenderContentContainer>
   );
 };
 

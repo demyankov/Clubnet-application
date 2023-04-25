@@ -11,7 +11,6 @@ import {
   Drawer,
   ScrollArea,
   rem,
-  Text,
   Avatar,
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
@@ -22,8 +21,7 @@ import { Link } from 'react-router-dom';
 
 import { LanguageSwitcher, ThemeToggler } from 'components';
 import { Paths } from 'constants/paths';
-import { errorNotification } from 'helpers';
-import { useStore } from 'store';
+import { useAuth } from 'store/store';
 
 const useStyles = createStyles((theme) => ({
   link: {
@@ -70,27 +68,15 @@ const useStyles = createStyles((theme) => ({
 }));
 
 export const HeaderMegaMenu: FC = () => {
-  const [drawerOpened, { toggle: toggleDrawer, close: closeDrawer }] =
+  const [drawerOpened, { toggle: toggleDrawer, close: handleCloseDrawer }] =
     useDisclosure(false);
   const { classes, theme } = useStyles();
-  const { user, removeUser } = useStore((state) => state);
-
-  const { isAuth, email } = user;
+  const { isAuth, signOut } = useAuth((state) => state);
 
   const { t } = useTranslation();
 
-  const handleLogOut = async (): Promise<void> => {
-    if (drawerOpened) {
-      toggleDrawer();
-    }
-    const isError = await removeUser();
-
-    if (isError) {
-      const title = t('form.error-title').toString();
-      const message = t('form.common-error').toString();
-
-      errorNotification(title, message);
-    }
+  const handleSignOut = (): void => {
+    signOut.signOut();
   };
 
   return (
@@ -114,14 +100,9 @@ export const HeaderMegaMenu: FC = () => {
             <LanguageSwitcher />
             <ThemeToggler />
             {!isAuth && (
-              <>
-                <Button component={Link} to={Paths.login} variant="default">
-                  {t('header.login')}
-                </Button>
-                <Button component={Link} to={Paths.register}>
-                  {t('header.signup')}
-                </Button>
-              </>
+              <Button component={Link} to={Paths.signin}>
+                {t('header.signin')}
+              </Button>
             )}
             {isAuth && (
               <>
@@ -131,8 +112,7 @@ export const HeaderMegaMenu: FC = () => {
                   src={null}
                   alt="no image here"
                 />
-                <Text fz="xl">{email}</Text>
-                <Button onClick={handleLogOut}>
+                <Button onClick={handleSignOut}>
                   <IoIosLogOut />
                 </Button>
               </>
@@ -149,26 +129,29 @@ export const HeaderMegaMenu: FC = () => {
 
       <Drawer
         opened={drawerOpened}
-        onClose={closeDrawer}
+        onClose={handleCloseDrawer}
         size="100%"
         padding="md"
-        title={email}
         className={classes.hiddenDesktop}
         zIndex={1000000}
       >
         <ScrollArea h={`calc(100vh - ${rem(60)})`} mx="-md">
           <Divider my="sm" color={theme.colorScheme === 'dark' ? 'dark.5' : 'gray.1'} />
 
-          <Link onClick={closeDrawer} to={Paths.home} className={classes.link}>
+          <Link onClick={handleCloseDrawer} to={Paths.home} className={classes.link}>
             {t('header.home')}
           </Link>
           {isAuth && (
-            <Link onClick={closeDrawer} to={Paths.profile} className={classes.link}>
+            <Link onClick={handleCloseDrawer} to={Paths.profile} className={classes.link}>
               {t('header.profile')}
             </Link>
           )}
           {isAuth && (
-            <Link onClick={closeDrawer} to={Paths.dashboard} className={classes.link}>
+            <Link
+              onClick={handleCloseDrawer}
+              to={Paths.dashboard}
+              className={classes.link}
+            >
               {t('header.dashboard')}
             </Link>
           )}
@@ -177,21 +160,11 @@ export const HeaderMegaMenu: FC = () => {
 
           <Group position="center" grow pb="xl" px="md">
             {!isAuth && (
-              <>
-                <Button
-                  onClick={closeDrawer}
-                  component={Link}
-                  to={Paths.login}
-                  variant="default"
-                >
-                  {t('header.login')}
-                </Button>
-                <Button onClick={closeDrawer} component={Link} to={Paths.register}>
-                  {t('header.signup')}
-                </Button>
-              </>
+              <Button onClick={handleCloseDrawer} component={Link} to={Paths.signin}>
+                {t('header.signin')}
+              </Button>
             )}
-            {isAuth && <Button onClick={handleLogOut}>{t('header.logout')}</Button>}
+            {isAuth && <Button onClick={handleSignOut}>{t('header.logout')}</Button>}
           </Group>
         </ScrollArea>
       </Drawer>

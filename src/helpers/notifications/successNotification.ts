@@ -1,11 +1,11 @@
-import { ReactNode } from 'react';
-
 import { notifications } from '@mantine/notifications';
 
-export const successNotification = (title: string, message: ReactNode): void => {
+import { TF } from './types';
+
+export const successNotification = (t: TF, message: string): void => {
   notifications.show({
-    title,
-    message,
+    title: t('notifications.success-header'),
+    message: t(message),
     color: 'teal',
   });
 };

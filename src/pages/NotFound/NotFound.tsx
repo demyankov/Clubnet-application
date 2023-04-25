@@ -51,7 +51,7 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-export const NotFound: FC = () => {
+const NotFound: FC = () => {
   const { classes } = useStyles();
   const { t } = useTranslation();
 
@@ -84,3 +84,5 @@ export const NotFound: FC = () => {
     </Container>
   );
 };
+
+export default NotFound;

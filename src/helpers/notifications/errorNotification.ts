@@ -1,11 +1,11 @@
-import { ReactNode } from 'react';
-
 import { notifications } from '@mantine/notifications';
 
-export const errorNotification = (title: string, message: ReactNode): void => {
+import { TF } from './types';
+
+export const errorNotification = (t: TF, message: string): void => {
   notifications.show({
-    title,
-    message,
+    title: t('notifications.error-header'),
+    message: t(message),
     color: 'red',
   });
 };

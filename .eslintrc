@@ -30,13 +30,16 @@
   "overrides": [
     {
       "files": [
-        ".ts",
-        ".jsx",
-        ".tsx",
+        "*.ts",
+        "*.jsx",
+        "*.tsx",
         "**/*.test.ts",
         "**/*.test.tsx",
         "**/*.spec.tsx"
-      ]
+      ],
+      "rules": {
+        "no-undef": "off"
+      }
     }
   ],
   "rules": {
