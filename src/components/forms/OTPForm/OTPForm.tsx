@@ -5,7 +5,6 @@ import { useForm } from '@mantine/form';
 import { useTranslation } from 'react-i18next';
 
 import { SignInSteps } from 'components';
-import { errorNotification, successNotification } from 'helpers';
 import { useAuth } from 'store/store';
 
 type PropsType = {
@@ -14,7 +13,7 @@ type PropsType = {
 
 export const OTPForm: FC<PropsType> = ({ setCurrentStep }: PropsType) => {
   const {
-    signIn: { isFetching, error, signIn },
+    signIn: { isFetching, signIn },
   } = useAuth((state) => state);
   const { t } = useTranslation();
 
@@ -29,18 +28,7 @@ export const OTPForm: FC<PropsType> = ({ setCurrentStep }: PropsType) => {
   };
 
   const onSubmitOTP = async (): Promise<void> => {
-    await signIn(OPTForm.values.OTP);
-    if (error) {
-      const message = 'notifications.verification-error';
-
-      errorNotification(t, message);
-
-      return;
-    }
-
-    const message = 'notifications.signin-success';
-
-    successNotification(t, message);
+    await signIn(OPTForm.values.OTP, t);
   };
 
   return (

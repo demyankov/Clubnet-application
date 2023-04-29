@@ -5,7 +5,6 @@ import { useForm } from '@mantine/form';
 import { useTranslation } from 'react-i18next';
 
 import { SignInSteps } from 'components';
-import { errorNotification } from 'helpers';
 import { useAuth } from 'store/store';
 
 type PropsType = {
@@ -14,7 +13,7 @@ type PropsType = {
 
 export const PhoneForm: FC<PropsType> = ({ setCurrentStep }: PropsType) => {
   const {
-    getOTP: { isFetching, error, sendOTP },
+    getOTP: { isFetching, sendOTP, error },
   } = useAuth((state) => state);
   const { t } = useTranslation();
 
@@ -30,15 +29,10 @@ export const PhoneForm: FC<PropsType> = ({ setCurrentStep }: PropsType) => {
   });
 
   const onSubmitPhone = async (): Promise<void> => {
-    await sendOTP(phoneForm.values.phone);
-    if (error) {
-      const message = 'notifications.phone-error';
-
-      errorNotification(t, message);
-
-      return;
+    await sendOTP(phoneForm.values.phone, t);
+    if (!error) {
+      setCurrentStep(SignInSteps.ConfirmCode);
     }
-    setCurrentStep(SignInSteps.ConfirmCode);
   };
 
   return (

@@ -1,18 +1,18 @@
 import { FC } from 'react';
 
 import {
-  createStyles,
-  Container,
-  Title,
   Button,
+  Container,
+  createStyles,
   Group,
-  Text,
   List,
-  ThemeIcon,
   rem,
+  Text,
+  ThemeIcon,
+  Title,
 } from '@mantine/core';
 import { IconCheck } from '@tabler/icons-react';
-import { useTranslation, Trans } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 
 import { ReactComponent as HomeImg } from 'assets/home.svg';
 

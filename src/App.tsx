@@ -1,11 +1,13 @@
-import { FC, useEffect, Suspense, lazy } from 'react';
+import { FC, lazy, Suspense, useEffect } from 'react';
 
 import { Notifications } from '@mantine/notifications';
+import { useTranslation } from 'react-i18next';
 import { Route, Routes } from 'react-router-dom';
 
-import { HeaderMegaMenu, FooterSocial, RenderContentContainer } from 'components';
+import { FooterSocial, HeaderMegaMenu, RenderContentContainer } from 'components';
 import { LoaderScreen, ProtectedRoute } from 'components/shared';
 import { Paths } from 'constants/paths';
+import { Roles } from 'constants/userRoles';
 import { useAuth } from 'store/store';
 
 const Home = lazy(() => import('pages/Home/Home'));
@@ -16,10 +18,11 @@ const NotFound = lazy(() => import('pages/NotFound/NotFound'));
 
 const App: FC = () => {
   const { getUser, isFetching } = useAuth((state) => state);
+  const { t } = useTranslation();
 
   useEffect(() => {
-    getUser();
-  }, [getUser]);
+    getUser(t);
+  }, [getUser, t]);
 
   return (
     <RenderContentContainer isFetching={isFetching}>
@@ -33,7 +36,7 @@ const App: FC = () => {
           <Route
             path={Paths.signin}
             element={
-              <ProtectedRoute>
+              <ProtectedRoute roles={[Roles.USER, Roles.ADMIN]}>
                 <SignIn />
               </ProtectedRoute>
             }
@@ -41,7 +44,7 @@ const App: FC = () => {
           <Route
             path={Paths.dashboard}
             element={
-              <ProtectedRoute isPrivate>
+              <ProtectedRoute isPrivate roles={[Roles.ADMIN]}>
                 <Dashboard />
               </ProtectedRoute>
             }
@@ -49,7 +52,7 @@ const App: FC = () => {
           <Route
             path={Paths.profile}
             element={
-              <ProtectedRoute isPrivate>
+              <ProtectedRoute isPrivate roles={[Roles.USER, Roles.ADMIN]}>
                 <Profile />
               </ProtectedRoute>
             }
