@@ -15,15 +15,11 @@ export const ProtectedRoute: FC<{
 
   const userHasRequiredRole = user?.role !== undefined && roles.includes(user.role);
 
-  if (isPrivate) {
-    if (isAuth && userHasRequiredRole) {
-      return children as ReactElement;
-    }
-
+  if (isPrivate && (!isAuth || !userHasRequiredRole)) {
     return <Navigate to={Paths.home} replace />;
   }
 
-  if (isAuth) {
+  if (!isPrivate && isAuth) {
     return <Navigate to={Paths.home} replace />;
   }
 
