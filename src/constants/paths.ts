@@ -1,9 +1,7 @@
 export enum Paths {
   home = '/',
-  register = '/register',
-  login = '/login',
   signin = '/signin',
-  dashboard = '/dashboard',
+  tournaments = '/tournaments',
   profile = '/profile',
   notFound = '*',
 }

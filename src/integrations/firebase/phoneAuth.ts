@@ -3,7 +3,6 @@ import {
   RecaptchaVerifier,
   User,
   signInWithPhoneNumber,
-  signOut,
 } from 'firebase/auth';
 
 import { auth } from './firebase';
@@ -35,8 +34,4 @@ export const appSignIn = async (code: string): Promise<User> => {
   const { user } = await extendedWindow.confirmationResult.confirm(code);
 
   return user;
-};
-
-export const appSignOut = async (): Promise<void> => {
-  await signOut(auth);
 };

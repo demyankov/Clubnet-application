@@ -19,8 +19,9 @@ import { DiReact } from 'react-icons/di';
 import { IoIosLogOut } from 'react-icons/io';
 import { Link } from 'react-router-dom';
 
-import { LanguageSwitcher, ThemeToggler } from 'components';
+import { HeaderLanguageSwitcher, HeaderThemeToggler } from 'components';
 import { Paths } from 'constants/paths';
+import { useUserRole } from 'hooks';
 import { useAuth } from 'store/store';
 
 const useStyles = createStyles((theme) => ({
@@ -73,6 +74,8 @@ export const HeaderMegaMenu: FC = () => {
   const { classes, theme } = useStyles();
   const { isAuth, signOut } = useAuth((state) => state);
 
+  const { isAdmin } = useUserRole();
+
   const { t } = useTranslation();
 
   const handleSignOut = (): void => {
@@ -89,16 +92,18 @@ export const HeaderMegaMenu: FC = () => {
             <Link to={Paths.home} className={classes.link}>
               {t('header.home')}
             </Link>
-            {isAuth && (
-              <Link to={Paths.dashboard} className={classes.link}>
-                {t('header.dashboard')}
+            {isAuth && isAdmin && (
+              <Link to={Paths.tournaments} className={classes.link}>
+                {t('header.tournaments')}
               </Link>
             )}
           </Group>
 
           <Group className={classes.hiddenMobile}>
-            <LanguageSwitcher />
-            <ThemeToggler />
+            <HeaderLanguageSwitcher />
+
+            <HeaderThemeToggler />
+
             {!isAuth && (
               <Button component={Link} to={Paths.signin}>
                 {t('header.signin')}
@@ -112,6 +117,7 @@ export const HeaderMegaMenu: FC = () => {
                   src={null}
                   alt="no image here"
                 />
+
                 <Button onClick={handleSignOut}>
                   <IoIosLogOut />
                 </Button>
@@ -120,8 +126,10 @@ export const HeaderMegaMenu: FC = () => {
           </Group>
 
           <Group className={classes.hiddenDesktop}>
-            <LanguageSwitcher />
-            <ThemeToggler />
+            <HeaderLanguageSwitcher />
+
+            <HeaderThemeToggler />
+
             <Burger opened={drawerOpened} onClick={toggleDrawer} />
           </Group>
         </Group>
@@ -141,18 +149,20 @@ export const HeaderMegaMenu: FC = () => {
           <Link onClick={handleCloseDrawer} to={Paths.home} className={classes.link}>
             {t('header.home')}
           </Link>
+
           {isAuth && (
             <Link onClick={handleCloseDrawer} to={Paths.profile} className={classes.link}>
               {t('header.profile')}
             </Link>
           )}
-          {isAuth && (
+
+          {isAuth && isAdmin && (
             <Link
               onClick={handleCloseDrawer}
-              to={Paths.dashboard}
+              to={Paths.tournaments}
               className={classes.link}
             >
-              {t('header.dashboard')}
+              {t('header.tournaments')}
             </Link>
           )}
 
@@ -164,6 +174,7 @@ export const HeaderMegaMenu: FC = () => {
                 {t('header.signin')}
               </Button>
             )}
+
             {isAuth && <Button onClick={handleSignOut}>{t('header.logout')}</Button>}
           </Group>
         </ScrollArea>

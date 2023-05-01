@@ -9,6 +9,7 @@ import {
 
 import { ColorScheme, ColorSchemeProvider, MantineProvider } from '@mantine/core';
 import { useLocalStorage } from '@mantine/hooks';
+import { ModalsProvider } from '@mantine/modals';
 
 import { Theme } from 'constants/theme';
 
@@ -55,7 +56,7 @@ export const ThemeContextProvider: FC<PropsWithChildren> = ({ children }) => {
         toggleColorScheme={toggleColorScheme}
       >
         <MantineProvider withGlobalStyles withNormalizeCSS theme={{ colorScheme }}>
-          {children}
+          <ModalsProvider>{children}</ModalsProvider>
         </MantineProvider>
       </ColorSchemeProvider>
     </ThemeContext.Provider>

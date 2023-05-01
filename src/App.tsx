@@ -1,28 +1,33 @@
-import { FC, lazy, Suspense, useEffect } from 'react';
+import { FC, lazy, Suspense, useCallback, useEffect } from 'react';
 
 import { Notifications } from '@mantine/notifications';
 import { useTranslation } from 'react-i18next';
 import { Route, Routes } from 'react-router-dom';
 
-import { FooterSocial, HeaderMegaMenu, RenderContentContainer } from 'components';
-import { LoaderScreen, ProtectedRoute } from 'components/shared';
+import { FooterSocial, HeaderMegaMenu } from 'components';
+import { LoaderScreen, ProtectedRoute, RenderContentContainer } from 'components/shared';
 import { Paths } from 'constants/paths';
 import { Roles } from 'constants/userRoles';
 import { useAuth } from 'store/store';
 
 const Home = lazy(() => import('pages/Home/Home'));
-const SignIn = lazy(() => import('pages/SignIn/SignIn'));
-const Dashboard = lazy(() => import('pages/Dashboard/Dashboard'));
+const Login = lazy(() => import('pages/Login/Login'));
+const Tournaments = lazy(() => import('pages/Tournaments/Tournaments'));
+const TournamentInfo = lazy(() => import('pages/TournamentInfo/TournamentInfo'));
 const Profile = lazy(() => import('pages/Profile/Profile'));
 const NotFound = lazy(() => import('pages/NotFound/NotFound'));
 
 const App: FC = () => {
-  const { getUser, isFetching } = useAuth((state) => state);
   const { t } = useTranslation();
+  const { getUser, isFetching } = useAuth((state) => state);
+
+  const fetchUserData = useCallback(async () => {
+    await getUser(t);
+  }, [getUser, t]);
 
   useEffect(() => {
-    getUser(t);
-  }, [getUser, t]);
+    fetchUserData();
+  }, [fetchUserData]);
 
   return (
     <RenderContentContainer isFetching={isFetching}>
@@ -37,15 +42,23 @@ const App: FC = () => {
             path={Paths.signin}
             element={
               <ProtectedRoute roles={[Roles.USER, Roles.ADMIN]}>
-                <SignIn />
+                <Login />
               </ProtectedRoute>
             }
           />
           <Route
-            path={Paths.dashboard}
+            path={Paths.tournaments}
             element={
-              <ProtectedRoute isPrivate roles={[Roles.ADMIN]}>
-                <Dashboard />
+              <ProtectedRoute isPrivate roles={[Roles.USER, Roles.ADMIN]}>
+                <Tournaments />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path={`${Paths.tournaments}/:id`}
+            element={
+              <ProtectedRoute isPrivate roles={[Roles.USER, Roles.ADMIN]}>
+                <TournamentInfo />
               </ProtectedRoute>
             }
           />

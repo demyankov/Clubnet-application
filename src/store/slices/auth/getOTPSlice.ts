@@ -1,9 +1,9 @@
 import { notifications } from '@mantine/notifications';
 
-import { TF } from 'helpers/notifications/types';
 import { generateRecaptcha, appGetOTP } from 'integrations/firebase/phoneAuth';
 import { BoundStore } from 'store/store';
 import { GenericStateCreator, IError } from 'store/types';
+import { TF } from 'types/translation';
 
 export interface IGetOTP {
   getOTP: {

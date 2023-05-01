@@ -6,7 +6,7 @@ import { IconSun, IconMoonStars } from '@tabler/icons-react';
 import { Theme } from 'constants/theme';
 import { useThemeContext } from 'context';
 
-export const ThemeToggler: FC = () => {
+export const HeaderThemeToggler: FC = () => {
   const { currentTheme, toggleTheme } = useThemeContext();
   const theme = useMantineTheme();
 

@@ -3,7 +3,7 @@ import { ref, set, get } from 'firebase/database';
 
 import { db } from './firebase';
 
-import { IUser } from 'store/slices';
+import { IUser } from 'store/types';
 
 export const setUserData = (userData: IUser): void => {
   set(ref(db, `users/${userData.id}`), userData);

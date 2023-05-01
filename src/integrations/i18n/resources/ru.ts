@@ -2,7 +2,7 @@ export const ru = {
   translation: {
     header: {
       home: 'Домой',
-      dashboard: 'Панель',
+      tournaments: 'Турниры',
       signin: 'Войти',
       profile: 'Профиль',
     },
@@ -16,13 +16,6 @@ export const ru = {
         '<0>Нет раздражающей рамки фокусировки</0> - рамка фокусировки появляется только когда пользователь использует навигацию с помощью клавиатуры',
       start: 'Начать',
       source: 'Исходный код',
-    },
-    dashboard: {
-      title: 'Название книги',
-      year: 'Год',
-      author: 'Автор',
-      reviews: 'Отзывы',
-      dist: 'Распределение отзывов',
     },
     '404': {
       title: 'Что-то не так...',
@@ -49,6 +42,11 @@ export const ru = {
       'signin-success': 'Добро пожаловать!',
       'verification-error': 'Неверный код. Попробуйте еще раз.',
       'phone-error': 'Недействительный номер телефона',
+    },
+    tournaments: {
+      createButtonText: 'Создать турнир',
+      modalTitle: 'Создайте турнир',
+      createTournament: 'Создать турнир',
     },
   },
 };

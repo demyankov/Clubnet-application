@@ -2,7 +2,7 @@ export const en = {
   translation: {
     header: {
       home: 'Home',
-      dashboard: 'Dashboard',
+      tournaments: 'Tournaments',
       signin: 'Sign In',
       profile: 'Profile',
     },
@@ -16,13 +16,6 @@ export const en = {
         '<0>No annoying focus ring</0> – focus ring will appear only when user navigates with keyboard',
       start: 'Get started',
       source: 'Source code',
-    },
-    dashboard: {
-      title: 'Book title',
-      year: 'Year',
-      author: 'Author',
-      reviews: 'Reviews',
-      dist: 'Reviews distribution',
     },
     '404': {
       title: 'Something is not right...',
@@ -49,6 +42,11 @@ export const en = {
       'signin-success': 'Welcome!',
       'verification-error': 'Wrong verification code. Try again.',
       'phone-error': 'Invalid phone number',
+    },
+    tournaments: {
+      createButtonText: 'Create a tournament',
+      modalTitle: 'Create a Tournament',
+      createTournament: 'Create',
     },
   },
 };

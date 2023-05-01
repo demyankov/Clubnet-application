@@ -4,14 +4,15 @@ import { PinInput, Group, Button, Stack, LoadingOverlay } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { useTranslation } from 'react-i18next';
 
-import { SignInSteps } from 'components';
+import { SignInSteps } from '../types';
+
 import { useAuth } from 'store/store';
 
-type PropsType = {
+type Props = {
   setCurrentStep: Dispatch<SetStateAction<SignInSteps>>;
 };
 
-export const OTPForm: FC<PropsType> = ({ setCurrentStep }: PropsType) => {
+export const LoginConfirmCode: FC<Props> = ({ setCurrentStep }) => {
   const {
     signIn: { isFetching, signIn },
   } = useAuth((state) => state);

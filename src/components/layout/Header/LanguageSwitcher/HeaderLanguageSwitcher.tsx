@@ -59,7 +59,7 @@ const useStyles = createStyles((theme, { opened }: { opened: boolean }) => ({
   },
 }));
 
-export const LanguageSwitcher: FC = () => {
+export const HeaderLanguageSwitcher: FC = () => {
   const [opened, setOpened] = useState(false);
   const { classes } = useStyles({ opened });
   const [selected, setSelected] = useState(setLang());

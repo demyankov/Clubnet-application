@@ -4,14 +4,15 @@ import { TextInput, Group, Button, Stack, LoadingOverlay } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { useTranslation } from 'react-i18next';
 
-import { SignInSteps } from 'components';
+import { SignInSteps } from '../types';
+
 import { useAuth } from 'store/store';
 
 type PropsType = {
   setCurrentStep: Dispatch<SetStateAction<SignInSteps>>;
 };
 
-export const PhoneForm: FC<PropsType> = ({ setCurrentStep }: PropsType) => {
+export const LoginEnterPhoneNumber: FC<PropsType> = ({ setCurrentStep }: PropsType) => {
   const {
     getOTP: { isFetching, sendOTP, error },
   } = useAuth((state) => state);
