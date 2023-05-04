@@ -57,7 +57,7 @@ export const LoginConfirmCode: FC<Props> = ({ setCurrentStep }) => {
             onClick={handlePrevStep}
             disabled={isFetching}
           >
-            {t('form.phone-again')}
+            {t('form.phoneAgain')}
           </Button>
           <Button type="submit" radius="xl" disabled={isFetching}>
             {t('form.send')}

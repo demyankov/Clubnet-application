@@ -1,51 +1,44 @@
 import { signOut } from 'firebase/auth';
+import { produce } from 'immer';
 
+import { errorNotification } from 'helpers';
 import { auth } from 'integrations/firebase/firebase';
 import { BoundStore } from 'store/store';
-import { GenericStateCreator, IError } from 'store/types';
+import { GenericStateCreator } from 'store/types';
+import { TF } from 'types/translation';
 
 export interface ISignOut {
   signOut: {
-    error: Nullable<string>;
-    signOut: () => Promise<void>;
+    signOut: (t: TF) => Promise<void>;
   };
 }
 
 export const signOutSlice: GenericStateCreator<BoundStore> = (set, get) => ({
   ...get(),
   signOut: {
-    error: null,
-
-    signOut: async () => {
-      set((state) => ({
-        ...state,
-        isFetching: true,
-        signOut: {
-          ...state.signOut,
-        },
-      }));
+    signOut: async (t) => {
+      set(
+        produce((state: BoundStore) => {
+          state.isFetching = true;
+        }),
+      );
 
       try {
         await signOut(auth);
-
-        set((state) => ({
-          ...state,
-          user: null,
-          isAuth: false,
-        }));
+        set(
+          produce((state: BoundStore) => {
+            state.isAuth = false;
+            state.user = null;
+          }),
+        );
       } catch (error) {
-        set((state) => ({
-          ...state,
-          signOut: {
-            ...state.signOut,
-            error: (error as IError).message,
-          },
-        }));
+        errorNotification(t);
       } finally {
-        set((state) => ({
-          ...state,
-          isFetching: false,
-        }));
+        set(
+          produce((state: BoundStore) => {
+            state.isFetching = false;
+          }),
+        );
       }
     },
   },

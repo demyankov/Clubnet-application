@@ -1,8 +1,9 @@
-import { notifications } from '@mantine/notifications';
+import { produce } from 'immer';
 
-import { generateRecaptcha, appGetOTP } from 'integrations/firebase/phoneAuth';
+import { errorNotification } from 'helpers';
+import { generateRecaptcha, appGetOTP } from 'integrations/firebase/auth';
 import { BoundStore } from 'store/store';
-import { GenericStateCreator, IError } from 'store/types';
+import { GenericStateCreator } from 'store/types';
 import { TF } from 'types/translation';
 
 export interface IGetOTP {
@@ -21,38 +22,22 @@ export const getOTPSlice: GenericStateCreator<BoundStore> = (set, get) => ({
 
     sendOTP: async (phone, t: TF) => {
       generateRecaptcha();
-      set((state) => ({
-        ...state,
-        getOTP: {
-          ...state.getOTP,
-          isFetching: true,
-        },
-      }));
+      set(
+        produce((state: BoundStore) => {
+          state.getOTP.isFetching = true;
+        }),
+      );
       try {
         await appGetOTP(phone);
       } catch (error) {
-        set((state) => ({
-          ...state,
-          getOTP: {
-            ...state.getOTP,
-            isFetching: false,
-            error: (error as IError).message,
-          },
-        }));
-        notifications.show({
-          title: t('notifications.error-header'),
-          message: t('notifications.phone-error'),
-          color: 'red',
-        });
+        errorNotification(t, 'errorPhone');
+      } finally {
+        set(
+          produce((state: BoundStore) => {
+            state.getOTP.isFetching = false;
+          }),
+        );
       }
-
-      set((state) => ({
-        ...state,
-        getOTP: {
-          ...state.getOTP,
-          isFetching: false,
-        },
-      }));
     },
   },
 });

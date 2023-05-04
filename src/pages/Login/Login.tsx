@@ -29,7 +29,7 @@ const Login: FC = () => {
     <div className={classes.authForm}>
       <Paper radius="md" p="xl" withBorder pos="relative">
         <Text size="lg" weight={500} ta="center">
-          {t('form.signin-header')}
+          {t('form.signinHeader')}
         </Text>
 
         <StepComponent setCurrentStep={setCurrentStep} />

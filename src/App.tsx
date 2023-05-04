@@ -31,7 +31,7 @@ const App: FC = () => {
 
   return (
     <RenderContentContainer isFetching={isFetching}>
-      <Notifications autoClose={5000} position="top-right" />
+      <Notifications autoClose={5000} position="bottom-right" />
 
       <HeaderMegaMenu />
 

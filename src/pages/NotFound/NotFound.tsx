@@ -64,9 +64,9 @@ const NotFound: FC = () => {
       >
         <NotFoundImg className={classes.mobileImage} />
         <div>
-          <Title className={classes.title}>{t('404.title')}</Title>
+          <Title className={classes.title}>{t('notFound.title')}</Title>
           <Text color="dimmed" size="lg">
-            {t('404.info')}
+            {t('notFound.info')}
           </Text>
           <Button
             variant="outline"
@@ -76,7 +76,7 @@ const NotFound: FC = () => {
             component={Link}
             to={Paths.home}
           >
-            {t('404.back')}
+            {t('notFound.back')}
           </Button>
         </div>
         <NotFoundImg className={classes.desktopImage} />

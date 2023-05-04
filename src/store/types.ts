@@ -4,16 +4,12 @@ import { Roles } from '../constants/userRoles';
 
 export type GenericStateCreator<T> = StateCreator<T, [], [], T>;
 
-export interface IError {
-  code: string;
-  message: string;
-  name: string;
-}
-
 export interface IUser {
   id: string;
-  phone: Nullable<string>;
-  name: Nullable<string>;
+  phone: string;
+  name: string;
   image: Nullable<string>;
   role: Roles;
 }
+
+export type EditableUserFields = Pick<IUser, 'name' | 'image' | 'role'>;

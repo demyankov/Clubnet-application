@@ -14,7 +14,7 @@ type PropsType = {
 
 export const LoginEnterPhoneNumber: FC<PropsType> = ({ setCurrentStep }: PropsType) => {
   const {
-    getOTP: { isFetching, sendOTP, error },
+    getOTP: { isFetching, sendOTP },
   } = useAuth((state) => state);
   const { t } = useTranslation();
 
@@ -31,9 +31,7 @@ export const LoginEnterPhoneNumber: FC<PropsType> = ({ setCurrentStep }: PropsTy
 
   const onSubmitPhone = async (): Promise<void> => {
     await sendOTP(phoneForm.values.phone, t);
-    if (!error) {
-      setCurrentStep(SignInSteps.ConfirmCode);
-    }
+    setCurrentStep(SignInSteps.ConfirmCode);
   };
 
   return (
@@ -43,8 +41,8 @@ export const LoginEnterPhoneNumber: FC<PropsType> = ({ setCurrentStep }: PropsTy
       <Stack>
         <TextInput
           required
-          label={t('form.your-phone')}
-          description={t('form.phone-format')}
+          label={t('form.yourPhone')}
+          description={t('form.phoneFormat')}
           placeholder="+1234234234"
           radius="md"
           mt="md"
@@ -54,7 +52,7 @@ export const LoginEnterPhoneNumber: FC<PropsType> = ({ setCurrentStep }: PropsTy
 
       <Group position="center" mt="xl">
         <Button type="submit" radius="xl" disabled={isFetching}>
-          {t('form.send-sms')}
+          {t('form.sendSMS')}
         </Button>
       </Group>
     </form>

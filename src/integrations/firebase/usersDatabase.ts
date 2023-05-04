@@ -1,8 +1,7 @@
 import { User } from 'firebase/auth';
-import { ref, set, get } from 'firebase/database';
+import { ref, set, get, update } from 'firebase/database';
 
-import { db } from './firebase';
-
+import { db } from 'integrations/firebase/firebase';
 import { IUser } from 'store/types';
 
 export const setUserData = (userData: IUser): void => {
@@ -21,4 +20,12 @@ export const getUserData = async (user: User): Promise<any> => {
 
     return dataArray.find((dataUser: any) => dataUser.id === user.uid);
   }
+};
+
+export const updateUserData = (userData: IUser): Promise<void> => {
+  const updates: any = {};
+
+  updates[`/users/${userData.id}`] = userData;
+
+  return update(ref(db), updates);
 };

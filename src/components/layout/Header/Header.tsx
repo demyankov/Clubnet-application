@@ -11,17 +11,14 @@ import {
   Drawer,
   ScrollArea,
   rem,
-  Avatar,
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { useTranslation } from 'react-i18next';
 import { DiReact } from 'react-icons/di';
-import { IoIosLogOut } from 'react-icons/io';
 import { Link } from 'react-router-dom';
 
-import { HeaderLanguageSwitcher, HeaderThemeToggler } from 'components';
+import { HeaderLanguageSwitcher, HeaderThemeToggler, HeaderUserMenu } from 'components';
 import { Paths } from 'constants/paths';
-import { useUserRole } from 'hooks';
 import { useAuth } from 'store/store';
 
 const useStyles = createStyles((theme) => ({
@@ -72,14 +69,15 @@ export const HeaderMegaMenu: FC = () => {
   const [drawerOpened, { toggle: toggleDrawer, close: handleCloseDrawer }] =
     useDisclosure(false);
   const { classes, theme } = useStyles();
-  const { isAuth, signOut } = useAuth((state) => state);
-
-  const { isAdmin } = useUserRole();
+  const {
+    isAuth,
+    signOut: { signOut },
+  } = useAuth((state) => state);
 
   const { t } = useTranslation();
 
   const handleSignOut = (): void => {
-    signOut.signOut();
+    signOut(t);
   };
 
   return (
@@ -92,7 +90,7 @@ export const HeaderMegaMenu: FC = () => {
             <Link to={Paths.home} className={classes.link}>
               {t('header.home')}
             </Link>
-            {isAuth && isAdmin && (
+            {isAuth && (
               <Link to={Paths.tournaments} className={classes.link}>
                 {t('header.tournaments')}
               </Link>
@@ -109,20 +107,7 @@ export const HeaderMegaMenu: FC = () => {
                 {t('header.signin')}
               </Button>
             )}
-            {isAuth && (
-              <>
-                <Avatar
-                  component={Link}
-                  to={Paths.profile}
-                  src={null}
-                  alt="no image here"
-                />
-
-                <Button onClick={handleSignOut}>
-                  <IoIosLogOut />
-                </Button>
-              </>
-            )}
+            {isAuth && <HeaderUserMenu />}
           </Group>
 
           <Group className={classes.hiddenDesktop}>
@@ -149,20 +134,18 @@ export const HeaderMegaMenu: FC = () => {
           <Link onClick={handleCloseDrawer} to={Paths.home} className={classes.link}>
             {t('header.home')}
           </Link>
-
           {isAuth && (
-            <Link onClick={handleCloseDrawer} to={Paths.profile} className={classes.link}>
-              {t('header.profile')}
-            </Link>
-          )}
-
-          {isAuth && isAdmin && (
             <Link
               onClick={handleCloseDrawer}
               to={Paths.tournaments}
               className={classes.link}
             >
               {t('header.tournaments')}
+            </Link>
+          )}
+          {isAuth && (
+            <Link onClick={handleCloseDrawer} to={Paths.profile} className={classes.link}>
+              {t('header.settings')}
             </Link>
           )}
 
@@ -174,8 +157,7 @@ export const HeaderMegaMenu: FC = () => {
                 {t('header.signin')}
               </Button>
             )}
-
-            {isAuth && <Button onClick={handleSignOut}>{t('header.logout')}</Button>}
+            {isAuth && <Button onClick={handleSignOut}>{t('header.signout')}</Button>}
           </Group>
         </ScrollArea>
       </Drawer>
