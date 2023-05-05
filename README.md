@@ -15,3 +15,7 @@ VITE_APP_ID=firebase-app-id
 ## This project using LF line separator
 1. To install in Webstorm: File -> Settings -> Editor -> Code Style -> Line Separator -> Unix and macOS
 2. To install in VS Code: Ctrl+Shift+P -> `Change End of Line Sequence` -> LF
+
+## Bundle Analyzer
+
+To see the application bundle of your project, you can run the command `npm, pnpm or yarn vite-bundle-visualizer` in the root directory of your project. This will launch vite-bundle-visualizer and display an interactive visualization of the contents and size of your bundle.
