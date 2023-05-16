@@ -23,6 +23,7 @@
   "plugins": [
     "react",
     "import",
+    "no-relative-import-paths",
     "prettier",
     "react-hooks",
     "@typescript-eslint"
@@ -73,6 +74,7 @@
     "import/extensions": "off",
     "import/prefer-default-export": "off",
     "consistent-return": "off",
+    "no-relative-import-paths/no-relative-import-paths": ["error", { "rootDir": "src" }],
     "padding-line-between-statements": [
       "error",
       {
