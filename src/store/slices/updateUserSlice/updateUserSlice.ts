@@ -1,7 +1,8 @@
 import { produce } from 'immer';
 
+import { DatabasePaths } from 'constants/databasePaths';
 import { errorNotification } from 'helpers';
-import { uploadImageAndGetURL, updateUserData } from 'integrations/firebase';
+import { uploadImageAndGetURL, updateFirebaseData } from 'integrations/firebase';
 import { BoundStore } from 'store/store';
 import { GenericStateCreator, IUser, EditableUserFields } from 'store/types';
 import { TF } from 'types/translation';
@@ -34,10 +35,14 @@ export const updateUserSlice: GenericStateCreator<BoundStore> = (set, get) => ({
     try {
       const image = await uploadImageAndGetURL(imageFile, currentUser.id);
 
-      await updateUserData({
-        ...currentUser,
-        image,
-      });
+      await updateFirebaseData<IUser>(
+        DatabasePaths.Users,
+        {
+          ...currentUser,
+          image,
+        },
+        currentUser.id,
+      );
 
       set(
         produce((state: BoundStore) => {
@@ -65,10 +70,14 @@ export const updateUserSlice: GenericStateCreator<BoundStore> = (set, get) => ({
     const currentUser = get().user as IUser;
 
     try {
-      await updateUserData({
-        ...currentUser,
-        image: null,
-      });
+      await updateFirebaseData<IUser>(
+        DatabasePaths.Users,
+        {
+          ...currentUser,
+          image: null,
+        },
+        currentUser.id,
+      );
 
       set(
         produce((state: BoundStore) => {
@@ -96,10 +105,14 @@ export const updateUserSlice: GenericStateCreator<BoundStore> = (set, get) => ({
     const currentUser = get().user as IUser;
 
     try {
-      await updateUserData({
-        ...currentUser,
-        ...updatedUserData,
-      });
+      await updateFirebaseData<IUser>(
+        DatabasePaths.Users,
+        {
+          ...currentUser,
+          ...updatedUserData,
+        },
+        currentUser.id,
+      );
 
       set(
         produce((state: BoundStore) => {

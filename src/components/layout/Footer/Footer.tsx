@@ -7,10 +7,10 @@ import { VscGithub } from 'react-icons/vsc';
 
 const useStyles = createStyles((theme) => ({
   footer: {
-    marginTop: rem(60),
     borderTop: `${rem(1)} solid ${
       theme.colorScheme === 'dark' ? theme.colors.dark[5] : theme.colors.gray[2]
     }`,
+    flex: '0 0 auto',
   },
 
   inner: {

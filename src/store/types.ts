@@ -1,6 +1,6 @@
 import { StateCreator } from 'zustand';
 
-import { Roles } from '../constants/userRoles';
+import { Roles } from 'constants/userRoles';
 
 export type GenericStateCreator<T> = StateCreator<T, [], [], T>;
 

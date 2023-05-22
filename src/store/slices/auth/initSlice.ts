@@ -1,8 +1,9 @@
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { produce } from 'immer';
 
+import { DatabasePaths } from 'constants/databasePaths';
 import { errorNotification } from 'helpers';
-import { getUserData } from 'integrations/firebase/usersDatabase';
+import { getFirebaseDataById } from 'integrations/firebase';
 import { BoundStore } from 'store/store';
 import { GenericStateCreator, IUser } from 'store/types';
 import { TF } from 'types/translation';
@@ -46,7 +47,7 @@ export const initSlice: GenericStateCreator<BoundStore> = (set, get) => ({
             state.isFetching = true;
           }),
         );
-        const userData = await getUserData(user);
+        const userData = await getFirebaseDataById(DatabasePaths.Users, user.uid);
 
         if (userData) {
           set(

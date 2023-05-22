@@ -12,7 +12,7 @@ import {
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 
-import { ReactComponent as NotFoundImg } from 'assets/404.svg';
+import { ReactComponent as NotFoundImg } from 'assets/images/shared/404.svg';
 import { Paths } from 'constants/paths';
 
 const useStyles = createStyles((theme) => ({

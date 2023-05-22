@@ -4,8 +4,8 @@ import { createStyles, UnstyledButton, Menu, Group, rem } from '@mantine/core';
 import { IconChevronDown } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
 
-import { ReactComponent as EnIcon } from 'assets/en.svg';
-import { ReactComponent as RuIcon } from 'assets/ru.svg';
+import { ReactComponent as EnIcon } from 'assets/images/shared/en.svg';
+import { ReactComponent as RuIcon } from 'assets/images/shared/ru.svg';
 
 interface ILanguage {
   label: string;

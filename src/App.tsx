@@ -36,42 +36,44 @@ const App: FC = () => {
       <HeaderMegaMenu />
 
       <Suspense fallback={<LoaderScreen />}>
-        <Routes>
-          <Route path={Paths.home} element={<Home />} />
-          <Route
-            path={Paths.signin}
-            element={
-              <ProtectedRoute roles={[Roles.USER, Roles.ADMIN]}>
-                <Login />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path={Paths.tournaments}
-            element={
-              <ProtectedRoute isPrivate roles={[Roles.USER, Roles.ADMIN]}>
-                <Tournaments />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path={`${Paths.tournaments}/:id`}
-            element={
-              <ProtectedRoute isPrivate roles={[Roles.USER, Roles.ADMIN]}>
-                <TournamentInfo />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path={Paths.profile}
-            element={
-              <ProtectedRoute isPrivate roles={[Roles.USER, Roles.ADMIN]}>
-                <Profile />
-              </ProtectedRoute>
-            }
-          />
-          <Route path={Paths.notFound} element={<NotFound />} />
-        </Routes>
+        <div className="content">
+          <Routes>
+            <Route path={Paths.home} element={<Home />} />
+            <Route
+              path={Paths.signin}
+              element={
+                <ProtectedRoute roles={[Roles.USER, Roles.ADMIN]}>
+                  <Login />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path={Paths.tournaments}
+              element={
+                <ProtectedRoute isPrivate roles={[Roles.USER, Roles.ADMIN]}>
+                  <Tournaments />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path={`${Paths.tournaments}/:id`}
+              element={
+                <ProtectedRoute isPrivate roles={[Roles.USER, Roles.ADMIN]}>
+                  <TournamentInfo />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path={Paths.profile}
+              element={
+                <ProtectedRoute isPrivate roles={[Roles.USER, Roles.ADMIN]}>
+                  <Profile />
+                </ProtectedRoute>
+              }
+            />
+            <Route path={Paths.notFound} element={<NotFound />} />
+          </Routes>
+        </div>
       </Suspense>
 
       <FooterSocial />

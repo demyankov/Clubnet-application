@@ -5,7 +5,7 @@ import {
   signInWithPhoneNumber,
 } from 'firebase/auth';
 
-import { auth } from './firebase';
+import { auth } from 'integrations/firebase/firebase';
 
 interface IExtendedWindow extends Window {
   recaptchaVerifier: RecaptchaVerifier;

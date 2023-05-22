@@ -1,11 +1,12 @@
 import { produce } from 'immer';
 
+import { DatabasePaths } from 'constants/databasePaths';
 import { Roles } from 'constants/userRoles';
-import { successNotification, errorNotification } from 'helpers';
+import { errorNotification, successNotification } from 'helpers';
+import { getFirebaseDataById, setFirebaseData } from 'integrations/firebase';
 import { appSignIn } from 'integrations/firebase/auth';
-import { getUserData, setUserData } from 'integrations/firebase/usersDatabase';
 import { BoundStore } from 'store/store';
-import { GenericStateCreator } from 'store/types';
+import { GenericStateCreator, IUser } from 'store/types';
 import { TF } from 'types/translation';
 
 export interface ISignIn {
@@ -31,18 +32,22 @@ export const signInSlice: GenericStateCreator<BoundStore> = (set, get) => ({
         const user = await appSignIn(code);
 
         if (user) {
-          const userData = await getUserData(user);
+          const userData = await getFirebaseDataById(DatabasePaths.Users, user.uid);
 
           if (!userData) {
             const { uid, phoneNumber, displayName, photoURL } = user;
 
-            setUserData({
-              id: uid,
-              phone: phoneNumber as string,
-              name: displayName as string,
-              image: photoURL,
-              role: Roles.USER,
-            });
+            setFirebaseData<IUser>(
+              {
+                id: uid,
+                phone: phoneNumber as string,
+                name: displayName as string,
+                image: photoURL,
+                role: Roles.USER,
+              },
+              DatabasePaths.Users,
+              uid,
+            );
           }
 
           set(

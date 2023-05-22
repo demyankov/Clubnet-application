@@ -1,75 +1,120 @@
 import { FC } from 'react';
 
-import { Button, Text, Group, Paper, Select, Stack, TextInput } from '@mantine/core';
+import { Button, FileInput, Group, Select, Stack, TextInput } from '@mantine/core';
+import { DateTimePicker } from '@mantine/dates';
 import { useForm } from '@mantine/form';
+import { useId } from '@mantine/hooks';
+import { modals } from '@mantine/modals';
+import { IconUpload } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
 
 import { SelectItem } from 'components/shared';
+import { TOURNAMENTS_CONFIG } from 'components/tournaments/Modal/config';
+import { ALLOWED_IMAGE_FORMATS } from 'constants/allowedImageFormats';
+import { useTournaments } from 'store/store';
+
+interface IFormValues {
+  name: string;
+  game: string;
+  format: string;
+  expectedDate: string;
+  gameMode: string;
+  image: File | null;
+}
 
 export const TournamentsModal: FC = () => {
   const { t } = useTranslation();
+  const id = useId();
+  const { addTournament, getTournaments, clearTournaments, isFetching } = useTournaments(
+    (state) => state,
+  );
 
-  const form = useForm({
+  const form = useForm<IFormValues>({
     initialValues: {
-      tournamentName: '',
+      name: '',
       game: '',
       format: '',
+      expectedDate: '',
       gameMode: '',
+      image: null,
     },
-    // Это обязательное поле, оно не может быть пустым.
+    validate: {
+      name: (value) => (value ? null : t('modals.requiredField')),
+      game: (value) => (value ? null : t('modals.requiredField')),
+      format: (value) => (value ? null : t('modals.requiredField')),
+      expectedDate: (value) => (value ? null : t('modals.requiredField')),
+      gameMode: (value) => (value ? null : t('modals.requiredField')),
+      image: (value) => (value ? null : t('modals.requiredField')),
+    },
   });
 
-  const handleSubmit = (): void => {};
+  const handleSubmit = async (): Promise<void> => {
+    const expectedDate = form.values.expectedDate
+      ? new Date(form.values.expectedDate).toString()
+      : '';
+    const registrationDate = new Date().toString();
+
+    await addTournament({
+      ...form.values,
+      id,
+      expectedDate,
+      registrationDate,
+    });
+
+    await clearTournaments();
+
+    await getTournaments();
+
+    form.reset();
+    modals.close('addTournamentModal');
+  };
 
   return (
     <form onSubmit={form.onSubmit(handleSubmit)}>
       <Stack spacing="xl">
-        <TextInput label="Название турнира" {...form.getInputProps('tournamentName')} />
+        <TextInput label={t('modals.tournamentName')} {...form.getInputProps('name')} />
 
         <Select
-          label="Игра"
+          withAsterisk
+          label={t('modals.game')}
           itemComponent={SelectItem}
-          data={[
-            {
-              image: 'https://img.icons8.com/clouds/256/000000/futurama-bender.png',
-              label: 'CS:GO',
-              value: 'csgo',
-            },
-
-            {
-              image: 'https://img.icons8.com/clouds/256/000000/futurama-mom.png',
-              label: 'Dota 2',
-              value: 'dota2',
-            },
-          ]}
+          data={TOURNAMENTS_CONFIG.Games}
           {...form.getInputProps('game')}
         />
 
-        <Stack>
-          <Select
-            label="Формат турнира"
-            placeholder="Pick one"
-            data={[{ value: 'olympic system', label: 'Олимпийская система' }]}
-          />
-
-          <Paper p="xs" withBorder>
-            <Text>Каждый игрок играет в матчах до тех пор, пока не проиграет.</Text>
-          </Paper>
-        </Stack>
+        <Select
+          withAsterisk
+          label={t('modals.tournamentFormat')}
+          data={TOURNAMENTS_CONFIG.Formats}
+          {...form.getInputProps('format')}
+        />
 
         <Select
-          label="Режим игры"
-          placeholder="Pick one"
-          data={[
-            { value: '1v1', label: '1v1' },
-            { value: '2v2', label: '2v2' },
-            { value: '5v5', label: '5v5' },
-            { value: 'wingman', label: 'Wingman' },
-          ]}
+          withAsterisk
+          label={t('modals.gameMode')}
+          data={TOURNAMENTS_CONFIG.Gamemodes}
+          {...form.getInputProps('gameMode')}
+        />
+
+        <DateTimePicker
+          withAsterisk
+          valueFormat="DD.MM.YYYY, HH:mm"
+          label={t('modals.startTime')}
+          {...form.getInputProps('expectedDate')}
+        />
+
+        <FileInput
+          withAsterisk
+          accept={ALLOWED_IMAGE_FORMATS.join(',')}
+          label={t('modals.addImage')}
+          icon={<IconUpload size={15} />}
+          {...form.getInputProps('image')}
         />
 
         <Group position="right" mt="md">
-          <Button type="submit">{t('tournaments.createTournament')}</Button>
+          <Button type="submit" loading={isFetching}>
+            {t('modals.createTournament')}
+          </Button>
         </Group>
       </Stack>
     </form>

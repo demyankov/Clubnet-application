@@ -1,6 +1,9 @@
 #root {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
   min-height: 100vh;
+}
+
+#root .content {
+  flex: 1 0 auto;
 }

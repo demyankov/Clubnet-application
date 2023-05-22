@@ -4,8 +4,7 @@ import { PinInput, Group, Button, Stack, LoadingOverlay } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
 import { BiArrowBack } from 'react-icons/bi';
 
-import { SignInSteps } from '../types';
-
+import { SignInSteps } from 'components/Login/types';
 import { useAuth } from 'store/store';
 
 type Props = {

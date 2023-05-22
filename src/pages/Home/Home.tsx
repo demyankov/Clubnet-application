@@ -1,6 +1,7 @@
 import { FC } from 'react';
 
 import {
+  Box,
   Button,
   Container,
   createStyles,
@@ -14,7 +15,7 @@ import {
 import { IconCheck } from '@tabler/icons-react';
 import { Trans, useTranslation } from 'react-i18next';
 
-import { ReactComponent as HomeImg } from 'assets/home.svg';
+import { ReactComponent as HomeImg } from 'assets/images/shared/home.svg';
 
 const useStyles = createStyles((theme) => ({
   inner: {
@@ -74,7 +75,7 @@ const Home: FC = () => {
   const { t } = useTranslation();
 
   return (
-    <div>
+    <Box>
       <Container>
         <div className={classes.inner}>
           <div className={classes.content}>
@@ -130,7 +131,7 @@ const Home: FC = () => {
           <HomeImg className={classes.image} />
         </div>
       </Container>
-    </div>
+    </Box>
   );
 };
 

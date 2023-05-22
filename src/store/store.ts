@@ -8,6 +8,8 @@ import {
   signInSlice,
   signOutSlice,
   updateUserSlice,
+  tournamentsSlice,
+  ITournaments,
   IState,
   IGetOTP,
   ISignIn,
@@ -16,6 +18,7 @@ import {
 } from 'store/slices';
 
 export interface BoundStore extends IState, IGetOTP, ISignIn, ISignOut, IUpdateUser {}
+export interface TournamentsStore extends ITournaments {}
 
 export const useAuth = create(
   devtools(
@@ -25,6 +28,14 @@ export const useAuth = create(
       ...signInSlice(...a),
       ...signOutSlice(...a),
       ...updateUserSlice(...a),
+    })),
+  ),
+);
+
+export const useTournaments = create(
+  devtools(
+    immer<TournamentsStore>((...a) => ({
+      ...tournamentsSlice(...a),
     })),
   ),
 );

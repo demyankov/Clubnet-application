@@ -1,9 +1,149 @@
-import { FC } from 'react';
+import { FC, useEffect } from 'react';
 
-import { Group } from '@mantine/core';
+import {
+  Badge,
+  Box,
+  Button,
+  Container,
+  Grid,
+  Group,
+  Image,
+  Overlay,
+  Tabs,
+  Text,
+  useMantineTheme,
+} from '@mantine/core';
+import {
+  IconClockHour2,
+  IconDeviceGamepad2,
+  IconLayoutGrid,
+  IconUsersGroup,
+  IconWriting,
+} from '@tabler/icons-react';
+import { useTranslation } from 'react-i18next';
+import { useParams } from 'react-router-dom';
+
+import { RenderContentContainer } from 'components/shared';
+import { TournamentsInfoItem } from 'components/tournaments';
+import { dateFormatting } from 'helpers/dateFormatting';
+import { useTournaments } from 'store/store';
 
 const TournamentInfo: FC = () => {
-  return <Group>tournament info</Group>;
+  const { id } = useParams();
+  const { t } = useTranslation();
+  const { currentTournament, getTournamentById, isFetching } = useTournaments(
+    (state) => state,
+  );
+  const theme = useMantineTheme();
+
+  useEffect(() => {
+    getTournamentById(id!);
+  }, [getTournamentById, id]);
+
+  return (
+    <div>
+      <RenderContentContainer
+        isFetching={isFetching}
+        isEmpty={!currentTournament}
+        emptyTitle={t('notFound.info')}
+      >
+        <Box pos="relative">
+          <Image src={currentTournament?.image} alt="image" width="100%" height="200px" />
+          <Overlay
+            gradient={`linear-gradient(180deg, rgba(34, 34, 34, 0) 0%, ${
+              theme.colorScheme === 'dark' ? '#1A1B1E' : theme.white
+            } 100%)`}
+            opacity={0.65}
+          />
+        </Box>
+
+        <Container size="md" mb={100}>
+          <Group position="apart" mb="30px">
+            <div>
+              <Text c="dimmed" fz="xl">
+                {dateFormatting(currentTournament?.expectedDate)}
+              </Text>
+              <Text fw={700} fz="30px">
+                {currentTournament?.name}
+              </Text>
+              <Text c="dimmed" fz="xl">
+                {currentTournament?.game} · {currentTournament?.format}
+              </Text>
+            </div>
+
+            <Button color="green" variant="outline">
+              {t('tournaments.submit')}
+            </Button>
+          </Group>
+          <Tabs defaultValue="match">
+            <Tabs.List>
+              <Tabs.Tab value="match">{t('tournaments.match')}</Tabs.Tab>
+              <Tabs.Tab
+                rightSection={
+                  <Badge
+                    w={16}
+                    h={16}
+                    sx={{ pointerEvents: 'none' }}
+                    variant="filled"
+                    size="xs"
+                    p={0}
+                  >
+                    0
+                  </Badge>
+                }
+                value="participants"
+              >
+                {t('tournaments.members')}
+              </Tabs.Tab>
+              <Tabs.Tab value="rules">{t('tournaments.rules')}</Tabs.Tab>
+            </Tabs.List>
+
+            <Tabs.Panel value="match" pt="xs">
+              <Text fw={700} fz="xl" mt="10px">
+                {t('tournaments.details')}
+              </Text>
+
+              <Grid mt="10px" gutter="xl">
+                <TournamentsInfoItem
+                  title={t('modals.game')}
+                  text={currentTournament?.game}
+                  Icon={IconDeviceGamepad2}
+                />
+                <TournamentsInfoItem
+                  title={t('tournaments.teamSize')}
+                  text={currentTournament?.gameMode}
+                  Icon={IconUsersGroup}
+                />
+                <TournamentsInfoItem
+                  title={t('modals.tournamentFormat')}
+                  text={currentTournament?.format}
+                  Icon={IconLayoutGrid}
+                />
+                <TournamentsInfoItem
+                  title={t('tournaments.tournamentRegistration')}
+                  text={dateFormatting(currentTournament?.registrationDate)}
+                  Icon={IconWriting}
+                />
+                <TournamentsInfoItem
+                  title={t('modals.startTime')}
+                  text={dateFormatting(currentTournament?.expectedDate)}
+                  Icon={IconClockHour2}
+                />
+              </Grid>
+            </Tabs.Panel>
+
+            <Tabs.Panel value="participants" pt="xs">
+              Здесь скоро будут участники
+            </Tabs.Panel>
+
+            <Tabs.Panel value="rules" pt="xs">
+              Здесь скоро будут правила
+            </Tabs.Panel>
+          </Tabs>
+        </Container>
+      </RenderContentContainer>
+    </div>
+  );
 };
 
 export default TournamentInfo;

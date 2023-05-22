@@ -4,8 +4,7 @@ import { TextInput, Group, Button, Stack, LoadingOverlay } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { useTranslation } from 'react-i18next';
 
-import { SignInSteps } from '../types';
-
+import { SignInSteps } from 'components/Login/types';
 import { useAuth } from 'store/store';
 
 type PropsType = {
