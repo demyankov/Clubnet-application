@@ -27,9 +27,7 @@ export const TournamentItem: FC<{ data: ITournamentData }> = ({ data }) => {
   const { classes } = useStyles();
   const navigate = useNavigate();
   const { isAdmin } = useUserRole();
-  const { deleteTournament, getTournaments, clearTournaments } = useTournaments(
-    (store) => store,
-  );
+  const { deleteTournament, getTournaments } = useTournaments((store) => store);
 
   const handleCardClick = (id: string): void => {
     navigate(`${Paths.tournaments}/${id}`);
@@ -37,7 +35,6 @@ export const TournamentItem: FC<{ data: ITournamentData }> = ({ data }) => {
 
   const handleDeleteClick = async (): Promise<void> => {
     await deleteTournament(data.id);
-    await clearTournaments();
     await getTournaments();
   };
 
@@ -87,7 +84,7 @@ export const TournamentItem: FC<{ data: ITournamentData }> = ({ data }) => {
           )}
           <Box display="flex">
             <IconUsersGroup color="#1971C2" />
-            <div>0/10</div>
+            <div>0/{data.countOfMembers}</div>
           </Box>
         </Group>
       </Group>

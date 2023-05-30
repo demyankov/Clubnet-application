@@ -19,15 +19,14 @@ interface IFormValues {
   format: string;
   expectedDate: string;
   gameMode: string;
+  countOfMembers: string;
   image: File | null;
 }
 
 export const TournamentsModal: FC = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const id = useId();
-  const { addTournament, getTournaments, clearTournaments, isFetching } = useTournaments(
-    (state) => state,
-  );
+  const { addTournament, getTournaments, isFetching } = useTournaments((state) => state);
 
   const form = useForm<IFormValues>({
     initialValues: {
@@ -36,6 +35,7 @@ export const TournamentsModal: FC = () => {
       format: '',
       expectedDate: '',
       gameMode: '',
+      countOfMembers: '',
       image: null,
     },
     validate: {
@@ -44,6 +44,12 @@ export const TournamentsModal: FC = () => {
       format: (value) => (value ? null : t('modals.requiredField')),
       expectedDate: (value) => (value ? null : t('modals.requiredField')),
       gameMode: (value) => (value ? null : t('modals.requiredField')),
+      countOfMembers: (value, values) => {
+        const { gameMode } = values;
+        const isMultiple = +value % (+gameMode.split('v')[0] * 2) === 0;
+
+        return isMultiple && value ? null : t('modals.shouldBeMultiple');
+      },
       image: (value) => (value ? null : t('modals.requiredField')),
     },
   });
@@ -61,8 +67,6 @@ export const TournamentsModal: FC = () => {
       registrationDate,
     });
 
-    await clearTournaments();
-
     await getTournaments();
 
     form.reset();
@@ -72,7 +76,11 @@ export const TournamentsModal: FC = () => {
   return (
     <form onSubmit={form.onSubmit(handleSubmit)}>
       <Stack spacing="xl">
-        <TextInput label={t('modals.tournamentName')} {...form.getInputProps('name')} />
+        <TextInput
+          withAsterisk
+          label={t('modals.tournamentName')}
+          {...form.getInputProps('name')}
+        />
 
         <Select
           withAsterisk
@@ -96,7 +104,15 @@ export const TournamentsModal: FC = () => {
           {...form.getInputProps('gameMode')}
         />
 
+        <TextInput
+          withAsterisk
+          label={t('modals.countOfMembers')}
+          {...form.getInputProps('countOfMembers')}
+        />
+
         <DateTimePicker
+          locale={i18n.language}
+          minDate={new Date()}
           withAsterisk
           valueFormat="DD.MM.YYYY, HH:mm"
           label={t('modals.startTime')}

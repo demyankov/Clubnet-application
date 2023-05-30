@@ -14,18 +14,18 @@ import { useTournaments } from 'store/store';
 export const TournamentsList: FC = () => {
   const { t } = useTranslation();
   const { isAdmin } = useUserRole();
-  const { isFetching, getTournaments, tournaments, isEmpty, clearTournaments } =
-    useTournaments((state) => state);
+  const {
+    isFetching,
+    getTournaments,
+    tournaments,
+    isEmpty,
+    getMoreTournaments,
+    isGetMoreFetching,
+  } = useTournaments((state) => state);
 
   useEffect(() => {
     getTournaments();
   }, [getTournaments]);
-
-  useEffect(() => {
-    return () => {
-      clearTournaments();
-    };
-  }, [clearTournaments]);
 
   const getSortedTournaments = (): ReactElement[] => {
     const items = groupByDate(tournaments);
@@ -40,10 +40,6 @@ export const TournamentsList: FC = () => {
         </div>
       );
     });
-  };
-
-  const handleLoadMoreClick = (): void => {
-    getTournaments();
   };
 
   const handleCreate = (): void => {
@@ -66,19 +62,17 @@ export const TournamentsList: FC = () => {
         )}
       </Group>
       <RenderContentContainer
+        isFetching={isFetching}
         emptyTitle={t('tournaments.noTournaments')}
         isEmpty={!tournaments.length}
       >
         {getSortedTournaments()}
-        <Center>
-          <Button
-            m="20px"
-            onClick={handleLoadMoreClick}
-            disabled={isEmpty}
-            loading={isFetching}
-          >
-            {t('tournaments.showMore')}
-          </Button>
+        <Center m="20px">
+          {!isEmpty && (
+            <Button m="20px" onClick={getMoreTournaments} loading={isGetMoreFetching}>
+              {t('tournaments.showMore')}
+            </Button>
+          )}
         </Center>
       </RenderContentContainer>
     </>

@@ -22,6 +22,7 @@ interface IAddTournamentData {
   expectedDate: string;
   registrationDate: string;
   gameMode: string;
+  countOfMembers: string;
   image: File | null;
 }
 
@@ -34,17 +35,19 @@ export interface ITournaments {
   latestDoc: Nullable<QueryDocumentSnapshot>;
   isEmpty: boolean;
   isFetching: boolean;
+  isGetMoreFetching: boolean;
   currentTournament: Nullable<ITournamentData>;
   addTournament: (data: IAddTournamentData) => void;
   getTournaments: () => Promise<void>;
-  clearTournaments: () => void;
+  getMoreTournaments: () => Promise<void>;
   deleteTournament: (id: string) => Promise<void>;
   getTournamentById: (id: string) => Promise<void>;
 }
 
 export const tournamentsSlice: GenericStateCreator<TournamentsStore> = (set, get) => ({
   ...get(),
-  isFetching: false,
+  isFetching: true,
+  isGetMoreFetching: false,
   isEmpty: false,
   latestDoc: null,
   currentTournament: null,
@@ -82,6 +85,44 @@ export const tournamentsSlice: GenericStateCreator<TournamentsStore> = (set, get
     set(
       produce((state: TournamentsStore) => {
         state.isFetching = true;
+        state.tournaments = [];
+        state.latestDoc = null;
+        state.isEmpty = false;
+      }),
+    );
+
+    try {
+      const querySnapshot = await getTournamentsData(null);
+
+      if (querySnapshot.docs) {
+        const data: any[] = [];
+
+        querySnapshot.forEach((doc) => {
+          data.push({ ...doc.data(), id: doc.id });
+        });
+
+        set(
+          produce((state: TournamentsStore) => {
+            state.tournaments = [...state.tournaments, ...data];
+            state.latestDoc = querySnapshot.docs[querySnapshot.docs.length - 1];
+          }),
+        );
+      }
+    } catch (error) {
+      errorNotification(t, 'errorCommon');
+    } finally {
+      set(
+        produce((state: TournamentsStore) => {
+          state.isFetching = false;
+        }),
+      );
+    }
+  },
+
+  getMoreTournaments: async () => {
+    set(
+      produce((state: TournamentsStore) => {
+        state.isGetMoreFetching = true;
       }),
     );
 
@@ -116,20 +157,10 @@ export const tournamentsSlice: GenericStateCreator<TournamentsStore> = (set, get
     } finally {
       set(
         produce((state: TournamentsStore) => {
-          state.isFetching = false;
+          state.isGetMoreFetching = false;
         }),
       );
     }
-  },
-
-  clearTournaments: () => {
-    set(
-      produce((state: TournamentsStore) => {
-        state.tournaments = [];
-        state.latestDoc = null;
-        state.isEmpty = false;
-      }),
-    );
   },
 
   deleteTournament: async (id: string) => {
@@ -139,7 +170,7 @@ export const tournamentsSlice: GenericStateCreator<TournamentsStore> = (set, get
       }),
     );
     try {
-      deleteFirestoreData(DatabasePaths.Tournaments, id);
+      await deleteFirestoreData(DatabasePaths.Tournaments, id);
 
       successNotification(t, 'successDelete');
     } catch (error) {

@@ -80,10 +80,13 @@ export const getTournamentsData = (
   return getDocs(queryRef);
 };
 
-export const deleteFirestoreData = (path: DatabasePaths, id: string): void => {
+export const deleteFirestoreData = async (
+  path: DatabasePaths,
+  id: string,
+): Promise<void> => {
   const docRef = doc(firestoreDb, path, id);
 
-  deleteDoc(docRef);
+  await deleteDoc(docRef);
 };
 
 export const getFirestoreDataById = async (

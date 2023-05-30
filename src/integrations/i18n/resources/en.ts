@@ -76,6 +76,7 @@ export const en = {
       startTime: 'Tournament start time',
       gameMode: 'Game mode',
       tournamentName: 'Name',
+      countOfMembers: 'Count of members',
       tournamentFormat: 'Format',
       game: 'Game',
       addImage: 'Add image',
@@ -85,6 +86,7 @@ export const en = {
       agreeToDelete:
         'Are you sure you want to delete this tournament? This action is irrevocable!',
       requiredField: 'This field is required!',
+      shouldBeMultiple: 'The value must be a multiple of the specified game mode',
     },
   },
 };

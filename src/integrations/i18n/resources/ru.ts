@@ -76,6 +76,7 @@ export const ru = {
       startTime: 'Начало турнира',
       gameMode: 'Режим',
       tournamentName: 'Имя',
+      countOfMembers: 'Количество участников',
       tournamentFormat: 'Формат',
       game: 'Игра',
       addImage: 'Добавьте изображение',
@@ -85,6 +86,7 @@ export const ru = {
       agreeToDelete:
         'Вы уверены что хотите удалить этот турнир? Это действие является безвозвратным!',
       requiredField: 'Это поле является обязательным',
+      shouldBeMultiple: 'Значение должно быть кратным указанному режиму игры',
     },
   },
 };
