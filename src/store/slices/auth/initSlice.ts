@@ -2,26 +2,25 @@ import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { produce } from 'immer';
 
 import { DatabasePaths } from 'constants/databasePaths';
-import { errorNotification } from 'helpers';
-import { getFirebaseDataById } from 'integrations/firebase';
+import { errorHandler } from 'helpers';
+import { getFirestoreDataByValue } from 'integrations/firebase/database';
 import { BoundStore } from 'store/store';
 import { GenericStateCreator, IUser } from 'store/types';
-import { TF } from 'types/translation';
 
 export interface IState {
   isAuth: boolean;
   isFetching: boolean;
   user: Nullable<IUser>;
-  getUser: (t: TF) => Promise<void>;
+  getUser: () => Promise<void>;
 }
 
 export const initSlice: GenericStateCreator<BoundStore> = (set, get) => ({
   ...get(),
+  isAuth: false,
   isFetching: false,
   user: null,
-  isAuth: false,
 
-  getUser: async (t: TF) => {
+  getUser: async () => {
     set(
       produce((state: BoundStore) => {
         state.isFetching = true;
@@ -42,23 +41,18 @@ export const initSlice: GenericStateCreator<BoundStore> = (set, get) => ({
       }
 
       try {
-        set(
-          produce((state) => {
-            state.isFetching = true;
-          }),
-        );
-        const userData = await getFirebaseDataById(DatabasePaths.Users, user.uid);
+        const userData = await getFirestoreDataByValue(DatabasePaths.Users, user.uid);
 
         if (userData) {
           set(
             produce((state: BoundStore) => {
-              state.user = { ...userData };
+              state.user = { ...(userData as IUser) };
               state.isAuth = true;
             }),
           );
         }
       } catch (error) {
-        errorNotification(t, 'errorSignin');
+        errorHandler(error as Error);
       } finally {
         set(
           produce((state: BoundStore) => {

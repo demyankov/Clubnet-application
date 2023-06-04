@@ -1,8 +1,10 @@
 import { FC, useState } from 'react';
 
-import { Button, Container, Text, TextInput } from '@mantine/core';
+import { Button, Container, Group, Text, TextInput } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { useTranslation } from 'react-i18next';
+import { BsCheck } from 'react-icons/bs';
+import { RiCloseCircleFill } from 'react-icons/ri';
 
 import { useAuth } from 'store/store';
 import { IUser } from 'store/types';
@@ -17,7 +19,7 @@ export const ProfilePersonalDataForm: FC = () => {
 
   const form = useForm({
     initialValues: {
-      name: currentUser.name,
+      name: currentUser.name || '',
     },
 
     validate: {
@@ -26,13 +28,20 @@ export const ProfilePersonalDataForm: FC = () => {
   });
 
   const submitUpdateUserData = async (): Promise<void> => {
-    await updateUserDataField({ name: form.values.name }, t);
+    await updateUserDataField({ name: form.values.name });
+    setIsEditMode(false);
+  };
+
+  const handleCancel = (): void => {
     setIsEditMode(false);
   };
 
   if (isEditMode)
     return (
       <Container m={0} w={250} pos="relative">
+        <Text size="lg" fw={700} td="underline">
+          {currentUser.nickName}
+        </Text>
         <form onSubmit={form.onSubmit(submitUpdateUserData)}>
           <TextInput
             label={t('profile.name')}
@@ -46,15 +55,24 @@ export const ProfilePersonalDataForm: FC = () => {
           </Text>
           <Text mb="sm">{currentUser.phone}</Text>
 
-          <Button type="submit" loading={isUpdateUserInfoFetching}>
-            {t('profile.save')}
-          </Button>
+          <Group>
+            <Button type="submit" loading={isUpdateUserInfoFetching}>
+              <BsCheck size="1.2rem" />
+            </Button>
+
+            <Button onClick={handleCancel}>
+              <RiCloseCircleFill size="1.2rem" />
+            </Button>
+          </Group>
         </form>
       </Container>
     );
 
   return (
     <Container m={0} w={250}>
+      <Text size="lg" fw={700} td="underline">
+        {currentUser.nickName}
+      </Text>
       <Text weight={500} size={14}>
         {t('profile.name')}
       </Text>

@@ -9,7 +9,6 @@ import {
   Button,
 } from '@mantine/core';
 import { useHover } from '@mantine/hooks';
-import { useTranslation } from 'react-i18next';
 import { BiUpload } from 'react-icons/bi';
 import { RiDeleteBin6Line } from 'react-icons/ri';
 
@@ -22,15 +21,14 @@ export const ProfileImageUploader: FC = () => {
     (state) => state,
   );
   const { hovered, ref } = useHover();
-  const { t } = useTranslation();
   const currentUser = user as IUser;
 
   const handleUpload = async (image: File): Promise<void> => {
-    await updateUserImage(image, t);
+    await updateUserImage(image);
   };
 
   const handleDeleteImage = async (): Promise<void> => {
-    await deleteUserImage(t);
+    await deleteUserImage();
   };
 
   return (

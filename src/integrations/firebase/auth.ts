@@ -25,9 +25,15 @@ export const generateRecaptcha = (): void => {
 
 export const appGetOTP = async (phone: string): Promise<void> => {
   const appVerifier = extendedWindow.recaptchaVerifier;
-  const confirmationResult = await signInWithPhoneNumber(auth, phone, appVerifier);
 
-  extendedWindow.confirmationResult = confirmationResult;
+  try {
+    const confirmationResult = await signInWithPhoneNumber(auth, phone, appVerifier);
+
+    extendedWindow.confirmationResult = confirmationResult;
+  } catch (error) {
+    extendedWindow.recaptchaVerifier.clear();
+    throw error;
+  }
 };
 
 export const appSignIn = async (code: string): Promise<User> => {

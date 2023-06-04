@@ -1,75 +1,72 @@
-import { ref, set, get, update } from 'firebase/database';
 import {
   collection,
   setDoc,
   getDocs,
   getDoc,
   deleteDoc,
+  updateDoc,
   doc,
   query,
   limit,
   orderBy,
-  Timestamp,
   startAfter,
   QuerySnapshot,
   QueryDocumentSnapshot,
   DocumentData,
+  Timestamp,
 } from 'firebase/firestore';
 
 import { DatabasePaths } from 'constants/databasePaths';
-import { db, firestoreDb } from 'integrations/firebase/firebase';
+import { db } from 'integrations/firebase/firebase';
 
-export const setFirebaseData = <T>(data: T, path: DatabasePaths, id: string): void => {
-  set(ref(db, `${path}/${id}`), data);
-};
-
-export const getFirebaseDataById = async (
+export const setFirestoreData = <T extends DocumentData>(
   path: DatabasePaths,
   id: string,
+  data: T,
+): void => {
+  const date = data.expectedDate ? new Date(data.expectedDate) : new Date();
+  const timestamp = Timestamp.fromDate(date);
+
+  const docRef = doc(db, path, id);
+
+  setDoc(docRef, { ...data, timestamp });
+};
+
+export const deleteFirestoreData = async (
+  path: DatabasePaths,
+  id: string,
+): Promise<void> => {
+  const docRef = doc(db, path, id);
+
+  await deleteDoc(docRef);
+};
+
+export const getFirestoreDataByValue = async (
+  path: DatabasePaths,
+  value: string,
 ): Promise<any> => {
-  const dataRef = ref(db, path);
-  const snapshot = await get(dataRef);
+  const docRef = doc(db, path, value);
+  const docSnap = await getDoc(docRef);
 
-  if (snapshot.exists()) {
-    const data = snapshot.val();
-    const dataArray = Object.keys(data).map((key) => {
-      return { id: key, ...data[key] };
-    });
-
-    return dataArray.find((dataUser: any) => dataUser.id === id);
+  if (docSnap.exists()) {
+    return { id: docSnap.id, ...docSnap.data() };
   }
 };
 
-export const updateFirebaseData = <T>(
+export const updateFirestoreData = async (
   path: DatabasePaths,
-  data: T,
   id: string,
+  propToUpdate: { [x: string]: any },
 ): Promise<void> => {
-  const updates: any = {};
+  const docRef = doc(db, path, id);
 
-  updates[`/${path}/${id}`] = data;
-
-  return update(ref(db), updates);
-};
-
-// new firestore feature
-export const setFirestoreData = <T extends DocumentData>(
-  path: DatabasePaths,
-  data: T,
-  id: string,
-): void => {
-  const date = new Date(data.expectedDate);
-  const timestamp = Timestamp.fromDate(date);
-
-  const docRef = doc(firestoreDb, path, id);
-
-  setDoc(docRef, { ...data, timestamp });
+  await updateDoc(docRef, propToUpdate);
 };
 
 export const getTournamentsData = (
   latestDoc: Nullable<QueryDocumentSnapshot>,
 ): Promise<QuerySnapshot<DocumentData>> => {
-  const collectionRef = collection(firestoreDb, DatabasePaths.Tournaments);
+  const collectionRef = collection(db, DatabasePaths.Tournaments);
   const queryRef = query(
     collectionRef,
     orderBy('timestamp', 'asc'),
@@ -78,25 +75,4 @@ export const getTournamentsData = (
   );
 
   return getDocs(queryRef);
-};
-
-export const deleteFirestoreData = async (
-  path: DatabasePaths,
-  id: string,
-): Promise<void> => {
-  const docRef = doc(firestoreDb, path, id);
-
-  await deleteDoc(docRef);
-};
-
-export const getFirestoreDataById = async (
-  path: DatabasePaths,
-  id: string,
-): Promise<any> => {
-  const docRef = doc(firestoreDb, path, id);
-  const docSnap = await getDoc(docRef);
-
-  if (docSnap.exists()) {
-    return { id: docSnap.id, ...docSnap.data() };
-  }
 };

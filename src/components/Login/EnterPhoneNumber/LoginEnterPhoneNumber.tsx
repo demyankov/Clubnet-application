@@ -1,53 +1,76 @@
-import { Dispatch, FC, SetStateAction } from 'react';
+import { FC } from 'react';
 
-import { TextInput, Group, Button, Stack, LoadingOverlay } from '@mantine/core';
+import { Input, Group, Button, LoadingOverlay } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { useTranslation } from 'react-i18next';
+import { IMaskInput } from 'react-imask';
 
-import { SignInSteps } from 'components/Login/types';
+import { LoginViewsProps } from 'components/Login/types';
 import { useAuth } from 'store/store';
 
-type PropsType = {
-  setCurrentStep: Dispatch<SetStateAction<SignInSteps>>;
-};
+export const LoginEnterPhoneNumber: FC<LoginViewsProps> = ({ setTempPhone }) => {
+  const { isFetching, isError, sendOTP } = useAuth((state) => state.signIn);
 
-export const LoginEnterPhoneNumber: FC<PropsType> = ({ setCurrentStep }: PropsType) => {
-  const {
-    getOTP: { isFetching, sendOTP },
-  } = useAuth((state) => state);
   const { t } = useTranslation();
 
-  const phoneForm = useForm({
+  const { values, errors, setFieldValue, onSubmit, getInputProps } = useForm({
     initialValues: {
       phone: '',
     },
 
     validate: {
       phone: (value) =>
-        /^\+[1-9]\d{1,14}$/.test(value) ? null : 'Wrong phone number format!',
+        /^\+375(25|29|33|44)\d{7}$/.test(value) ? null : t('form.phoneFormat'),
     },
   });
 
   const onSubmitPhone = async (): Promise<void> => {
-    await sendOTP(phoneForm.values.phone, t);
-    setCurrentStep(SignInSteps.ConfirmCode);
+    const { phone } = values;
+
+    await sendOTP(phone);
+
+    if (!isError) {
+      setTempPhone(phone);
+    }
+  };
+
+  const handleOnFocus = (): void => {
+    if (values.phone.length <= 4) {
+      setFieldValue('phone', '+375');
+    }
+  };
+
+  const handleOnPaste = async (): Promise<void> => {
+    // user has to allow access to clipboard
+    const paste = await navigator.clipboard.readText();
+
+    setFieldValue('phone', paste.trim().slice(-9));
   };
 
   return (
-    <form onSubmit={phoneForm.onSubmit(onSubmitPhone)}>
+    <form onSubmit={onSubmit(onSubmitPhone)}>
       <LoadingOverlay visible={isFetching} overlayBlur={0.1} />
 
-      <Stack>
-        <TextInput
+      <Input.Wrapper
+        id="phone-input"
+        label={t('form.yourPhone')}
+        required
+        mt="xs"
+        inputMode="tel"
+        onFocus={handleOnFocus}
+        onPaste={handleOnPaste}
+      >
+        <Input
+          component={IMaskInput}
+          mask="+375000000000"
+          id="phone-input"
           required
-          label={t('form.yourPhone')}
-          description={t('form.phoneFormat')}
-          placeholder="+1234234234"
-          radius="md"
-          mt="md"
-          {...phoneForm.getInputProps('phone')}
+          mt="xs"
+          placeholder="+375251234567"
+          {...getInputProps('phone')}
         />
-      </Stack>
+        <Input.Error>{errors.phone}</Input.Error>
+      </Input.Wrapper>
 
       <Group position="center" mt="xl">
         <Button type="submit" radius="xl" disabled={isFetching}>

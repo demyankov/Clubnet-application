@@ -17,7 +17,7 @@ export const HeaderUserMenu: FC = () => {
   } = useAuth((state) => state);
 
   const handleSignOut = (): void => {
-    signOut(t);
+    signOut();
   };
 
   return (
@@ -27,7 +27,7 @@ export const HeaderUserMenu: FC = () => {
       </Menu.Target>
 
       <Menu.Dropdown>
-        <Menu.Label>{user?.name}</Menu.Label>
+        <Menu.Label>{user?.nickName}</Menu.Label>
         <Menu.Item icon={<IconSettings size={14} />} component={Link} to={Paths.profile}>
           {t('header.settings')}
         </Menu.Item>

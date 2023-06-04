@@ -1,13 +1,13 @@
 import { QueryDocumentSnapshot } from 'firebase/firestore';
-import { t } from 'i18next';
 import { produce } from 'immer';
 
 import { DatabasePaths } from 'constants/databasePaths';
+import { StorageFolders } from 'constants/storageFolders';
 import { errorNotification, successNotification } from 'helpers';
 import {
   deleteFirestoreData,
   getTournamentsData,
-  getFirestoreDataById,
+  getFirestoreDataByValue,
   setFirestoreData,
   uploadImageAndGetURL,
 } from 'integrations/firebase';
@@ -61,17 +61,20 @@ export const tournamentsSlice: GenericStateCreator<TournamentsStore> = (set, get
     );
 
     try {
-      const image = await uploadImageAndGetURL(data.image!, data.id);
-
-      setFirestoreData<ITournamentData>(
-        DatabasePaths.Tournaments,
-        { ...data, image },
+      const image = await uploadImageAndGetURL(
+        data.image!,
+        StorageFolders.Images.TournamentImage,
         data.id,
       );
 
-      successNotification(t, 'tournamentSuccess');
+      setFirestoreData<ITournamentData>(DatabasePaths.Tournaments, data.id, {
+        ...data,
+        image,
+      });
+
+      successNotification('tournamentSuccess');
     } catch (error) {
-      errorNotification(t, 'errorCommon');
+      errorNotification('errorCommon');
     } finally {
       set(
         produce((state: TournamentsStore) => {
@@ -109,7 +112,7 @@ export const tournamentsSlice: GenericStateCreator<TournamentsStore> = (set, get
         );
       }
     } catch (error) {
-      errorNotification(t, 'errorCommon');
+      errorNotification('errorCommon');
     } finally {
       set(
         produce((state: TournamentsStore) => {
@@ -137,7 +140,7 @@ export const tournamentsSlice: GenericStateCreator<TournamentsStore> = (set, get
         });
 
         if (querySnapshot.empty) {
-          successNotification(t, 'emptyTournaments');
+          successNotification('emptyTournaments');
           set(
             produce((state: TournamentsStore) => {
               state.isEmpty = true;
@@ -153,7 +156,7 @@ export const tournamentsSlice: GenericStateCreator<TournamentsStore> = (set, get
         );
       }
     } catch (error) {
-      errorNotification(t, 'errorCommon');
+      errorNotification('errorCommon');
     } finally {
       set(
         produce((state: TournamentsStore) => {
@@ -172,9 +175,9 @@ export const tournamentsSlice: GenericStateCreator<TournamentsStore> = (set, get
     try {
       await deleteFirestoreData(DatabasePaths.Tournaments, id);
 
-      successNotification(t, 'successDelete');
+      successNotification('successDelete');
     } catch (error) {
-      errorNotification(t, 'errorCommon');
+      errorNotification('errorCommon');
     } finally {
       set(
         produce((state: TournamentsStore) => {
@@ -191,7 +194,7 @@ export const tournamentsSlice: GenericStateCreator<TournamentsStore> = (set, get
       }),
     );
     try {
-      const data = await getFirestoreDataById(DatabasePaths.Tournaments, id);
+      const data = await getFirestoreDataByValue(DatabasePaths.Tournaments, id);
 
       set(
         produce((state: TournamentsStore) => {
@@ -199,7 +202,7 @@ export const tournamentsSlice: GenericStateCreator<TournamentsStore> = (set, get
         }),
       );
     } catch (error) {
-      errorNotification(t, 'errorCommon');
+      errorNotification('errorCommon');
     } finally {
       set(
         produce((state: TournamentsStore) => {

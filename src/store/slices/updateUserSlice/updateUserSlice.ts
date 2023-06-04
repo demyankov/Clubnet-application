@@ -1,21 +1,22 @@
 import { produce } from 'immer';
 
 import { DatabasePaths } from 'constants/databasePaths';
-import { errorNotification } from 'helpers';
-import { uploadImageAndGetURL, updateFirebaseData } from 'integrations/firebase';
+import { StorageFolders } from 'constants/storageFolders';
+import { errorHandler } from 'helpers';
+import {
+  uploadImageAndGetURL,
+  deleteImageFromStorage,
+  updateFirestoreData,
+} from 'integrations/firebase';
 import { BoundStore } from 'store/store';
 import { GenericStateCreator, IUser, EditableUserFields } from 'store/types';
-import { TF } from 'types/translation';
 
 export interface IUpdateUser {
   isUserImageFetching: boolean;
   isUpdateUserInfoFetching: boolean;
-  updateUserImage: (image: File, t: TF) => Promise<void>;
-  deleteUserImage: (t: TF) => Promise<void>;
-  updateUserDataField: (
-    updatedUserData: Partial<EditableUserFields>,
-    t: TF,
-  ) => Promise<void>;
+  updateUserImage: (image: File) => Promise<void>;
+  deleteUserImage: () => Promise<void>;
+  updateUserDataField: (updatedUserData: Partial<EditableUserFields>) => Promise<void>;
 }
 
 export const updateUserSlice: GenericStateCreator<BoundStore> = (set, get) => ({
@@ -23,7 +24,7 @@ export const updateUserSlice: GenericStateCreator<BoundStore> = (set, get) => ({
   isUserImageFetching: false,
   isUpdateUserInfoFetching: false,
 
-  updateUserImage: async (imageFile, t) => {
+  updateUserImage: async (imageFile) => {
     set(
       produce((state: BoundStore) => {
         state.isUserImageFetching = true;
@@ -33,16 +34,13 @@ export const updateUserSlice: GenericStateCreator<BoundStore> = (set, get) => ({
     const currentUser = get().user as IUser;
 
     try {
-      const image = await uploadImageAndGetURL(imageFile, currentUser.id);
-
-      await updateFirebaseData<IUser>(
-        DatabasePaths.Users,
-        {
-          ...currentUser,
-          image,
-        },
+      const image = await uploadImageAndGetURL(
+        imageFile,
+        StorageFolders.Images.UserPhoto,
         currentUser.id,
       );
+
+      await updateFirestoreData(DatabasePaths.Users, currentUser.id, { image });
 
       set(
         produce((state: BoundStore) => {
@@ -50,7 +48,7 @@ export const updateUserSlice: GenericStateCreator<BoundStore> = (set, get) => ({
         }),
       );
     } catch (error) {
-      errorNotification(t);
+      errorHandler(error as Error);
     } finally {
       set(
         produce((state: BoundStore) => {
@@ -60,7 +58,7 @@ export const updateUserSlice: GenericStateCreator<BoundStore> = (set, get) => ({
     }
   },
 
-  deleteUserImage: async (t) => {
+  deleteUserImage: async () => {
     set(
       produce((state: BoundStore) => {
         state.isUserImageFetching = true;
@@ -70,14 +68,11 @@ export const updateUserSlice: GenericStateCreator<BoundStore> = (set, get) => ({
     const currentUser = get().user as IUser;
 
     try {
-      await updateFirebaseData<IUser>(
-        DatabasePaths.Users,
-        {
-          ...currentUser,
-          image: null,
-        },
-        currentUser.id,
-      );
+      if (currentUser.image) {
+        await deleteImageFromStorage(currentUser.image);
+      }
+
+      await updateFirestoreData(DatabasePaths.Users, currentUser.id, { image: null });
 
       set(
         produce((state: BoundStore) => {
@@ -85,7 +80,7 @@ export const updateUserSlice: GenericStateCreator<BoundStore> = (set, get) => ({
         }),
       );
     } catch (error) {
-      errorNotification(t);
+      errorHandler(error as Error);
     } finally {
       set(
         produce((state: BoundStore) => {
@@ -95,7 +90,7 @@ export const updateUserSlice: GenericStateCreator<BoundStore> = (set, get) => ({
     }
   },
 
-  updateUserDataField: async (updatedUserData, t) => {
+  updateUserDataField: async (updatedUserData) => {
     set(
       produce((state: BoundStore) => {
         state.isUpdateUserInfoFetching = true;
@@ -105,14 +100,11 @@ export const updateUserSlice: GenericStateCreator<BoundStore> = (set, get) => ({
     const currentUser = get().user as IUser;
 
     try {
-      await updateFirebaseData<IUser>(
-        DatabasePaths.Users,
-        {
-          ...currentUser,
-          ...updatedUserData,
-        },
-        currentUser.id,
-      );
+      if (currentUser.image) {
+        await deleteImageFromStorage(currentUser.image);
+      }
+
+      await updateFirestoreData(DatabasePaths.Users, currentUser.id, updatedUserData);
 
       set(
         produce((state: BoundStore) => {
@@ -120,7 +112,7 @@ export const updateUserSlice: GenericStateCreator<BoundStore> = (set, get) => ({
         }),
       );
     } catch (error) {
-      errorNotification(t);
+      errorHandler(error as Error);
     } finally {
       set(
         produce((state: BoundStore) => {

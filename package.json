@@ -29,6 +29,7 @@
     "react-dom": "^18.2.0",
     "react-i18next": "^12.2.0",
     "react-icons": "^4.8.0",
+    "react-imask": "^6.6.1",
     "react-router-dom": "^6.10.0",
     "vite-plugin-svgr": "^2.4.0",
     "zustand": "^4.3.7"

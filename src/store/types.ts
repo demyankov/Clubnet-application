@@ -6,8 +6,9 @@ export type GenericStateCreator<T> = StateCreator<T, [], [], T>;
 
 export interface IUser {
   id: string;
-  phone: string;
-  name: string;
+  phone: Nullable<string>;
+  nickName: Nullable<string>;
+  name: Nullable<string>;
   image: Nullable<string>;
   role: Roles;
 }

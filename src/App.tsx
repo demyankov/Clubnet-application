@@ -1,7 +1,6 @@
 import { FC, lazy, Suspense, useCallback, useEffect } from 'react';
 
 import { Notifications } from '@mantine/notifications';
-import { useTranslation } from 'react-i18next';
 import { Route, Routes } from 'react-router-dom';
 
 import { FooterSocial, HeaderMegaMenu } from 'components';
@@ -18,12 +17,11 @@ const Profile = lazy(() => import('pages/Profile/Profile'));
 const NotFound = lazy(() => import('pages/NotFound/NotFound'));
 
 const App: FC = () => {
-  const { t } = useTranslation();
   const { getUser, isFetching } = useAuth((state) => state);
 
   const fetchUserData = useCallback(async () => {
-    await getUser(t);
-  }, [getUser, t]);
+    await getUser();
+  }, [getUser]);
 
   useEffect(() => {
     fetchUserData();
@@ -36,44 +34,42 @@ const App: FC = () => {
       <HeaderMegaMenu />
 
       <Suspense fallback={<LoaderScreen />}>
-        <div className="content">
-          <Routes>
-            <Route path={Paths.home} element={<Home />} />
-            <Route
-              path={Paths.signin}
-              element={
-                <ProtectedRoute roles={[Roles.USER, Roles.ADMIN]}>
-                  <Login />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path={Paths.tournaments}
-              element={
-                <ProtectedRoute isPrivate roles={[Roles.USER, Roles.ADMIN]}>
-                  <Tournaments />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path={`${Paths.tournaments}/:id`}
-              element={
-                <ProtectedRoute isPrivate roles={[Roles.USER, Roles.ADMIN]}>
-                  <TournamentInfo />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path={Paths.profile}
-              element={
-                <ProtectedRoute isPrivate roles={[Roles.USER, Roles.ADMIN]}>
-                  <Profile />
-                </ProtectedRoute>
-              }
-            />
-            <Route path={Paths.notFound} element={<NotFound />} />
-          </Routes>
-        </div>
+        <Routes>
+          <Route path={Paths.home} element={<Home />} />
+          <Route
+            path={Paths.signin}
+            element={
+              <ProtectedRoute roles={[Roles.USER, Roles.ADMIN]}>
+                <Login />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path={Paths.tournaments}
+            element={
+              <ProtectedRoute isPrivate roles={[Roles.USER, Roles.ADMIN]}>
+                <Tournaments />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path={`${Paths.tournaments}/:id`}
+            element={
+              <ProtectedRoute isPrivate roles={[Roles.USER, Roles.ADMIN]}>
+                <TournamentInfo />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path={Paths.profile}
+            element={
+              <ProtectedRoute isPrivate roles={[Roles.USER, Roles.ADMIN]}>
+                <Profile />
+              </ProtectedRoute>
+            }
+          />
+          <Route path={Paths.notFound} element={<NotFound />} />
+        </Routes>
       </Suspense>
 
       <FooterSocial />

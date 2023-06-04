@@ -1,14 +1,13 @@
-import { FC, useState } from 'react';
+import { FC, useState, useRef } from 'react';
 
 import { createStyles, Paper, Text } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
 
 import { SIGN_IN_STEP_VIEWS } from 'components/Login/config';
-import { SignInSteps } from 'components/Login/types';
+import { useAuth } from 'store/store';
 
 const useStyles = createStyles(() => ({
   authForm: {
-    paddingTop: '2.5rem',
     maxWidth: '26.25rem',
     width: '100%',
     marginLeft: 'auto',
@@ -17,13 +16,20 @@ const useStyles = createStyles(() => ({
 }));
 
 const Login: FC = () => {
-  const { classes } = useStyles();
-  const [currentStep, setCurrentStep] = useState<SignInSteps>(
-    SignInSteps.EnterPhoneNumber,
-  );
   const { t } = useTranslation();
+  const { classes } = useStyles();
+
+  const { currentStep } = useAuth((state) => state.signIn);
+
+  const [tempPhone, setTempPhone] = useState<string>('');
+
+  const widgetRef = useRef<HTMLDivElement>(null);
 
   const StepComponent = SIGN_IN_STEP_VIEWS[currentStep];
+
+  const resetRecaptchaWidget = (): void => {
+    (widgetRef.current as HTMLDivElement).innerHTML = '<div id="captcha" />';
+  };
 
   return (
     <div className={classes.authForm}>
@@ -32,9 +38,15 @@ const Login: FC = () => {
           {t('form.signinHeader')}
         </Text>
 
-        <StepComponent setCurrentStep={setCurrentStep} />
+        <StepComponent
+          tempPhone={tempPhone}
+          setTempPhone={setTempPhone}
+          resetRecaptchaWidget={resetRecaptchaWidget}
+        />
 
-        <div id="captcha" />
+        <div ref={widgetRef}>
+          <div id="captcha" />
+        </div>
       </Paper>
     </div>
   );

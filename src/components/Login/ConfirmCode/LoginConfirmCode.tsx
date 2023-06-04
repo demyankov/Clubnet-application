@@ -1,36 +1,47 @@
-import { Dispatch, FC, SetStateAction } from 'react';
+import { FC } from 'react';
 
-import { PinInput, Group, Button, Stack, LoadingOverlay } from '@mantine/core';
+import { PinInput, Group, Button, Stack, LoadingOverlay, Text } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
 import { BiArrowBack } from 'react-icons/bi';
 
-import { SignInSteps } from 'components/Login/types';
+import { LoginViewsProps, SignInSteps } from 'components/Login/types';
+import { useTimer } from 'hooks';
 import { useAuth } from 'store/store';
-
-type Props = {
-  setCurrentStep: Dispatch<SetStateAction<SignInSteps>>;
-};
 
 const codeLength = 6;
 
-export const LoginConfirmCode: FC<Props> = ({ setCurrentStep }) => {
-  const {
-    signIn: { isFetching, signIn },
-  } = useAuth((state) => state);
+export const LoginConfirmCode: FC<LoginViewsProps> = ({
+  tempPhone,
+  resetRecaptchaWidget,
+}) => {
   const { t } = useTranslation();
+  const { isFetching, isError, signIn, setCurrentStep, sendOTP } = useAuth(
+    (state) => state.signIn,
+  );
+
+  const { seconds, isFinished, restart } = useTimer();
 
   const handlePrevStep = (): void => {
+    resetRecaptchaWidget();
     setCurrentStep(SignInSteps.EnterPhoneNumber);
   };
 
-  const handleChangeConfirmCode = async (code: string): Promise<void> => {
+  const handleChangeConfirmCode = (code: string): void => {
     const isValid = code.length === codeLength;
 
     if (!isValid) {
       return;
     }
 
-    await signIn(code, t);
+    signIn(code);
+  };
+
+  const handleSendCode = async (): Promise<void> => {
+    resetRecaptchaWidget();
+
+    await sendOTP(tempPhone);
+
+    restart();
   };
 
   return (
@@ -49,18 +60,27 @@ export const LoginConfirmCode: FC<Props> = ({ setCurrentStep }) => {
           mt="md"
           mx="auto"
           onChange={handleChangeConfirmCode}
+          error={isError}
         />
+        {isError && (
+          <Text c="red" size="xs" ta="center">
+            {t('form.wrongCode')}
+          </Text>
+        )}
       </Stack>
 
       <Group position="center" mt="xl">
+        <Button type="button" radius="xl" onClick={handlePrevStep} disabled={isFetching}>
+          <BiArrowBack size="1.2rem" />
+        </Button>
+
         <Button
-          leftIcon={<BiArrowBack size="1.2rem" />}
-          type="button"
+          disabled={!isFinished}
+          loading={isFetching}
           radius="xl"
-          onClick={handlePrevStep}
-          disabled={isFetching}
+          onClick={handleSendCode}
         >
-          {t('form.phoneAgain')}
+          {seconds} {t('form.smsAgain')}
         </Button>
       </Group>
     </>

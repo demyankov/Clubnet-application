@@ -3,8 +3,11 @@ import { Dispatch, SetStateAction } from 'react';
 export enum SignInSteps {
   EnterPhoneNumber,
   ConfirmCode,
+  SetNickName,
 }
 
 export type LoginViewsProps = {
-  setCurrentStep: Dispatch<SetStateAction<SignInSteps>>;
+  tempPhone: string;
+  setTempPhone: Dispatch<SetStateAction<string>>;
+  resetRecaptchaWidget: () => void;
 };

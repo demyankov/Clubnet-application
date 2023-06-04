@@ -77,7 +77,7 @@ export const HeaderMegaMenu: FC = () => {
   const { t } = useTranslation();
 
   const handleSignOut = (): void => {
-    signOut(t);
+    signOut();
   };
 
   return (
