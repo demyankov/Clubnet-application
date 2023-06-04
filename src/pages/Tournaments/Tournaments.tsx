@@ -6,7 +6,7 @@ import { TournamentsList } from 'components/tournaments';
 
 const Tournaments: FC = () => {
   return (
-    <Box pt="60px">
+    <Box>
       <Container size="md">
         <TournamentsList />
       </Container>
