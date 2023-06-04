@@ -18,10 +18,12 @@ export const TournamentsList: FC = () => {
     isFetching,
     getTournaments,
     tournaments,
-    isEmpty,
     getMoreTournaments,
     isGetMoreFetching,
+    totalTournamentsCount,
   } = useTournaments((state) => state);
+
+  const IsShowMoreButtonShown: boolean = totalTournamentsCount !== tournaments.length;
 
   useEffect(() => {
     getTournaments();
@@ -68,7 +70,7 @@ export const TournamentsList: FC = () => {
       >
         {getSortedTournaments()}
         <Center m="20px">
-          {!isEmpty && (
+          {IsShowMoreButtonShown && (
             <Button m="20px" onClick={getMoreTournaments} loading={isGetMoreFetching}>
               {t('tournaments.showMore')}
             </Button>

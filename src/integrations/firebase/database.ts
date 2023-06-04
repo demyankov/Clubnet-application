@@ -14,6 +14,7 @@ import {
   QueryDocumentSnapshot,
   DocumentData,
   Timestamp,
+  getCountFromServer,
 } from 'firebase/firestore';
 
 import { DatabasePaths } from 'constants/databasePaths';
@@ -75,4 +76,10 @@ export const getTournamentsData = (
   );
 
   return getDocs(queryRef);
+};
+
+export const getFirestoreDataLength = (path: DatabasePaths): Promise<any> => {
+  const collectionRef = collection(db, path);
+
+  return getCountFromServer(collectionRef);
 };

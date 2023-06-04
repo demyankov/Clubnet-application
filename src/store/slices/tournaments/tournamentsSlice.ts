@@ -6,8 +6,9 @@ import { StorageFolders } from 'constants/storageFolders';
 import { errorNotification, successNotification } from 'helpers';
 import {
   deleteFirestoreData,
-  getTournamentsData,
   getFirestoreDataByValue,
+  getFirestoreDataLength,
+  getTournamentsData,
   setFirestoreData,
   uploadImageAndGetURL,
 } from 'integrations/firebase';
@@ -33,8 +34,8 @@ export interface ITournamentData extends Omit<IAddTournamentData, 'image'> {
 export interface ITournaments {
   tournaments: ITournamentData[];
   latestDoc: Nullable<QueryDocumentSnapshot>;
-  isEmpty: boolean;
   isFetching: boolean;
+  totalTournamentsCount: number;
   isGetMoreFetching: boolean;
   currentTournament: Nullable<ITournamentData>;
   addTournament: (data: IAddTournamentData) => void;
@@ -47,8 +48,8 @@ export interface ITournaments {
 export const tournamentsSlice: GenericStateCreator<TournamentsStore> = (set, get) => ({
   ...get(),
   isFetching: true,
+  totalTournamentsCount: 0,
   isGetMoreFetching: false,
-  isEmpty: false,
   latestDoc: null,
   currentTournament: null,
   tournaments: [],
@@ -90,12 +91,12 @@ export const tournamentsSlice: GenericStateCreator<TournamentsStore> = (set, get
         state.isFetching = true;
         state.tournaments = [];
         state.latestDoc = null;
-        state.isEmpty = false;
       }),
     );
 
     try {
       const querySnapshot = await getTournamentsData(null);
+      const snapshotLength = await getFirestoreDataLength(DatabasePaths.Tournaments);
 
       if (querySnapshot.docs) {
         const data: any[] = [];
@@ -108,6 +109,7 @@ export const tournamentsSlice: GenericStateCreator<TournamentsStore> = (set, get
           produce((state: TournamentsStore) => {
             state.tournaments = [...state.tournaments, ...data];
             state.latestDoc = querySnapshot.docs[querySnapshot.docs.length - 1];
+            state.totalTournamentsCount = snapshotLength.data().count;
           }),
         );
       }
@@ -138,15 +140,6 @@ export const tournamentsSlice: GenericStateCreator<TournamentsStore> = (set, get
         querySnapshot.forEach((doc) => {
           data.push({ ...doc.data(), id: doc.id });
         });
-
-        if (querySnapshot.empty) {
-          successNotification('emptyTournaments');
-          set(
-            produce((state: TournamentsStore) => {
-              state.isEmpty = true;
-            }),
-          );
-        }
 
         set(
           produce((state: TournamentsStore) => {

@@ -1,6 +1,6 @@
 import { FC, useState, useRef } from 'react';
 
-import { createStyles, Paper, Text } from '@mantine/core';
+import { createStyles, Text, Card } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
 
 import { SIGN_IN_STEP_VIEWS } from 'components/Login/config';
@@ -8,10 +8,11 @@ import { useAuth } from 'store/store';
 
 const useStyles = createStyles(() => ({
   authForm: {
-    maxWidth: '26.25rem',
     width: '100%',
-    marginLeft: 'auto',
-    marginRight: 'auto',
+    position: 'absolute',
+    left: '50%',
+    top: '50%',
+    transform: 'translate(-50%, -50%)',
   },
 }));
 
@@ -32,23 +33,21 @@ const Login: FC = () => {
   };
 
   return (
-    <div className={classes.authForm}>
-      <Paper radius="md" p="xl" withBorder pos="relative">
-        <Text size="lg" weight={500} ta="center">
-          {t('form.signinHeader')}
-        </Text>
+    <Card className={classes.authForm} radius="md" p="xl" withBorder maw="26.25rem">
+      <Text size="lg" weight={500} ta="center">
+        {t('form.signinHeader')}
+      </Text>
 
-        <StepComponent
-          tempPhone={tempPhone}
-          setTempPhone={setTempPhone}
-          resetRecaptchaWidget={resetRecaptchaWidget}
-        />
+      <StepComponent
+        tempPhone={tempPhone}
+        setTempPhone={setTempPhone}
+        resetRecaptchaWidget={resetRecaptchaWidget}
+      />
 
-        <div ref={widgetRef}>
-          <div id="captcha" />
-        </div>
-      </Paper>
-    </div>
+      <div ref={widgetRef}>
+        <div id="captcha" />
+      </div>
+    </Card>
   );
 };
 
