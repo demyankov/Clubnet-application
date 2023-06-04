@@ -80,7 +80,7 @@ export const LoginConfirmCode: FC<LoginViewsProps> = ({
           radius="xl"
           onClick={handleSendCode}
         >
-          {seconds} {t('form.smsAgain')}
+          {seconds > 0 && seconds} {t('form.smsAgain')}
         </Button>
       </Group>
     </>

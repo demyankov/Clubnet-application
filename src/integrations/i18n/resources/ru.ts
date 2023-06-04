@@ -96,5 +96,8 @@ export const ru = {
       requiredField: 'Это поле является обязательным',
       shouldBeMultiple: 'Значение должно быть кратным указанному режиму игры',
     },
+    login: {
+      phonePlaceholder: 'Введите номер телефона',
+    },
   },
 };

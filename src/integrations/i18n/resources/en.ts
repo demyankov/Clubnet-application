@@ -96,5 +96,8 @@ export const en = {
       requiredField: 'This field is required!',
       shouldBeMultiple: 'The value must be a multiple of the specified game mode',
     },
+    login: {
+      phonePlaceholder: 'Enter phone number',
+    },
   },
 };

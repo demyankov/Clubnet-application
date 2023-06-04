@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { IMaskInput } from 'react-imask';
 
 import { LoginViewsProps } from 'components/Login/types';
+import { formatPhoneNumber } from 'helpers/formatters';
 import { useAuth } from 'store/store';
 
 export const LoginEnterPhoneNumber: FC<LoginViewsProps> = ({ setTempPhone }) => {
@@ -13,42 +14,38 @@ export const LoginEnterPhoneNumber: FC<LoginViewsProps> = ({ setTempPhone }) => 
 
   const { t } = useTranslation();
 
-  const { values, errors, setFieldValue, onSubmit, getInputProps } = useForm({
+  const { values, errors, onSubmit, getInputProps } = useForm({
     initialValues: {
       phone: '',
     },
 
     validate: {
-      phone: (value) =>
-        /^\+375(25|29|33|44)\d{7}$/.test(value) ? null : t('form.phoneFormat'),
+      phone: (value) => {
+        const processedPhone = formatPhoneNumber(value);
+
+        const prefixRegex = /^\+375\s?(25|29|33|44)/;
+
+        if (!prefixRegex.test(processedPhone)) {
+          return t('form.phoneFormat');
+        }
+
+        return null;
+      },
     },
   });
 
-  const onSubmitPhone = async (): Promise<void> => {
-    const { phone } = values;
+  const handleSubmit = ({ phone }: typeof values): void => {
+    const processedPhone = formatPhoneNumber(phone);
 
-    await sendOTP(phone);
+    sendOTP(processedPhone);
 
     if (!isError) {
-      setTempPhone(phone);
+      setTempPhone(processedPhone);
     }
-  };
-
-  const handleOnFocus = (): void => {
-    if (values.phone.length <= 4) {
-      setFieldValue('phone', '+375');
-    }
-  };
-
-  const handleOnPaste = async (): Promise<void> => {
-    // user has to allow access to clipboard
-    const paste = await navigator.clipboard.readText();
-
-    setFieldValue('phone', paste.trim().slice(-9));
   };
 
   return (
-    <form onSubmit={onSubmit(onSubmitPhone)}>
+    <form onSubmit={onSubmit(handleSubmit)}>
       <LoadingOverlay visible={isFetching} overlayBlur={0.1} />
 
       <Input.Wrapper
@@ -57,16 +54,14 @@ export const LoginEnterPhoneNumber: FC<LoginViewsProps> = ({ setTempPhone }) => 
         required
         mt="xs"
         inputMode="tel"
-        onFocus={handleOnFocus}
-        onPaste={handleOnPaste}
       >
         <Input
           component={IMaskInput}
-          mask="+375000000000"
+          mask="+375 (00) 000-00-00"
           id="phone-input"
           required
           mt="xs"
-          placeholder="+375251234567"
+          placeholder={t('login.phonePlaceholder')}
           {...getInputProps('phone')}
         />
         <Input.Error>{errors.phone}</Input.Error>
