@@ -1,3 +1,6 @@
+// eslint-disable-next-line import/no-unresolved
+import { SetFieldError } from '@mantine/form/lib/types';
+import { t } from 'i18next';
 import { produce } from 'immer';
 
 import { SignInSteps } from 'components/Login/types';
@@ -6,7 +9,8 @@ import { Roles } from 'constants/userRoles';
 import { errorHandler, successNotification } from 'helpers';
 import { appGetOTP, appSignIn, generateRecaptcha } from 'integrations/firebase/auth';
 import {
-  getFirestoreDataByValue,
+  checkFieldValueExists,
+  getFireStoreDataById,
   setFirestoreData,
 } from 'integrations/firebase/database';
 import { BoundStore } from 'store/store';
@@ -18,9 +22,8 @@ export interface ISignIn {
     isError: boolean;
     isCompletedRegistration: boolean;
     currentStep: SignInSteps;
-    signIn: (code: string) => Promise<void>;
-    setNickName: (nickName: string) => Promise<void>;
-    nickNameExists: (nickName: string) => Promise<boolean | undefined>;
+    checkSmsCode: (code: string, setFieldError?: SetFieldError<any>) => Promise<void>;
+    nickNameExists: (nickName: string, setFieldError: SetFieldError<any>) => void;
     sendOTP: (phone: string) => Promise<void>;
     setCurrentStep: (step: SignInSteps) => void;
   };
@@ -33,8 +36,9 @@ export const signInSlice: GenericStateCreator<BoundStore> = (set, get) => ({
     isError: false,
     isCompletedRegistration: false,
     currentStep: SignInSteps.EnterPhoneNumber,
+    // TODO: add setFieldError
 
-    signIn: async (code) => {
+    checkSmsCode: async (code, setFieldError) => {
       set(
         produce((state: BoundStore) => {
           state.signIn.isFetching = true;
@@ -46,19 +50,16 @@ export const signInSlice: GenericStateCreator<BoundStore> = (set, get) => ({
         const user = await appSignIn(code);
 
         if (user) {
-          const userData: IUser = await getFirestoreDataByValue(
-            DatabasePaths.Users,
-            user.uid,
-          );
+          const isUserExist = await getFireStoreDataById(DatabasePaths.Users, user.uid);
 
-          if (userData) {
+          if (isUserExist) {
             set(
               produce((state: BoundStore) => {
-                state.isAuth = true;
                 state.signIn.isCompletedRegistration = true;
-                state.user = { ...userData };
               }),
             );
+
+            return;
           }
 
           const candidate: Partial<IUser> = {
@@ -124,17 +125,29 @@ export const signInSlice: GenericStateCreator<BoundStore> = (set, get) => ({
       }
     },
 
-    setNickName: async (nickName) => {
-      set(
-        produce((state: BoundStore) => {
-          state.signIn.isFetching = true;
-        }),
-      );
-
-      const currentUser = get().user as IUser;
-
+    nickNameExists: async (nickName, setFieldError) => {
       try {
-        setFirestoreData(DatabasePaths.Users, currentUser.id, {
+        set(
+          produce((state: BoundStore) => {
+            state.signIn.isFetching = true;
+          }),
+        );
+
+        const isNicknameExists = await checkFieldValueExists(
+          DatabasePaths.Users,
+          'nickName',
+          nickName,
+        );
+
+        if (isNicknameExists) {
+          setFieldError('nickName', t('form.nicknameExists'));
+
+          return;
+        }
+
+        const currentUser = get().user as IUser;
+
+        await setFirestoreData(DatabasePaths.Users, currentUser.id, {
           ...currentUser,
           nickName,
         });
@@ -150,34 +163,6 @@ export const signInSlice: GenericStateCreator<BoundStore> = (set, get) => ({
         successNotification('successSignin');
       } catch (error) {
         errorHandler(error as Error);
-      } finally {
-        set(
-          produce((state: BoundStore) => {
-            state.signIn.isFetching = false;
-          }),
-        );
-      }
-    },
-
-    nickNameExists: async (nickName) => {
-      try {
-        set(
-          produce((state: BoundStore) => {
-            state.signIn.isFetching = true;
-          }),
-        );
-        const foundNickName = await getFirestoreDataByValue(
-          DatabasePaths.Users,
-          nickName,
-        );
-
-        return !!foundNickName;
-      } catch (e) {
-        set(
-          produce((state: BoundStore) => {
-            state.signIn.isError = true;
-          }),
-        );
       } finally {
         set(
           produce((state: BoundStore) => {

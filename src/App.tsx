@@ -18,14 +18,15 @@ const NotFound = lazy(() => import('pages/NotFound/NotFound'));
 
 const App: FC = () => {
   const { getUser, isFetching } = useAuth((state) => state);
+  const { isCompletedRegistration } = useAuth((state) => state.signIn);
 
-  const fetchUserData = useCallback(async () => {
-    await getUser();
+  const fetchUserData = useCallback(() => {
+    getUser();
   }, [getUser]);
 
   useEffect(() => {
     fetchUserData();
-  }, [fetchUserData]);
+  }, [fetchUserData, isCompletedRegistration]);
 
   return (
     <RenderContentContainer isFetching={isFetching}>

@@ -1,93 +1,50 @@
-import { FC, useState, useEffect, useCallback } from 'react';
+import { FC } from 'react';
 
-import { TextInput, Group, Button, LoadingOverlay, Text, Flex } from '@mantine/core';
+import { Button, createStyles, Group, TextInput } from '@mantine/core';
 import { useForm } from '@mantine/form';
-import { useDebouncedValue } from '@mantine/hooks';
 import { useTranslation } from 'react-i18next';
-import { BsCheck } from 'react-icons/bs';
-import { RiCloseCircleFill } from 'react-icons/ri';
 
 import { LoginViewsProps } from 'components/Login/types';
 import { useAuth } from 'store/store';
 
+const useStyles = createStyles(() => ({
+  wrapper: {
+    height: '90px', // Set a fixed height to prevent layout jump
+  },
+}));
+
 export const LoginSetNickName: FC<LoginViewsProps> = () => {
   const { t } = useTranslation();
+  const { classes } = useStyles();
 
-  const { isFetching, setNickName, nickNameExists } = useAuth((state) => state.signIn);
+  const { isFetching, nickNameExists } = useAuth((state) => state.signIn);
 
-  const [confirmed, setConfirmed] = useState<boolean>(false);
-
-  const {
-    values: { nickName },
-    getInputProps,
-    onSubmit,
-  } = useForm({
+  const { values, getInputProps, onSubmit, setFieldError } = useForm({
     initialValues: {
       nickName: '',
     },
   });
 
-  const [debounced] = useDebouncedValue(nickName, 500);
-
-  const check = useCallback(async (): Promise<void> => {
-    const exists = await nickNameExists(debounced);
-
-    if (exists) {
-      setConfirmed(false);
-
-      return;
-    }
-
-    setConfirmed(true);
-  }, [debounced, nickNameExists]);
-
-  useEffect(() => {
-    if (debounced.length >= 2) {
-      check();
-    }
-
-    setConfirmed(false);
-  }, [check, debounced]);
-
-  const onSubmitNickName = (): void => {
-    setNickName(nickName);
+  const handleSubmit = ({ nickName }: typeof values): void => {
+    nickNameExists(nickName, setFieldError);
   };
 
   return (
-    <form onSubmit={onSubmit(onSubmitNickName)}>
-      <LoadingOverlay visible={isFetching} />
-
+    <form onSubmit={onSubmit(handleSubmit)}>
       <TextInput
         my="xs"
+        name="nickName"
         label={t('form.setNickname')}
         required
         autoFocus
+        wrapperProps={{ className: classes.wrapper }}
         description={t('form.nicknameNote')}
         placeholder={t('form.yourNickname') as string}
         {...getInputProps('nickName')}
       />
 
-      {!confirmed && nickName.length >= 2 && (
-        <Flex c="red" gap="0.1rem" align="center">
-          <RiCloseCircleFill size="1rem" />
-          <Text size="xs">{t('form.nicknameBad')}</Text>
-        </Flex>
-      )}
-
-      {confirmed && (
-        <Flex c="teal" gap="0.1rem" align="center">
-          <BsCheck size="1rem" />
-          <Text size="xs">{t('form.nicknameOK')}</Text>
-        </Flex>
-      )}
-
       <Group position="center" mt="xl">
-        <Button
-          loading={isFetching}
-          type="submit"
-          radius="xl"
-          disabled={isFetching || !confirmed}
-        >
+        <Button loading={isFetching} type="submit" radius="xl">
           {t('form.toSetNickname')}
         </Button>
       </Group>

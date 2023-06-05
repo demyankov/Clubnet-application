@@ -3,7 +3,7 @@ import { produce } from 'immer';
 
 import { DatabasePaths } from 'constants/databasePaths';
 import { errorHandler } from 'helpers';
-import { getFirestoreDataByValue } from 'integrations/firebase/database';
+import { getFireStoreDataById } from 'integrations/firebase/database';
 import { BoundStore } from 'store/store';
 import { GenericStateCreator, IUser } from 'store/types';
 
@@ -41,7 +41,7 @@ export const initSlice: GenericStateCreator<BoundStore> = (set, get) => ({
       }
 
       try {
-        const userData = await getFirestoreDataByValue(DatabasePaths.Users, user.uid);
+        const userData = await getFireStoreDataById(DatabasePaths.Users, user.uid);
 
         if (userData) {
           set(

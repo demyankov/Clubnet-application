@@ -2,6 +2,7 @@ import {
   collection,
   setDoc,
   getDocs,
+  where,
   getDoc,
   deleteDoc,
   updateDoc,
@@ -42,11 +43,11 @@ export const deleteFirestoreData = async (
   await deleteDoc(docRef);
 };
 
-export const getFirestoreDataByValue = async (
+export const getFireStoreDataById = async (
   path: DatabasePaths,
-  value: string,
+  id: string,
 ): Promise<any> => {
-  const docRef = doc(db, path, value);
+  const docRef = doc(db, path, id);
   const docSnap = await getDoc(docRef);
 
   if (docSnap.exists()) {
@@ -82,4 +83,16 @@ export const getFirestoreDataLength = (path: DatabasePaths): Promise<any> => {
   const collectionRef = collection(db, path);
 
   return getCountFromServer(collectionRef);
+};
+
+export const checkFieldValueExists = async (
+  collectionPath: DatabasePaths,
+  fieldName: string,
+  value: string,
+): Promise<boolean> => {
+  const collectionRef = collection(db, collectionPath);
+  const docsQuery = query(collectionRef, where(fieldName, '==', value));
+  const querySnapshot = await getDocs(docsQuery);
+
+  return !querySnapshot.empty;
 };

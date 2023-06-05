@@ -15,7 +15,7 @@ export const LoginConfirmCode: FC<LoginViewsProps> = ({
   resetRecaptchaWidget,
 }) => {
   const { t } = useTranslation();
-  const { isFetching, isError, signIn, setCurrentStep, sendOTP } = useAuth(
+  const { isFetching, isError, checkSmsCode, setCurrentStep, sendOTP } = useAuth(
     (state) => state.signIn,
   );
 
@@ -33,7 +33,7 @@ export const LoginConfirmCode: FC<LoginViewsProps> = ({
       return;
     }
 
-    signIn(code);
+    checkSmsCode(code);
   };
 
   const handleSendCode = async (): Promise<void> => {
@@ -62,6 +62,7 @@ export const LoginConfirmCode: FC<LoginViewsProps> = ({
           onChange={handleChangeConfirmCode}
           error={isError}
         />
+
         {isError && (
           <Text c="red" size="xs" ta="center">
             {t('form.wrongCode')}

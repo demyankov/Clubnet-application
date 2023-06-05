@@ -43,7 +43,7 @@ export const en = {
       nicknameNote: 'Note: you will not be able to change you nickname in future',
       yourNickname: 'Your nickname',
       nicknameOK: "You're good to go",
-      nicknameBad: 'Nickname already registered',
+      nicknameExists: 'Nickname already registered',
       toSetNickname: 'Set nickname',
     },
     footer: {

@@ -1,8 +1,8 @@
 import {
   ConfirmationResult,
   RecaptchaVerifier,
-  User,
   signInWithPhoneNumber,
+  User,
 } from 'firebase/auth';
 
 import { auth } from 'integrations/firebase/firebase';
@@ -27,11 +27,13 @@ export const appGetOTP = async (phone: string): Promise<void> => {
   const appVerifier = extendedWindow.recaptchaVerifier;
 
   try {
-    const confirmationResult = await signInWithPhoneNumber(auth, phone, appVerifier);
-
-    extendedWindow.confirmationResult = confirmationResult;
+    extendedWindow.confirmationResult = await signInWithPhoneNumber(
+      auth,
+      phone,
+      appVerifier,
+    );
   } catch (error) {
-    extendedWindow.recaptchaVerifier.clear();
+    appVerifier.clear();
     throw error;
   }
 };

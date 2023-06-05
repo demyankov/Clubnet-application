@@ -1,9 +1,11 @@
-import { FC, useState, useRef } from 'react';
+import { FC, useState, useRef, useEffect } from 'react';
 
 import { createStyles, Text, Card } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 
 import { SIGN_IN_STEP_VIEWS } from 'components/Login/config';
+import { Paths } from 'constants/paths';
 import { useAuth } from 'store/store';
 
 const useStyles = createStyles(() => ({
@@ -17,10 +19,11 @@ const useStyles = createStyles(() => ({
 }));
 
 const Login: FC = () => {
+  const navigate = useNavigate();
   const { t } = useTranslation();
   const { classes } = useStyles();
 
-  const { currentStep } = useAuth((state) => state.signIn);
+  const { currentStep, isCompletedRegistration } = useAuth((state) => state.signIn);
 
   const [tempPhone, setTempPhone] = useState<string>('');
 
@@ -31,6 +34,12 @@ const Login: FC = () => {
   const resetRecaptchaWidget = (): void => {
     (widgetRef.current as HTMLDivElement).innerHTML = '<div id="captcha" />';
   };
+
+  useEffect(() => {
+    if (isCompletedRegistration) {
+      navigate(Paths.home);
+    }
+  }, [isCompletedRegistration, navigate]);
 
   return (
     <Card className={classes.authForm} radius="md" p="xl" withBorder maw="26.25rem">

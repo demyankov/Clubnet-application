@@ -43,7 +43,7 @@ export const ru = {
       nicknameNote: 'Внимание: вы не сможете изменить ваш ник в будущем',
       yourNickname: 'Ваш ник',
       nicknameOK: 'Все в порядке',
-      nicknameBad: 'Ник уже зарегистрирован',
+      nicknameExists: 'Ник уже зарегистрирован',
       toSetNickname: 'Установить ник',
     },
     footer: {
