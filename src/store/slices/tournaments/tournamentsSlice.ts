@@ -3,9 +3,10 @@ import { produce } from 'immer';
 
 import { DatabasePaths } from 'constants/databasePaths';
 import { StorageFolders } from 'constants/storageFolders';
-import { errorNotification, successNotification } from 'helpers';
+import { errorHandler, successNotification } from 'helpers';
 import {
   deleteFirestoreData,
+  deleteImageFromStorage,
   getFireStoreDataById,
   getFirestoreDataLength,
   getTournamentsData,
@@ -38,10 +39,10 @@ export interface ITournaments {
   totalTournamentsCount: number;
   isGetMoreFetching: boolean;
   currentTournament: Nullable<ITournamentData>;
-  addTournament: (data: IAddTournamentData) => void;
+  addTournament: (data: IAddTournamentData) => Promise<void>;
   getTournaments: () => Promise<void>;
   getMoreTournaments: () => Promise<void>;
-  deleteTournament: (id: string) => Promise<void>;
+  deleteTournament: (id: string, image: string) => Promise<void>;
   getTournamentById: (id: string) => Promise<void>;
 }
 
@@ -68,14 +69,14 @@ export const tournamentsSlice: GenericStateCreator<TournamentsStore> = (set, get
         data.id,
       );
 
-      setFirestoreData<ITournamentData>(DatabasePaths.Tournaments, data.id, {
+      await setFirestoreData<ITournamentData>(DatabasePaths.Tournaments, data.id, {
         ...data,
         image,
       });
 
       successNotification('tournamentSuccess');
     } catch (error) {
-      errorNotification('errorCommon');
+      errorHandler(error as Error);
     } finally {
       set(
         produce((state: TournamentsStore) => {
@@ -114,7 +115,7 @@ export const tournamentsSlice: GenericStateCreator<TournamentsStore> = (set, get
         );
       }
     } catch (error) {
-      errorNotification('errorCommon');
+      errorHandler(error as Error);
     } finally {
       set(
         produce((state: TournamentsStore) => {
@@ -149,7 +150,7 @@ export const tournamentsSlice: GenericStateCreator<TournamentsStore> = (set, get
         );
       }
     } catch (error) {
-      errorNotification('errorCommon');
+      errorHandler(error as Error);
     } finally {
       set(
         produce((state: TournamentsStore) => {
@@ -159,7 +160,7 @@ export const tournamentsSlice: GenericStateCreator<TournamentsStore> = (set, get
     }
   },
 
-  deleteTournament: async (id: string) => {
+  deleteTournament: async (id, image) => {
     set(
       produce((state: TournamentsStore) => {
         state.isFetching = true;
@@ -167,10 +168,11 @@ export const tournamentsSlice: GenericStateCreator<TournamentsStore> = (set, get
     );
     try {
       await deleteFirestoreData(DatabasePaths.Tournaments, id);
+      await deleteImageFromStorage(image);
 
       successNotification('successDelete');
     } catch (error) {
-      errorNotification('errorCommon');
+      errorHandler(error as Error);
     } finally {
       set(
         produce((state: TournamentsStore) => {
@@ -195,7 +197,7 @@ export const tournamentsSlice: GenericStateCreator<TournamentsStore> = (set, get
         }),
       );
     } catch (error) {
-      errorNotification('errorCommon');
+      errorHandler(error as Error);
     } finally {
       set(
         produce((state: TournamentsStore) => {

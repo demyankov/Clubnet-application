@@ -15,7 +15,7 @@ export const LoginConfirmCode: FC<LoginViewsProps> = ({
   resetRecaptchaWidget,
 }) => {
   const { t } = useTranslation();
-  const { isFetching, isError, checkSmsCode, setCurrentStep, sendOTP } = useAuth(
+  const { isFetching, isError, checkSmsCode, setCurrentStep, sendSmsCode } = useAuth(
     (state) => state.signIn,
   );
 
@@ -39,7 +39,7 @@ export const LoginConfirmCode: FC<LoginViewsProps> = ({
   const handleSendCode = async (): Promise<void> => {
     resetRecaptchaWidget();
 
-    await sendOTP(tempPhone);
+    await sendSmsCode(tempPhone);
 
     restart();
   };

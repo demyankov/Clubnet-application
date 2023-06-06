@@ -21,17 +21,17 @@ import {
 import { DatabasePaths } from 'constants/databasePaths';
 import { db } from 'integrations/firebase/firebase';
 
-export const setFirestoreData = <T extends DocumentData>(
+export const setFirestoreData = async <T extends DocumentData>(
   path: DatabasePaths,
   id: string,
   data: T,
-): void => {
+): Promise<void> => {
   const date = data.expectedDate ? new Date(data.expectedDate) : new Date();
   const timestamp = Timestamp.fromDate(date);
 
   const docRef = doc(db, path, id);
 
-  setDoc(docRef, { ...data, timestamp });
+  await setDoc(docRef, { ...data, timestamp });
 };
 
 export const deleteFirestoreData = async (

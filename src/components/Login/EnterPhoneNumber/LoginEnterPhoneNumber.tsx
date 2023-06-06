@@ -10,7 +10,7 @@ import { formatPhoneNumber } from 'helpers/formatters';
 import { useAuth } from 'store/store';
 
 export const LoginEnterPhoneNumber: FC<LoginViewsProps> = ({ setTempPhone }) => {
-  const { isFetching, isError, sendOTP } = useAuth((state) => state.signIn);
+  const { isFetching, isError, sendSmsCode } = useAuth((state) => state.signIn);
 
   const { t } = useTranslation();
 
@@ -37,7 +37,7 @@ export const LoginEnterPhoneNumber: FC<LoginViewsProps> = ({ setTempPhone }) => 
   const handleSubmit = ({ phone }: typeof values): void => {
     const processedPhone = formatPhoneNumber(phone);
 
-    sendOTP(processedPhone);
+    sendSmsCode(processedPhone);
 
     if (!isError) {
       setTempPhone(processedPhone);

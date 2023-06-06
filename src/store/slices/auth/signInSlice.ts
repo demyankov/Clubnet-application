@@ -22,9 +22,12 @@ export interface ISignIn {
     isError: boolean;
     isCompletedRegistration: boolean;
     currentStep: SignInSteps;
+    sendSmsCode: (phone: string) => Promise<void>;
     checkSmsCode: (code: string, setFieldError?: SetFieldError<any>) => Promise<void>;
-    nickNameExists: (nickName: string, setFieldError: SetFieldError<any>) => void;
-    sendOTP: (phone: string) => Promise<void>;
+    nickNameExists: (
+      nickName: string,
+      setFieldError: SetFieldError<any>,
+    ) => Promise<void>;
     setCurrentStep: (step: SignInSteps) => void;
   };
 }
@@ -38,59 +41,7 @@ export const signInSlice: GenericStateCreator<BoundStore> = (set, get) => ({
     currentStep: SignInSteps.EnterPhoneNumber,
     // TODO: add setFieldError
 
-    checkSmsCode: async (code, setFieldError) => {
-      set(
-        produce((state: BoundStore) => {
-          state.signIn.isFetching = true;
-          state.signIn.isError = false;
-        }),
-      );
-
-      try {
-        const user = await appSignIn(code);
-
-        if (user) {
-          const isUserExist = await getFireStoreDataById(DatabasePaths.Users, user.uid);
-
-          if (isUserExist) {
-            set(
-              produce((state: BoundStore) => {
-                state.signIn.isCompletedRegistration = true;
-              }),
-            );
-
-            return;
-          }
-
-          const candidate: Partial<IUser> = {
-            id: user.uid,
-            phone: user.phoneNumber,
-            role: Roles.USER,
-          };
-
-          set(
-            produce((state: BoundStore) => {
-              state.user = { ...(state.user as IUser), ...candidate };
-              state.signIn.currentStep = SignInSteps.SetNickName;
-            }),
-          );
-        }
-      } catch (error) {
-        set(
-          produce((state: BoundStore) => {
-            state.signIn.isError = true;
-          }),
-        );
-      } finally {
-        set(
-          produce((state: BoundStore) => {
-            state.signIn.isFetching = false;
-          }),
-        );
-      }
-    },
-
-    sendOTP: async (phone) => {
+    sendSmsCode: async (phone) => {
       set(
         produce((state: BoundStore) => {
           state.signIn.isFetching = true;
@@ -116,6 +67,59 @@ export const signInSlice: GenericStateCreator<BoundStore> = (set, get) => ({
         );
 
         errorHandler(error as Error);
+      } finally {
+        set(
+          produce((state: BoundStore) => {
+            state.signIn.isFetching = false;
+          }),
+        );
+      }
+    },
+
+    checkSmsCode: async (code) => {
+      set(
+        produce((state: BoundStore) => {
+          state.signIn.isFetching = true;
+          state.signIn.isError = false;
+        }),
+      );
+
+      try {
+        const user = await appSignIn(code);
+
+        if (user) {
+          const userId = `user-${user.uid}`;
+          const isUserExist = await getFireStoreDataById(DatabasePaths.Users, userId);
+
+          if (isUserExist) {
+            set(
+              produce((state: BoundStore) => {
+                state.signIn.isCompletedRegistration = true;
+              }),
+            );
+
+            return;
+          }
+
+          const candidate: Partial<IUser> = {
+            id: userId,
+            phone: user.phoneNumber,
+            role: Roles.USER,
+          };
+
+          set(
+            produce((state: BoundStore) => {
+              state.user = candidate as IUser;
+              state.signIn.currentStep = SignInSteps.SetNickName;
+            }),
+          );
+        }
+      } catch (error) {
+        set(
+          produce((state: BoundStore) => {
+            state.signIn.isError = true;
+          }),
+        );
       } finally {
         set(
           produce((state: BoundStore) => {

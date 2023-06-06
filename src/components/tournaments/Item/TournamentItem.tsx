@@ -34,7 +34,7 @@ export const TournamentItem: FC<{ data: ITournamentData }> = ({ data }) => {
   };
 
   const handleDeleteClick = async (): Promise<void> => {
-    await deleteTournament(data.id);
+    await deleteTournament(data.id, data.image);
     await getTournaments();
   };
 

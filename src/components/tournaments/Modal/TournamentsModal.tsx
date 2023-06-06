@@ -25,8 +25,8 @@ interface IFormValues {
 
 export const TournamentsModal: FC = () => {
   const { t, i18n } = useTranslation();
-  const id = useId();
   const { addTournament, getTournaments, isFetching } = useTournaments((state) => state);
+  const id = `tournament-${useId().split('-')[1]}`;
 
   const form = useForm<IFormValues>({
     initialValues: {
