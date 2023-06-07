@@ -1,6 +1,6 @@
 import { FC, ReactElement, useEffect } from 'react';
 
-import { Button, Center, Divider, Group, Text } from '@mantine/core';
+import { Button, Center, Divider, Group, Loader, Text } from '@mantine/core';
 import { modals } from '@mantine/modals';
 import { useTranslation } from 'react-i18next';
 
@@ -56,9 +56,19 @@ export const TournamentsList: FC = () => {
   return (
     <>
       <Group position="apart" mb="30px">
-        <Text fz="xl" fw={700}>
-          {t('tournaments.tournaments')}
-        </Text>
+        <div>
+          <Text fz="xl" fw={700}>
+            {t('tournaments.tournaments')}
+          </Text>
+          <Group align="center">
+            <Text c="dimmed">{`${t('tournaments.totalCount')}: `}</Text>
+            {isFetching ? (
+              <Loader color="gray" size="xs" variant="oval" />
+            ) : (
+              <Text c="dimmed">{totalTournamentsCount}</Text>
+            )}
+          </Group>
+        </div>
         {isAdmin && (
           <Button onClick={handleCreate}>{t('tournaments.createButtonText')}</Button>
         )}

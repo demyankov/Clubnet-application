@@ -48,6 +48,10 @@ export const TournamentsModal: FC = () => {
         const { gameMode } = values;
         const isMultiple = +value % (+gameMode.split('v')[0] * 2) === 0;
 
+        if (+value > 999) {
+          return `${t('tournaments.maxCount')} 999`;
+        }
+
         return isMultiple && value ? null : t('modals.shouldBeMultiple');
       },
       image: (value) => (value ? null : t('modals.requiredField')),
@@ -106,6 +110,8 @@ export const TournamentsModal: FC = () => {
 
         <TextInput
           withAsterisk
+          type="number"
+          placeholder={`${t('tournaments.maxCount')} 999`}
           label={t('modals.countOfMembers')}
           {...form.getInputProps('countOfMembers')}
         />

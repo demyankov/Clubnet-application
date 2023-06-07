@@ -78,6 +78,8 @@ export const ru = {
       teamSize: 'Размер команды',
       tournamentRegistration: 'Регистрация',
       showMore: 'Показать еще',
+      totalCount: 'Всего',
+      maxCount: 'Макс. количество: ',
     },
     modals: {
       createTournament: 'Создать',

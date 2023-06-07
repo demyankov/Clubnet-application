@@ -78,6 +78,8 @@ export const en = {
       teamSize: 'Team size',
       tournamentRegistration: 'Registration',
       showMore: 'Show more',
+      totalCount: 'Total',
+      maxCount: 'Max count: ',
     },
     modals: {
       createTournament: 'Create',
