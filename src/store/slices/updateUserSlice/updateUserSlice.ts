@@ -4,12 +4,12 @@ import { DatabasePaths } from 'constants/databasePaths';
 import { StorageFolders } from 'constants/storageFolders';
 import { errorHandler } from 'helpers';
 import {
-  uploadImageAndGetURL,
   deleteImageFromStorage,
   updateFirestoreData,
+  uploadImageAndGetURL,
 } from 'integrations/firebase';
 import { BoundStore } from 'store/store';
-import { GenericStateCreator, IUser, EditableUserFields } from 'store/types';
+import { EditableUserFields, GenericStateCreator, IUser } from 'store/types';
 
 export interface IUpdateUser {
   isUserImageFetching: boolean;

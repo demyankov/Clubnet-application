@@ -13,7 +13,7 @@ import {
   setFirestoreData,
   uploadImageAndGetURL,
 } from 'integrations/firebase';
-import { TournamentsStore } from 'store/store';
+import { BoundStore } from 'store/store';
 import { GenericStateCreator } from 'store/types';
 
 interface IAddTournamentData {
@@ -46,7 +46,7 @@ export interface ITournaments {
   getTournamentById: (id: string) => Promise<void>;
 }
 
-export const tournamentsSlice: GenericStateCreator<TournamentsStore> = (set, get) => ({
+export const tournamentsSlice: GenericStateCreator<BoundStore> = (set, get) => ({
   ...get(),
   isFetching: true,
   totalTournamentsCount: 0,
@@ -57,7 +57,7 @@ export const tournamentsSlice: GenericStateCreator<TournamentsStore> = (set, get
 
   addTournament: async (data: IAddTournamentData) => {
     set(
-      produce((state: TournamentsStore) => {
+      produce((state: BoundStore) => {
         state.isFetching = true;
       }),
     );
@@ -79,7 +79,7 @@ export const tournamentsSlice: GenericStateCreator<TournamentsStore> = (set, get
       errorHandler(error as Error);
     } finally {
       set(
-        produce((state: TournamentsStore) => {
+        produce((state: BoundStore) => {
           state.isFetching = false;
         }),
       );
@@ -88,7 +88,7 @@ export const tournamentsSlice: GenericStateCreator<TournamentsStore> = (set, get
 
   getTournaments: async () => {
     set(
-      produce((state: TournamentsStore) => {
+      produce((state: BoundStore) => {
         state.isFetching = true;
         state.tournaments = [];
         state.latestDoc = null;
@@ -107,7 +107,7 @@ export const tournamentsSlice: GenericStateCreator<TournamentsStore> = (set, get
         });
 
         set(
-          produce((state: TournamentsStore) => {
+          produce((state: BoundStore) => {
             state.tournaments = [...state.tournaments, ...data];
             state.latestDoc = querySnapshot.docs[querySnapshot.docs.length - 1];
             state.totalTournamentsCount = snapshotLength.data().count;
@@ -118,7 +118,7 @@ export const tournamentsSlice: GenericStateCreator<TournamentsStore> = (set, get
       errorHandler(error as Error);
     } finally {
       set(
-        produce((state: TournamentsStore) => {
+        produce((state: BoundStore) => {
           state.isFetching = false;
         }),
       );
@@ -127,7 +127,7 @@ export const tournamentsSlice: GenericStateCreator<TournamentsStore> = (set, get
 
   getMoreTournaments: async () => {
     set(
-      produce((state: TournamentsStore) => {
+      produce((state: BoundStore) => {
         state.isGetMoreFetching = true;
       }),
     );
@@ -143,7 +143,7 @@ export const tournamentsSlice: GenericStateCreator<TournamentsStore> = (set, get
         });
 
         set(
-          produce((state: TournamentsStore) => {
+          produce((state: BoundStore) => {
             state.tournaments = [...state.tournaments, ...data];
             state.latestDoc = querySnapshot.docs[querySnapshot.docs.length - 1];
           }),
@@ -153,7 +153,7 @@ export const tournamentsSlice: GenericStateCreator<TournamentsStore> = (set, get
       errorHandler(error as Error);
     } finally {
       set(
-        produce((state: TournamentsStore) => {
+        produce((state: BoundStore) => {
           state.isGetMoreFetching = false;
         }),
       );
@@ -162,7 +162,7 @@ export const tournamentsSlice: GenericStateCreator<TournamentsStore> = (set, get
 
   deleteTournament: async (id, image) => {
     set(
-      produce((state: TournamentsStore) => {
+      produce((state: BoundStore) => {
         state.isFetching = true;
       }),
     );
@@ -175,7 +175,7 @@ export const tournamentsSlice: GenericStateCreator<TournamentsStore> = (set, get
       errorHandler(error as Error);
     } finally {
       set(
-        produce((state: TournamentsStore) => {
+        produce((state: BoundStore) => {
           state.isFetching = false;
         }),
       );
@@ -184,7 +184,7 @@ export const tournamentsSlice: GenericStateCreator<TournamentsStore> = (set, get
 
   getTournamentById: async (id: string) => {
     set(
-      produce((state: TournamentsStore) => {
+      produce((state: BoundStore) => {
         state.isFetching = true;
       }),
     );
@@ -192,7 +192,7 @@ export const tournamentsSlice: GenericStateCreator<TournamentsStore> = (set, get
       const data = await getFireStoreDataById(DatabasePaths.Tournaments, id);
 
       set(
-        produce((state: TournamentsStore) => {
+        produce((state: BoundStore) => {
           state.currentTournament = data;
         }),
       );
@@ -200,7 +200,7 @@ export const tournamentsSlice: GenericStateCreator<TournamentsStore> = (set, get
       errorHandler(error as Error);
     } finally {
       set(
-        produce((state: TournamentsStore) => {
+        produce((state: BoundStore) => {
           state.isFetching = false;
         }),
       );

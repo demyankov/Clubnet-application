@@ -3,7 +3,6 @@ import { FC } from 'react';
 import { Button, FileInput, Group, Select, Stack, TextInput } from '@mantine/core';
 import { DateTimePicker } from '@mantine/dates';
 import { useForm } from '@mantine/form';
-import { useId } from '@mantine/hooks';
 import { modals } from '@mantine/modals';
 import { IconUpload } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
@@ -11,6 +10,10 @@ import { useTranslation } from 'react-i18next';
 import { SelectItem } from 'components/shared';
 import { TOURNAMENTS_CONFIG } from 'components/tournaments/Modal/config';
 import { ALLOWED_IMAGE_FORMATS } from 'constants/allowedImageFormats';
+import { DatabaseId } from 'constants/databaseId';
+import { GAMES } from 'constants/games';
+import { uniqueIdGenerator } from 'helpers';
+import { requiredFieldsGenerator } from 'helpers/requiredFieldsGenerator';
 import { useTournaments } from 'store/store';
 
 interface IFormValues {
@@ -26,7 +29,6 @@ interface IFormValues {
 export const TournamentsModal: FC = () => {
   const { t, i18n } = useTranslation();
   const { addTournament, getTournaments, isFetching } = useTournaments((state) => state);
-  const id = `tournament-${useId().split('-')[1]}`;
 
   const form = useForm<IFormValues>({
     initialValues: {
@@ -38,23 +40,26 @@ export const TournamentsModal: FC = () => {
       countOfMembers: '',
       image: null,
     },
-    validate: {
-      name: (value) => (value ? null : t('modals.requiredField')),
-      game: (value) => (value ? null : t('modals.requiredField')),
-      format: (value) => (value ? null : t('modals.requiredField')),
-      expectedDate: (value) => (value ? null : t('modals.requiredField')),
-      gameMode: (value) => (value ? null : t('modals.requiredField')),
-      countOfMembers: (value, values) => {
-        const { gameMode } = values;
-        const isMultiple = +value % (+gameMode.split('v')[0] * 2) === 0;
+    validate: (values) => {
+      const requiredFields = requiredFieldsGenerator<IFormValues>(values);
 
-        if (+value > 999) {
-          return `${t('tournaments.maxCount')} 999`;
+      const countOfMembersError: { countOfMembers?: string | null } = {};
+      const { gameMode, countOfMembers } = values;
+
+      if (+countOfMembers > 999) {
+        countOfMembersError.countOfMembers = `${t('tournaments.maxCount')} 999`;
+      } else {
+        const isMultiple = +countOfMembers % (+gameMode.split('v')[0] * 2) === 0;
+
+        if (!isMultiple || !countOfMembers) {
+          countOfMembersError.countOfMembers = t('modals.shouldBeMultiple');
         }
+      }
 
-        return isMultiple && value ? null : t('modals.shouldBeMultiple');
-      },
-      image: (value) => (value ? null : t('modals.requiredField')),
+      return {
+        ...requiredFields,
+        ...countOfMembersError,
+      };
     },
   });
 
@@ -66,7 +71,7 @@ export const TournamentsModal: FC = () => {
 
     await addTournament({
       ...form.values,
-      id,
+      id: uniqueIdGenerator(DatabaseId.Tournament),
       expectedDate,
       registrationDate,
     });
@@ -90,7 +95,7 @@ export const TournamentsModal: FC = () => {
           withAsterisk
           label={t('modals.game')}
           itemComponent={SelectItem}
-          data={TOURNAMENTS_CONFIG.Games}
+          data={GAMES}
           {...form.getInputProps('game')}
         />
 
@@ -109,8 +114,8 @@ export const TournamentsModal: FC = () => {
         />
 
         <TextInput
-          withAsterisk
           type="number"
+          withAsterisk
           placeholder={`${t('tournaments.maxCount')} 999`}
           label={t('modals.countOfMembers')}
           {...form.getInputProps('countOfMembers')}

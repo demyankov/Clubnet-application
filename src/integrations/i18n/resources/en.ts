@@ -25,6 +25,9 @@ export const en = {
       'upload-image': 'Upload image',
       update: 'Update',
       save: 'Save',
+      profileTeams: 'Teams',
+      profileFriends: 'Friends',
+      profileStats: 'Stats',
     },
     notFound: {
       title: 'Something is not right...',
@@ -53,6 +56,8 @@ export const en = {
       successHeader: 'Success',
       errorHeader: 'Error',
       successDelete: 'The tournament was successfully deleted',
+      successAddedTeam: 'The team was successfully added',
+      sameTeam: 'A team with this tag already exists',
       successCommon: 'Congratulations!',
       errorCommon: 'Something went wrong',
       errorSignin: 'Sign in failed',
@@ -62,6 +67,7 @@ export const en = {
       errorPhone: 'Invalid phone number',
       tournamentSuccess: 'The tournament has been successfully added!',
       emptyTournaments: 'There are no more tournaments!',
+      maxTeamsCount: "You can't create more than 5 teams",
     },
     tournaments: {
       tournaments: 'Tournaments',
@@ -80,6 +86,16 @@ export const en = {
       showMore: 'Show more',
       totalCount: 'Total',
       maxCount: 'Max count: ',
+    },
+    teams: {
+      modalTitle: 'Create team',
+      modalNameLabel: 'Enter name',
+      modalTagLabel: 'Enter tag',
+      createButtonText: 'Create team',
+      maxLength: 'Max length: ',
+      aboutTeam: 'About',
+      teamInfo: 'Information',
+      teamImage: 'Team image',
     },
     modals: {
       createTournament: 'Create',

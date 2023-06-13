@@ -1,13 +1,6 @@
 import { FC } from 'react';
 
-import {
-  Image,
-  Container,
-  LoadingOverlay,
-  FileButton,
-  Overlay,
-  Button,
-} from '@mantine/core';
+import { Avatar, Box, LoadingOverlay, FileButton, Overlay, Button } from '@mantine/core';
 import { useHover } from '@mantine/hooks';
 import { BiUpload } from 'react-icons/bi';
 import { RiDeleteBin6Line } from 'react-icons/ri';
@@ -32,17 +25,10 @@ export const ProfileImageUploader: FC = () => {
   };
 
   return (
-    <Container ta="center" m={0} px={0} pos="relative" w={250} h={250} ref={ref}>
-      <Image
-        mx="auto"
-        withPlaceholder
-        radius="sm"
-        src={currentUser.image}
-        width={250}
-        height={250}
-      />
+    <Box pos="relative" ref={ref}>
+      <Avatar src={currentUser.image} size={200} radius="100%" alt="no avatar" />
       {hovered && !isUserImageFetching && (
-        <Overlay opacity={0.3} center>
+        <Overlay opacity={0.5} center radius="100%">
           <FileButton onChange={handleUpload} accept={ALLOWED_IMAGE_FORMATS.join(',')}>
             {(props) => (
               <Button {...props} mr="xs">
@@ -55,7 +41,7 @@ export const ProfileImageUploader: FC = () => {
           </Button>
         </Overlay>
       )}
-      <LoadingOverlay visible={isUserImageFetching} />
-    </Container>
+      <LoadingOverlay visible={isUserImageFetching} radius="100%" />
+    </Box>
   );
 };

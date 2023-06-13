@@ -8,3 +8,11 @@ export const successNotification = (message: string = 'successCommon'): void => 
     color: 'teal',
   });
 };
+
+export const errorNotification = (message: string = 'errorCommon'): void => {
+  notifications.show({
+    title: t('notifications.errorHeader'),
+    message: t(`notifications.${message}`),
+    color: 'red',
+  });
+};

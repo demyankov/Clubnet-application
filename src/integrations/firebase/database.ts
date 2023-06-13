@@ -1,25 +1,27 @@
 import {
   collection,
-  setDoc,
-  getDocs,
-  where,
-  getDoc,
   deleteDoc,
-  updateDoc,
   doc,
-  query,
+  DocumentData,
+  getCountFromServer,
+  getDoc,
+  getDocs,
   limit,
   orderBy,
-  startAfter,
-  QuerySnapshot,
+  query,
   QueryDocumentSnapshot,
-  DocumentData,
+  QuerySnapshot,
+  setDoc,
+  startAfter,
   Timestamp,
-  getCountFromServer,
+  updateDoc,
+  where,
 } from 'firebase/firestore';
 
 import { DatabasePaths } from 'constants/databasePaths';
+import { Roles } from 'constants/userRoles';
 import { db } from 'integrations/firebase/firebase';
+import { ITeam, ITeamMember } from 'store/slices';
 
 export const setFirestoreData = async <T extends DocumentData>(
   path: DatabasePaths,
@@ -95,4 +97,76 @@ export const checkFieldValueExists = async (
   const querySnapshot = await getDocs(docsQuery);
 
   return !querySnapshot.empty;
+};
+
+export const addFirestoreTeam = async <T extends DocumentData>(
+  referencePath: DatabasePaths,
+  referenceId: string,
+  docPath: DatabasePaths,
+  data: T,
+): Promise<void> => {
+  const userRef = doc(db, referencePath, referenceId);
+  const collectionRef = doc(db, docPath, data.id);
+
+  await setDoc(collectionRef, {
+    ...data,
+    members: [{ userLink: userRef, role: Roles.CAPTAIN }],
+  });
+};
+
+export const getFirestoreTeams = async (
+  referencePath: DatabasePaths,
+  referenceId: string,
+): Promise<ITeam[]> => {
+  const userRef = doc(db, referencePath, referenceId);
+  const collectionRef = collection(db, DatabasePaths.Teams);
+  const data: any[] = [];
+
+  const docsQuery = query(
+    collectionRef,
+    where('members', 'array-contains', { userLink: userRef, role: Roles.CAPTAIN }),
+  );
+  const querySnapshot = await getDocs(docsQuery);
+
+  querySnapshot.forEach((doc) => {
+    data.push(doc.data());
+  });
+
+  return data.reverse();
+};
+
+export const getFirestoreArrayLengthByField = async (
+  referencePath: DatabasePaths,
+  referenceId: string,
+  databaseArray: string,
+  objectField: string,
+  role: Roles,
+  collectionPath: DatabasePaths,
+): Promise<number> => {
+  const userRef = doc(db, referencePath, referenceId);
+  const collectionRef = collection(db, collectionPath);
+
+  const docsQuery = query(
+    collectionRef,
+    where(databaseArray, 'array-contains', { [objectField]: userRef, role }),
+  );
+
+  const lengthSnapshot = await getCountFromServer(docsQuery);
+
+  return lengthSnapshot.data().count;
+};
+
+export const getFirestoreTeamMembers = async (
+  refArray: ITeamMember[],
+): Promise<any[]> => {
+  const promises = refArray.map((item) => getDoc(item.userLink!));
+  const docs = await Promise.all(promises);
+
+  const result = docs.map((doc, index) => {
+    const data = doc.data();
+
+    return { ...data, role: refArray[index].role };
+  });
+
+  return result;
 };

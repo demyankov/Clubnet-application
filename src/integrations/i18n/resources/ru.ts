@@ -25,6 +25,9 @@ export const ru = {
       uploadImage: 'Загрузить картинку',
       update: 'Обновить',
       save: 'Сохранить',
+      profileTeams: 'Команды',
+      profileFriends: 'Друзья',
+      profileStats: 'Статистика',
     },
     notFound: {
       title: 'Что-то не так...',
@@ -52,6 +55,8 @@ export const ru = {
     notifications: {
       successHeader: 'Успех',
       successDelete: 'Турнир успешно удален',
+      successAddedTeam: 'Команда успешно создана',
+      sameTeam: 'Команда с таким тегом уже существует',
       errorHeader: 'Ошибка',
       successCommon: 'Поздравляем!',
       errorCommon: 'Что-то пошло не так',
@@ -62,6 +67,7 @@ export const ru = {
       errorPhone: 'Недействительный номер телефона',
       tournamentSuccess: 'Турнир успешно добавлен',
       emptyTournaments: 'Больше турниров нет!',
+      maxTeamsCount: 'Вы не можете создать больше 5 команд',
     },
     tournaments: {
       createButtonText: 'Создать турнир',
@@ -80,6 +86,16 @@ export const ru = {
       showMore: 'Показать еще',
       totalCount: 'Всего',
       maxCount: 'Макс. количество: ',
+    },
+    teams: {
+      modalTitle: 'Создайте команду',
+      modalNameLabel: 'Введите название команды',
+      modalTagLabel: 'Введите тег',
+      createButtonText: 'Создать команду',
+      maxLength: 'Макс. символов: ',
+      aboutTeam: 'О команде',
+      teamInfo: 'Информация',
+      teamImage: 'Изображение команды',
     },
     modals: {
       createTournament: 'Создать',

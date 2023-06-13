@@ -14,6 +14,7 @@ const Login = lazy(() => import('pages/Login/Login'));
 const Tournaments = lazy(() => import('pages/Tournaments/Tournaments'));
 const TournamentInfo = lazy(() => import('pages/TournamentInfo/TournamentInfo'));
 const Profile = lazy(() => import('pages/Profile/Profile'));
+const TeamInfo = lazy(() => import('pages/TeamInfo/TeamInfo'));
 const NotFound = lazy(() => import('pages/NotFound/NotFound'));
 
 const App: FC = () => {
@@ -59,6 +60,14 @@ const App: FC = () => {
               element={
                 <ProtectedRoute isPrivate roles={[Roles.USER, Roles.ADMIN]}>
                   <TournamentInfo />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path={`${Paths.teams}/:id`}
+              element={
+                <ProtectedRoute isPrivate roles={[Roles.USER, Roles.ADMIN]}>
+                  <TeamInfo />
                 </ProtectedRoute>
               }
             />

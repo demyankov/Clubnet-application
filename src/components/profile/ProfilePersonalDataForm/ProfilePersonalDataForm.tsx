@@ -1,88 +1,50 @@
-import { FC, useState } from 'react';
+import { FC } from 'react';
 
-import { Button, Container, Group, Text, TextInput } from '@mantine/core';
-import { useForm } from '@mantine/form';
+import { Button, Group, Text } from '@mantine/core';
+import { modals } from '@mantine/modals';
+import { IconPhoneCall, IconSettings } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
-import { BsCheck } from 'react-icons/bs';
-import { RiCloseCircleFill } from 'react-icons/ri';
 
+import { ProfileUpdateUserModal } from 'components/profile';
 import { useAuth } from 'store/store';
 import { IUser } from 'store/types';
 
 export const ProfilePersonalDataForm: FC = () => {
-  const [isEditMode, setIsEditMode] = useState<boolean>(false);
-  const { user, isUpdateUserInfoFetching, updateUserDataField } = useAuth(
-    (state) => state,
-  );
+  const { user } = useAuth((state) => state);
   const { t } = useTranslation();
   const currentUser = user as IUser;
 
-  const form = useForm({
-    initialValues: {
-      name: currentUser.name || '',
-    },
-
-    validate: {
-      name: (value) => (value ? null : 'Введите имя'),
-    },
-  });
-
-  const submitUpdateUserData = async (): Promise<void> => {
-    await updateUserDataField({ name: form.values.name });
-    setIsEditMode(false);
+  const handleOpenModal = (): void => {
+    modals.open({
+      modalId: 'ProfileUpdateUserModal',
+      title: t('profile.update'),
+      children: <ProfileUpdateUserModal />,
+      centered: true,
+    });
   };
-
-  const handleCancel = (): void => {
-    setIsEditMode(false);
-  };
-
-  if (isEditMode)
-    return (
-      <Container m={0} w={250} pos="relative">
-        <Text size="lg" fw={700} td="underline">
-          {currentUser.nickName}
-        </Text>
-        <form onSubmit={form.onSubmit(submitUpdateUserData)}>
-          <TextInput
-            label={t('profile.name')}
-            placeholder="Ivan Ivanov"
-            mb="sm"
-            disabled={isUpdateUserInfoFetching}
-            {...form.getInputProps('name')}
-          />
-          <Text weight={500} size={14}>
-            {t('profile.phone')}
-          </Text>
-          <Text mb="sm">{currentUser.phone}</Text>
-
-          <Group>
-            <Button type="submit" loading={isUpdateUserInfoFetching}>
-              <BsCheck size="1.2rem" />
-            </Button>
-
-            <Button onClick={handleCancel}>
-              <RiCloseCircleFill size="1.2rem" />
-            </Button>
-          </Group>
-        </form>
-      </Container>
-    );
 
   return (
-    <Container m={0} w={250}>
-      <Text size="lg" fw={700} td="underline">
-        {currentUser.nickName}
-      </Text>
-      <Text weight={500} size={14}>
-        {t('profile.name')}
-      </Text>
-      <Text mb="sm">{currentUser.name}</Text>
-      <Text weight={500} size={14}>
-        {t('profile.phone')}
-      </Text>
-      <Text mb="sm">{currentUser.phone}</Text>
+    <Group>
+      <div>
+        <Text size="20px" fw={700} c="dimmed">
+          {currentUser.name}
+        </Text>
 
-      <Button onClick={() => setIsEditMode(true)}>{t('profile.update')}</Button>
-    </Container>
+        <Text size="40px" fw={500} tt="uppercase" mt="-5px">
+          {currentUser.nickName}
+        </Text>
+
+        <Group noWrap spacing={10} mt={5}>
+          <IconPhoneCall stroke={1.5} size="15px" />
+          <Text c="dimmed" size="15px">
+            {currentUser.phone}
+          </Text>
+        </Group>
+      </div>
+
+      <Button onClick={handleOpenModal} variant="light">
+        <IconSettings />
+      </Button>
+    </Group>
   );
 };
