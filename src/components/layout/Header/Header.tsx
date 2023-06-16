@@ -87,9 +87,11 @@ export const HeaderMegaMenu: FC = () => {
           <DiReact size={40} />
 
           <Group sx={{ height: '100%' }} spacing={0} className={classes.hiddenMobile}>
-            <Link to={Paths.home} className={classes.link}>
-              {t('header.home')}
-            </Link>
+            {isAuth && (
+              <Link to={Paths.clients} className={classes.link}>
+                {t('header.clients')}
+              </Link>
+            )}
             {isAuth && (
               <Link to={Paths.tournaments} className={classes.link}>
                 {t('header.tournaments')}
@@ -145,7 +147,7 @@ export const HeaderMegaMenu: FC = () => {
           )}
           {isAuth && (
             <Link onClick={handleCloseDrawer} to={Paths.profile} className={classes.link}>
-              {t('header.settings')}
+              {t('header.profile')}
             </Link>
           )}
 

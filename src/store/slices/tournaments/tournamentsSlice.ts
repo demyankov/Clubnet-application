@@ -7,7 +7,7 @@ import { errorHandler, successNotification } from 'helpers';
 import {
   deleteFirestoreData,
   deleteImageFromStorage,
-  getFireStoreDataById,
+  getFireStoreDataByFieldName,
   getFirestoreDataLength,
   getTournamentsData,
   setFirestoreData,
@@ -189,7 +189,7 @@ export const tournamentsSlice: GenericStateCreator<BoundStore> = (set, get) => (
       }),
     );
     try {
-      const data = await getFireStoreDataById(DatabasePaths.Tournaments, id);
+      const data = await getFireStoreDataByFieldName(DatabasePaths.Tournaments, id);
 
       set(
         produce((state: BoundStore) => {

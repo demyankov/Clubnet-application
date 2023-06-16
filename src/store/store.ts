@@ -15,6 +15,8 @@ import {
   IUpdateUser,
   ITeams,
   teamsSlice,
+  clientSlice,
+  IClients,
 } from 'store/slices';
 
 export interface BoundStore
@@ -23,7 +25,8 @@ export interface BoundStore
     ISignOut,
     IUpdateUser,
     ITournaments,
-    ITeams {}
+    ITeams,
+    IClients {}
 
 export const useAuth = create(
   devtools(
@@ -41,6 +44,14 @@ export const useTournaments = create(
   devtools(
     immer<BoundStore>((...a) => ({
       ...tournamentsSlice(...a),
+    })),
+  ),
+);
+
+export const useClients = create(
+  devtools(
+    immer<BoundStore>((...a) => ({
+      ...clientSlice(...a),
     })),
   ),
 );

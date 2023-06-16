@@ -14,6 +14,8 @@ const Login = lazy(() => import('pages/Login/Login'));
 const Tournaments = lazy(() => import('pages/Tournaments/Tournaments'));
 const TournamentInfo = lazy(() => import('pages/TournamentInfo/TournamentInfo'));
 const Profile = lazy(() => import('pages/Profile/Profile'));
+const Clients = lazy(() => import('pages/Clients/Clients'));
+const ClientInfo = lazy(() => import('pages/ClientInfo/ClientInfo'));
 const TeamInfo = lazy(() => import('pages/TeamInfo/TeamInfo'));
 const NotFound = lazy(() => import('pages/NotFound/NotFound'));
 
@@ -76,6 +78,22 @@ const App: FC = () => {
               element={
                 <ProtectedRoute isPrivate roles={[Roles.USER, Roles.ADMIN]}>
                   <Profile />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path={Paths.clients}
+              element={
+                <ProtectedRoute isPrivate roles={[Roles.ADMIN]}>
+                  <Clients />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path={`${Paths.clients}/:nickname`}
+              element={
+                <ProtectedRoute isPrivate roles={[Roles.ADMIN]}>
+                  <ClientInfo />
                 </ProtectedRoute>
               }
             />

@@ -1,5 +1,6 @@
 import {
   collection,
+  CollectionReference,
   deleteDoc,
   doc,
   DocumentData,
@@ -9,6 +10,8 @@ import {
   limit,
   orderBy,
   query,
+  Query,
+  WhereFilterOp,
   QueryDocumentSnapshot,
   QuerySnapshot,
   setDoc,
@@ -22,6 +25,12 @@ import { DatabasePaths } from 'constants/databasePaths';
 import { Roles } from 'constants/userRoles';
 import { db } from 'integrations/firebase/firebase';
 import { ITeam, ITeamMember } from 'store/slices';
+
+export interface Filter<V> {
+  field: string;
+  operator: WhereFilterOp;
+  value: V;
+}
 
 export const setFirestoreData = async <T extends DocumentData>(
   path: DatabasePaths,
@@ -45,14 +54,41 @@ export const deleteFirestoreData = async (
   await deleteDoc(docRef);
 };
 
-export const getFireStoreDataById = async (
-  path: DatabasePaths,
-  id: string,
-): Promise<any> => {
-  const docRef = doc(db, path, id);
-  const docSnap = await getDoc(docRef);
+export const getFirestoreData = async <T, V>(
+  collectionPath: DatabasePaths,
+  filters: Filter<V>[] = [],
+): Promise<T[]> => {
+  let queryRef: Query<DocumentData> = collection(
+    db,
+    collectionPath,
+  ) as CollectionReference<DocumentData>;
 
-  if (docSnap.exists()) {
+  filters.forEach((filter) => {
+    queryRef = query(queryRef, where(filter.field, filter.operator, filter.value));
+  });
+
+  const querySnapshot = await getDocs(queryRef);
+  const data: T[] = [];
+
+  querySnapshot.forEach((doc) => {
+    data.push(doc.data() as T);
+  });
+
+  return data;
+};
+
+export const getFireStoreDataByFieldName = async (
+  path: DatabasePaths,
+  identifier: string,
+  field: string = 'id',
+): Promise<any> => {
+  const queryRef = query(collection(db, path), where(field, '==', identifier));
+
+  const querySnapshot = await getDocs(queryRef);
+
+  if (!querySnapshot.empty) {
+    const docSnap = querySnapshot.docs[0];
+
     return { id: docSnap.id, ...docSnap.data() };
   }
 };

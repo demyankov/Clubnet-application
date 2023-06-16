@@ -29,7 +29,7 @@ export const HeaderUserMenu: FC = () => {
       <Menu.Dropdown>
         <Menu.Label>{user?.nickName}</Menu.Label>
         <Menu.Item icon={<IconSettings size={14} />} component={Link} to={Paths.profile}>
-          {t('header.settings')}
+          {t('header.profile')}
         </Menu.Item>
 
         <Menu.Divider />

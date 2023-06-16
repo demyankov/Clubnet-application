@@ -87,7 +87,7 @@ const TeamInfo: FC = () => {
                 rightSection={<IconSettings size="1.2rem" />}
                 ml="auto"
               >
-                {t('header.settings')}
+                {t('teams.settings')}
               </Tabs.Tab>
             )}
           </Tabs.List>

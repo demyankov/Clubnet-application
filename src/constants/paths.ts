@@ -4,5 +4,6 @@ export enum Paths {
   tournaments = '/tournaments',
   profile = '/profile',
   teams = '/teams',
+  clients = '/clients',
   notFound = '*',
 }

@@ -10,7 +10,7 @@ import { errorHandler, successNotification } from 'helpers';
 import { appGetOTP, appSignIn, generateRecaptcha } from 'integrations/firebase/auth';
 import {
   checkFieldValueExists,
-  getFireStoreDataById,
+  getFireStoreDataByFieldName,
   setFirestoreData,
 } from 'integrations/firebase/database';
 import { BoundStore } from 'store/store';
@@ -89,7 +89,10 @@ export const signInSlice: GenericStateCreator<BoundStore> = (set, get) => ({
 
         if (user) {
           const userId = `user-${user.uid}`;
-          const isUserExist = await getFireStoreDataById(DatabasePaths.Users, userId);
+          const isUserExist = await getFireStoreDataByFieldName(
+            DatabasePaths.Users,
+            userId,
+          );
 
           if (isUserExist) {
             set(

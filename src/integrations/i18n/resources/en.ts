@@ -5,7 +5,16 @@ export const en = {
       tournaments: 'Tournaments',
       signin: 'Sign In',
       signout: 'Sign out',
-      settings: 'Settings',
+      profile: 'Profile',
+    },
+    common: {
+      total: 'Total: ',
+      search: 'Search',
+      reset: 'Reset',
+      phone: 'Phone',
+      nickname: 'Nickname',
+      fio: 'FIO',
+      emptyLit: 'Empty list',
     },
     home: {
       title: 'A <1>modern</1> React <br/> components library',
@@ -96,6 +105,7 @@ export const en = {
       aboutTeam: 'About',
       teamInfo: 'Information',
       teamImage: 'Team image',
+      settings: 'Settings',
     },
     modals: {
       createTournament: 'Create',
@@ -116,6 +126,10 @@ export const en = {
     },
     login: {
       phonePlaceholder: 'Enter phone number',
+    },
+    clients: {
+      clients: 'Clients',
+      addClient: 'Add client',
     },
   },
 };

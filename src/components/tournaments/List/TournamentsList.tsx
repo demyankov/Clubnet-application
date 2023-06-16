@@ -1,6 +1,15 @@
 import { FC, ReactElement, useEffect } from 'react';
 
-import { Button, Center, Divider, Group, Loader, Text } from '@mantine/core';
+import {
+  Button,
+  Center,
+  Divider,
+  Group,
+  LoadingOverlay,
+  Stack,
+  Text,
+  Title,
+} from '@mantine/core';
 import { modals } from '@mantine/modals';
 import { useTranslation } from 'react-i18next';
 
@@ -55,30 +64,27 @@ export const TournamentsList: FC = () => {
 
   return (
     <>
-      <Group position="apart" mb="30px">
-        <div>
-          <Text fz="xl" fw={700}>
-            {t('tournaments.tournaments')}
-          </Text>
-          <Group align="center">
-            <Text c="dimmed">{`${t('tournaments.totalCount')}: `}</Text>
-            {isFetching ? (
-              <Loader color="gray" size="xs" variant="oval" />
-            ) : (
-              <Text c="dimmed">{totalTournamentsCount}</Text>
-            )}
-          </Group>
-        </div>
+      <Title mt="md" order={2}>
+        {t('tournaments.tournaments')}
+      </Title>
+
+      <Group mt="md" position="apart">
+        <Text c="dimmed">{`${t(
+          'tournaments.totalCount',
+        )}: ${totalTournamentsCount}`}</Text>
+
         {isAdmin && (
           <Button onClick={handleCreate}>{t('tournaments.createButtonText')}</Button>
         )}
       </Group>
+
       <RenderContentContainer
         isFetching={isFetching}
         emptyTitle={t('tournaments.noTournaments')}
         isEmpty={!tournaments.length}
       >
         {getSortedTournaments()}
+
         <Center m="20px">
           {IsShowMoreButtonShown && (
             <Button m="20px" onClick={getMoreTournaments} loading={isGetMoreFetching}>

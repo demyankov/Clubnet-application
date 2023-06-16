@@ -84,7 +84,7 @@ export const TournamentItem: FC<{ data: ITournamentData }> = ({ data }) => {
           )}
           <Box display="flex">
             <IconUsersGroup color="#1971C2" />
-            <div>0/{data.countOfMembers}</div>
+            <Text ml="xs">0/{data.countOfMembers}</Text>
           </Box>
         </Group>
       </Group>

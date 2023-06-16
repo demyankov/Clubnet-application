@@ -9,7 +9,7 @@ import { errorHandler, errorNotification, successNotification } from 'helpers';
 import {
   addFirestoreTeam,
   checkFieldValueExists,
-  getFireStoreDataById,
+  getFireStoreDataByFieldName,
   getFirestoreArrayLengthByField,
   getFirestoreTeamMembers,
   getFirestoreTeams,
@@ -148,7 +148,7 @@ export const teamsSlice: GenericStateCreator<BoundStore> = (set, get) => ({
     );
 
     try {
-      const currentTeam = await getFireStoreDataById(DatabasePaths.Teams, id);
+      const currentTeam = await getFireStoreDataByFieldName(DatabasePaths.Teams, id);
       const members = await getFirestoreTeamMembers(currentTeam.members);
 
       set(
