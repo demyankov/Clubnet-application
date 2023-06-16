@@ -1,6 +1,5 @@
 import {
   collection,
-  CollectionReference,
   deleteDoc,
   doc,
   DocumentData,
@@ -10,8 +9,6 @@ import {
   limit,
   orderBy,
   query,
-  Query,
-  WhereFilterOp,
   QueryDocumentSnapshot,
   QuerySnapshot,
   setDoc,
@@ -19,6 +16,7 @@ import {
   Timestamp,
   updateDoc,
   where,
+  WhereFilterOp,
 } from 'firebase/firestore';
 
 import { DatabasePaths } from 'constants/databasePaths';
@@ -31,6 +29,14 @@ export interface Filter<V> {
   operator: WhereFilterOp;
   value: V;
 }
+
+type FirestoreOutput<T> = {
+  data: T[];
+  totalCount: number;
+  querySnapshot: QuerySnapshot;
+};
+
+const defaultLimit = 10;
 
 export const setFirestoreData = async <T extends DocumentData>(
   path: DatabasePaths,
@@ -57,14 +63,26 @@ export const deleteFirestoreData = async (
 export const getFirestoreData = async <T, V>(
   collectionPath: DatabasePaths,
   filters: Filter<V>[] = [],
-): Promise<T[]> => {
-  let queryRef: Query<DocumentData> = collection(
-    db,
-    collectionPath,
-  ) as CollectionReference<DocumentData>;
+  lastVisible: Nullable<QueryDocumentSnapshot> = null,
+): Promise<FirestoreOutput<T>> => {
+  const collectionRef = collection(db, collectionPath);
+
+  let queryRef = query(
+    collectionRef,
+    orderBy('id', 'asc'),
+    startAfter(lastVisible || 0),
+    limit(defaultLimit),
+  );
+
+  const countFromServer = await getCountFromServer(collectionRef);
+  const totalCount = countFromServer.data().count;
 
   filters.forEach((filter) => {
-    queryRef = query(queryRef, where(filter.field, filter.operator, filter.value));
+    queryRef = query(
+      collectionRef,
+      where(filter.field, filter.operator, filter.value),
+      orderBy(filter.field, 'asc'),
+    );
   });
 
   const querySnapshot = await getDocs(queryRef);
@@ -74,7 +92,11 @@ export const getFirestoreData = async <T, V>(
     data.push(doc.data() as T);
   });
 
-  return data;
+  return {
+    totalCount,
+    data,
+    querySnapshot,
+  };
 };
 
 export const getFireStoreDataByFieldName = async (
@@ -103,26 +125,6 @@ export const updateFirestoreData = async (
   await updateDoc(docRef, propToUpdate);
 };
 
-export const getTournamentsData = (
-  latestDoc: Nullable<QueryDocumentSnapshot>,
-): Promise<QuerySnapshot<DocumentData>> => {
-  const collectionRef = collection(db, DatabasePaths.Tournaments);
-  const queryRef = query(
-    collectionRef,
-    orderBy('timestamp', 'asc'),
-    startAfter(latestDoc || 0),
-    limit(10),
-  );
-
-  return getDocs(queryRef);
-};
-
-export const getFirestoreDataLength = (path: DatabasePaths): Promise<any> => {
-  const collectionRef = collection(db, path);
-
-  return getCountFromServer(collectionRef);
-};
-
 export const checkFieldValueExists = async (
   collectionPath: DatabasePaths,
   fieldName: string,
@@ -135,6 +137,7 @@ export const checkFieldValueExists = async (
   return !querySnapshot.empty;
 };
 
+// TODO: refactor, need use setFirestoreData
 export const addFirestoreTeam = async <T extends DocumentData>(
   referencePath: DatabasePaths,
   referenceId: string,
@@ -150,6 +153,7 @@ export const addFirestoreTeam = async <T extends DocumentData>(
   });
 };
 
+// TODO: reuse getFirestoreData
 export const getFirestoreTeams = async (
   referencePath: DatabasePaths,
   referenceId: string,
@@ -171,6 +175,7 @@ export const getFirestoreTeams = async (
   return data.reverse();
 };
 
+// TODO: refactor
 export const getFirestoreArrayLengthByField = async (
   referencePath: DatabasePaths,
   referenceId: string,
@@ -192,6 +197,7 @@ export const getFirestoreArrayLengthByField = async (
   return lengthSnapshot.data().count;
 };
 
+// TODO: refactor
 export const getFirestoreTeamMembers = async (
   refArray: ITeamMember[],
 ): Promise<any[]> => {

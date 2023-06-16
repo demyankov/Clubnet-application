@@ -1,6 +1,6 @@
 import { FC, useCallback } from 'react';
 
-import { Button, createStyles, Group, Table, Text, Title } from '@mantine/core';
+import { Button, Center, createStyles, Group, Table, Text, Title } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
@@ -20,7 +20,10 @@ export const ClientsList: FC = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
 
-  const { clients, isClientsFetching } = useClients((state) => state);
+  const { clients, isClientsFetching, totalCount, getMoreClients, isGetMoreFetching } =
+    useClients((state) => state);
+
+  const IsShowMoreButtonShown = totalCount > clients.length;
 
   const handleClientCreate = (): void => {};
 
@@ -38,8 +41,9 @@ export const ClientsList: FC = () => {
       </Title>
 
       <Group mt="md" position="apart">
-        {/* TODO: add total */}
-        <Text c="dimmed">{t('common.total')} 0</Text>
+        <Text c="dimmed">
+          {t('common.total')} {totalCount}
+        </Text>
 
         <Button onClick={handleClientCreate}>{t('clients.addClient')}</Button>
       </Group>
@@ -51,7 +55,7 @@ export const ClientsList: FC = () => {
         isEmpty={!clients?.length}
         emptyTitle={t('common.emptyLit')}
       >
-        <Table striped highlightOnHover withBorder withColumnBorders mt="md">
+        <Table mb="xl" striped highlightOnHover withBorder withColumnBorders mt="md">
           <thead>
             <tr>
               <th>{t('common.fio')}</th>
@@ -74,6 +78,14 @@ export const ClientsList: FC = () => {
             ))}
           </tbody>
         </Table>
+
+        <Center mb="xl">
+          {IsShowMoreButtonShown && (
+            <Button onClick={getMoreClients} loading={isGetMoreFetching}>
+              {t('tournaments.showMore')}
+            </Button>
+          )}
+        </Center>
       </RenderContentContainer>
     </>
   );

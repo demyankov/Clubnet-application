@@ -37,7 +37,9 @@ const TournamentInfo: FC = () => {
   const theme = useMantineTheme();
 
   useEffect(() => {
-    getTournamentById(id!);
+    if (id) {
+      getTournamentById(id);
+    }
   }, [getTournamentById, id]);
 
   return (

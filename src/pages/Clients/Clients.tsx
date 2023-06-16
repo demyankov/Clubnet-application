@@ -9,7 +9,7 @@ const Clients: FC = () => {
   const { getClients } = useClients((state) => state);
 
   useEffect(() => {
-    getClients([]);
+    getClients();
   }, [getClients]);
 
   return (

@@ -11,22 +11,33 @@ import {
 import { BoundStore } from 'store/store';
 import { GenericStateCreator, IUser } from 'store/types';
 
+type ClientFilter = {
+  fio: string;
+  phone: string;
+  nickname: string;
+};
+
 export interface IClients {
   isClientsFetching: boolean;
-  isUpdateClientFetching: boolean;
+  isGetMoreFetching: boolean;
   clients: IUser[];
   client: Nullable<IUser>;
   addClient: (clientData: IUser) => void;
-  // TODO: fix any
-  getClients: (filter: any) => void;
+  getClients: (filter?: ClientFilter) => void;
+  getMoreClients: () => void;
   getClientByNickname: (nickname: string) => void;
+  totalCount: number;
+  querySnapshot: any;
 }
 
 export const clientSlice: GenericStateCreator<BoundStore> = (set, get) => ({
   ...get(),
   isClientsFetching: false,
+  isGetMoreFetching: false,
   clients: [],
   client: null,
+  querySnapshot: null,
+  totalCount: 0,
 
   getClients: async (filter) => {
     set(
@@ -47,14 +58,27 @@ export const clientSlice: GenericStateCreator<BoundStore> = (set, get) => ({
       }
 
       if (filter?.nickname) {
-        filters.push({ field: 'nickName', operator: '==', value: filter?.nickname });
+        filters.push({ field: 'nickName', operator: '>=', value: filter?.nickname });
       }
 
-      const data = await getFirestoreData<IUser, string>(DatabasePaths.Users, filters);
+      if (filter?.fio) {
+        filters.push({
+          field: 'name',
+          operator: '>=',
+          value: filter?.fio,
+        });
+      }
+
+      const { data, totalCount, querySnapshot } = await getFirestoreData<IUser, string>(
+        DatabasePaths.Users,
+        filters,
+      );
 
       set(
         produce((state: BoundStore) => {
           state.clients = data;
+          state.totalCount = totalCount;
+          state.querySnapshot = querySnapshot;
         }),
       );
     } catch (error) {
@@ -93,6 +117,41 @@ export const clientSlice: GenericStateCreator<BoundStore> = (set, get) => ({
       set(
         produce((state: BoundStore) => {
           state.isClientsFetching = false;
+        }),
+      );
+    }
+  },
+
+  getMoreClients: async () => {
+    try {
+      set(
+        produce((state: BoundStore) => {
+          state.isGetMoreFetching = true;
+        }),
+      );
+
+      const lastVisible = get().querySnapshot?.docs[get().querySnapshot.docs.length - 1];
+
+      const { data, totalCount, querySnapshot } = await getFirestoreData<IUser, string>(
+        DatabasePaths.Users,
+        [],
+        // TODO: fix any
+        lastVisible as any,
+      );
+
+      set(
+        produce((state: BoundStore) => {
+          state.clients = [...state.clients, ...data];
+          state.totalCount = totalCount;
+          state.querySnapshot = querySnapshot;
+        }),
+      );
+    } catch (error) {
+      errorHandler(error as Error);
+    } finally {
+      set(
+        produce((state: BoundStore) => {
+          state.isGetMoreFetching = false;
         }),
       );
     }

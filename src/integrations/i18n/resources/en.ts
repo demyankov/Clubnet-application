@@ -6,6 +6,7 @@ export const en = {
       signin: 'Sign In',
       signout: 'Sign out',
       profile: 'Profile',
+      clients: 'Clients',
     },
     common: {
       total: 'Total: ',

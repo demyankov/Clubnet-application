@@ -7,9 +7,8 @@ import { errorHandler, successNotification } from 'helpers';
 import {
   deleteFirestoreData,
   deleteImageFromStorage,
+  getFirestoreData,
   getFireStoreDataByFieldName,
-  getFirestoreDataLength,
-  getTournamentsData,
   setFirestoreData,
   uploadImageAndGetURL,
 } from 'integrations/firebase';
@@ -25,7 +24,7 @@ interface IAddTournamentData {
   registrationDate: string;
   gameMode: string;
   countOfMembers: string;
-  image: File | null;
+  image: Nullable<File>;
 }
 
 export interface ITournamentData extends Omit<IAddTournamentData, 'image'> {
@@ -36,7 +35,6 @@ export interface ITournaments {
   tournaments: ITournamentData[];
   latestDoc: Nullable<QueryDocumentSnapshot>;
   isFetching: boolean;
-  totalTournamentsCount: number;
   isGetMoreFetching: boolean;
   currentTournament: Nullable<ITournamentData>;
   addTournament: (data: IAddTournamentData) => Promise<void>;
@@ -44,16 +42,19 @@ export interface ITournaments {
   getMoreTournaments: () => Promise<void>;
   deleteTournament: (id: string, image: string) => Promise<void>;
   getTournamentById: (id: string) => Promise<void>;
+  totalCount: number;
+  querySnapshot: any;
 }
 
 export const tournamentsSlice: GenericStateCreator<BoundStore> = (set, get) => ({
   ...get(),
   isFetching: true,
-  totalTournamentsCount: 0,
   isGetMoreFetching: false,
   latestDoc: null,
   currentTournament: null,
   tournaments: [],
+  totalCount: 0,
+  querySnapshot: null,
 
   addTournament: async (data: IAddTournamentData) => {
     set(
@@ -87,33 +88,25 @@ export const tournamentsSlice: GenericStateCreator<BoundStore> = (set, get) => (
   },
 
   getTournaments: async () => {
-    set(
-      produce((state: BoundStore) => {
-        state.isFetching = true;
-        state.tournaments = [];
-        state.latestDoc = null;
-      }),
-    );
-
     try {
-      const querySnapshot = await getTournamentsData(null);
-      const snapshotLength = await getFirestoreDataLength(DatabasePaths.Tournaments);
+      set(
+        produce((state: BoundStore) => {
+          state.isFetching = true;
+        }),
+      );
 
-      if (querySnapshot.docs) {
-        const data: any[] = [];
+      const { data, totalCount, querySnapshot } = await getFirestoreData<
+        ITournamentData,
+        string
+      >(DatabasePaths.Tournaments);
 
-        querySnapshot.forEach((doc) => {
-          data.push({ ...doc.data(), id: doc.id });
-        });
-
-        set(
-          produce((state: BoundStore) => {
-            state.tournaments = [...state.tournaments, ...data];
-            state.latestDoc = querySnapshot.docs[querySnapshot.docs.length - 1];
-            state.totalTournamentsCount = snapshotLength.data().count;
-          }),
-        );
-      }
+      set(
+        produce((state: BoundStore) => {
+          state.tournaments = data;
+          state.totalCount = totalCount;
+          state.querySnapshot = querySnapshot;
+        }),
+      );
     } catch (error) {
       errorHandler(error as Error);
     } finally {
@@ -126,29 +119,27 @@ export const tournamentsSlice: GenericStateCreator<BoundStore> = (set, get) => (
   },
 
   getMoreTournaments: async () => {
-    set(
-      produce((state: BoundStore) => {
-        state.isGetMoreFetching = true;
-      }),
-    );
-
     try {
-      const querySnapshot = await getTournamentsData(get().latestDoc);
+      set(
+        produce((state: BoundStore) => {
+          state.isGetMoreFetching = true;
+        }),
+      );
 
-      if (querySnapshot.docs) {
-        const data: any[] = [];
+      const lastVisible = get().querySnapshot?.docs[get().querySnapshot.docs.length - 1];
 
-        querySnapshot.forEach((doc) => {
-          data.push({ ...doc.data(), id: doc.id });
-        });
+      const { data, totalCount, querySnapshot } = await getFirestoreData<
+        ITournamentData,
+        string
+      >(DatabasePaths.Tournaments, [], lastVisible as any);
 
-        set(
-          produce((state: BoundStore) => {
-            state.tournaments = [...state.tournaments, ...data];
-            state.latestDoc = querySnapshot.docs[querySnapshot.docs.length - 1];
-          }),
-        );
-      }
+      set(
+        produce((state: BoundStore) => {
+          state.tournaments = [...state.tournaments, ...data];
+          state.totalCount = totalCount;
+          state.querySnapshot = querySnapshot;
+        }),
+      );
     } catch (error) {
       errorHandler(error as Error);
     } finally {

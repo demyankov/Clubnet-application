@@ -17,6 +17,7 @@ export const ClientsFilter: FC = () => {
     initialValues: {
       phone: '',
       nickname: '',
+      fio: '',
     },
   });
 
@@ -26,8 +27,10 @@ export const ClientsFilter: FC = () => {
 
   const handleReset = (): void => {
     form.reset();
-    getClients([]);
+    getClients();
   };
+
+  const isButtonsDisabled = !form.isDirty() || isClientsFetching;
 
   return (
     <form onSubmit={form.onSubmit(handleSubmit)}>
@@ -56,20 +59,17 @@ export const ClientsFilter: FC = () => {
             label={t('common.nickname') as string}
             {...form.getInputProps('nickname')}
           />
+
+          <TextInput label={t('common.fio') as string} {...form.getInputProps('fio')} />
         </Group>
       </Box>
 
       <Group mt="xl" position="center">
-        <Button disabled={isClientsFetching} leftIcon={<IoIosSearch />} type="submit">
+        <Button disabled={isButtonsDisabled} leftIcon={<IoIosSearch />} type="submit">
           {t('common.search')}
         </Button>
 
-        <Button
-          disabled={isClientsFetching}
-          onClick={handleReset}
-          leftIcon={<IoClose />}
-          variant="outline"
-        >
+        <Button onClick={handleReset} leftIcon={<IoClose />} variant="outline">
           {t('common.reset')}
         </Button>
       </Group>

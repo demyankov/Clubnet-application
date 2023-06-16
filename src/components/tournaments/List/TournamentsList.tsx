@@ -1,15 +1,6 @@
 import { FC, ReactElement, useEffect } from 'react';
 
-import {
-  Button,
-  Center,
-  Divider,
-  Group,
-  LoadingOverlay,
-  Stack,
-  Text,
-  Title,
-} from '@mantine/core';
+import { Button, Center, Divider, Group, Text, Title } from '@mantine/core';
 import { modals } from '@mantine/modals';
 import { useTranslation } from 'react-i18next';
 
@@ -27,12 +18,12 @@ export const TournamentsList: FC = () => {
     isFetching,
     getTournaments,
     tournaments,
-    getMoreTournaments,
     isGetMoreFetching,
-    totalTournamentsCount,
+    totalCount,
+    getMoreTournaments,
   } = useTournaments((state) => state);
 
-  const IsShowMoreButtonShown: boolean = totalTournamentsCount !== tournaments.length;
+  const IsShowMoreButtonShown = totalCount > tournaments.length;
 
   useEffect(() => {
     getTournaments();
@@ -69,9 +60,7 @@ export const TournamentsList: FC = () => {
       </Title>
 
       <Group mt="md" position="apart">
-        <Text c="dimmed">{`${t(
-          'tournaments.totalCount',
-        )}: ${totalTournamentsCount}`}</Text>
+        <Text c="dimmed">{`${t('tournaments.totalCount')}: ${totalCount}`}</Text>
 
         {isAdmin && (
           <Button onClick={handleCreate}>{t('tournaments.createButtonText')}</Button>

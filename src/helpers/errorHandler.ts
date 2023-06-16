@@ -15,4 +15,7 @@ export const errorHandler = (error: Error): void => {
       color: 'red',
     });
   }
+
+  // eslint-disable-next-line no-console
+  console.error(error);
 };
