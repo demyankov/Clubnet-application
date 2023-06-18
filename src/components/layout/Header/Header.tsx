@@ -1,16 +1,15 @@
-import { FC } from 'react';
+import React, { FC } from 'react';
 
 import {
-  createStyles,
-  Header,
-  Group,
-  Button,
-  Divider,
-  Box,
   Burger,
+  Button,
+  createStyles,
+  Divider,
   Drawer,
-  ScrollArea,
+  Group,
+  Header,
   rem,
+  ScrollArea,
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { useTranslation } from 'react-i18next';
@@ -18,7 +17,9 @@ import { DiReact } from 'react-icons/di';
 import { Link } from 'react-router-dom';
 
 import { HeaderLanguageSwitcher, HeaderThemeToggler, HeaderUserMenu } from 'components';
+import { HeaderSearch } from 'components/layout/Header/HeaderSearch/Search';
 import { Paths } from 'constants/paths';
+import { useUserRole } from 'hooks';
 import { useAuth } from 'store/store';
 
 const useStyles = createStyles((theme) => ({
@@ -74,6 +75,8 @@ export const HeaderMegaMenu: FC = () => {
     signOut: { signOut },
   } = useAuth((state) => state);
 
+  const { isAdmin } = useUserRole();
+
   const { t } = useTranslation();
 
   const handleSignOut = (): void => {
@@ -81,46 +84,46 @@ export const HeaderMegaMenu: FC = () => {
   };
 
   return (
-    <Box>
-      <Header height={60} px="md">
-        <Group position="apart" sx={{ height: '100%' }} className={classes.inner}>
-          <DiReact size={40} />
+    <Header height={60} px="md">
+      <Group position="apart" sx={{ height: '100%' }} className={classes.inner}>
+        <DiReact size={40} />
 
-          <Group sx={{ height: '100%' }} spacing={0} className={classes.hiddenMobile}>
-            {isAuth && (
-              <Link to={Paths.clients} className={classes.link}>
-                {t('header.clients')}
-              </Link>
-            )}
-            {isAuth && (
-              <Link to={Paths.tournaments} className={classes.link}>
-                {t('header.tournaments')}
-              </Link>
-            )}
-          </Group>
-
-          <Group className={classes.hiddenMobile}>
-            <HeaderLanguageSwitcher />
-
-            <HeaderThemeToggler />
-
-            {!isAuth && (
-              <Button component={Link} to={Paths.signin}>
-                {t('header.signin')}
-              </Button>
-            )}
-            {isAuth && <HeaderUserMenu />}
-          </Group>
-
-          <Group className={classes.hiddenDesktop}>
-            <HeaderLanguageSwitcher />
-
-            <HeaderThemeToggler />
-
-            <Burger opened={drawerOpened} onClick={toggleDrawer} />
-          </Group>
+        <Group sx={{ height: '100%' }} spacing={0} className={classes.hiddenMobile}>
+          {isAuth && isAdmin && (
+            <Link to={Paths.clients} className={classes.link}>
+              {t('header.clients')}
+            </Link>
+          )}
+          {isAuth && (
+            <Link to={Paths.tournaments} className={classes.link}>
+              {t('header.tournaments')}
+            </Link>
+          )}
         </Group>
-      </Header>
+
+        <Group className={classes.hiddenMobile}>
+          {isAuth && <HeaderSearch />}
+
+          <HeaderLanguageSwitcher />
+
+          <HeaderThemeToggler />
+
+          {!isAuth && (
+            <Button component={Link} to={Paths.signin}>
+              {t('header.signin')}
+            </Button>
+          )}
+          {isAuth && <HeaderUserMenu />}
+        </Group>
+
+        <Group className={classes.hiddenDesktop}>
+          <HeaderLanguageSwitcher />
+
+          <HeaderThemeToggler />
+
+          <Burger opened={drawerOpened} onClick={toggleDrawer} />
+        </Group>
+      </Group>
 
       <Drawer
         opened={drawerOpened}
@@ -163,6 +166,6 @@ export const HeaderMegaMenu: FC = () => {
           </Group>
         </ScrollArea>
       </Drawer>
-    </Box>
+    </Header>
   );
 };

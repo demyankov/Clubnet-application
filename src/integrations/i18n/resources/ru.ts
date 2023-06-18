@@ -120,5 +120,9 @@ export const ru = {
       clients: 'Клиенты',
       addClient: 'Добавить клиента',
     },
+    search: {
+      empty: 'Ничего не найдено',
+      searchPlaceholder: 'Поиск друзей...',
+    },
   },
 };

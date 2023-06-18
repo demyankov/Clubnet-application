@@ -12,9 +12,9 @@ import { BoundStore } from 'store/store';
 import { GenericStateCreator, IUser } from 'store/types';
 
 type ClientFilter = {
-  fio: string;
-  phone: string;
-  nickname: string;
+  fio?: string;
+  phone?: string;
+  nickname?: string;
 };
 
 export interface IClients {

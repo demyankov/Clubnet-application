@@ -14,7 +14,7 @@ export const en = {
       reset: 'Reset',
       phone: 'Phone',
       nickname: 'Nickname',
-      fio: 'FIO',
+      fio: 'Full name',
       emptyLit: 'Empty list',
     },
     home: {
@@ -131,6 +131,10 @@ export const en = {
     clients: {
       clients: 'Clients',
       addClient: 'Add client',
+    },
+    search: {
+      empty: 'No results found',
+      searchPlaceholder: 'Search friends...',
     },
   },
 };
