@@ -13,10 +13,10 @@ import {
   QuerySnapshot,
   setDoc,
   startAfter,
-  Timestamp,
   updateDoc,
   where,
   WhereFilterOp,
+  DocumentReference,
 } from 'firebase/firestore';
 
 import { DatabasePaths } from 'constants/databasePaths';
@@ -42,13 +42,12 @@ export const setFirestoreData = async <T extends DocumentData>(
   path: DatabasePaths,
   id: string,
   data: T,
-): Promise<void> => {
-  const date = data.expectedDate ? new Date(data.expectedDate) : new Date();
-  const timestamp = Timestamp.fromDate(date);
+): Promise<DocumentReference<T>> => {
+  const docRef = doc(db, path, id) as DocumentReference<T>;
 
-  const docRef = doc(db, path, id);
+  await setDoc(docRef, data);
 
-  await setDoc(docRef, { ...data, timestamp });
+  return docRef;
 };
 
 export const deleteFirestoreData = async (
@@ -99,11 +98,11 @@ export const getFirestoreData = async <T, V>(
   };
 };
 
-export const getFireStoreDataByFieldName = async (
+export const getFireStoreDataByFieldName = async <T>(
   path: DatabasePaths,
   identifier: string,
   field: string = 'id',
-): Promise<any> => {
+): Promise<T | undefined> => {
   const queryRef = query(collection(db, path), where(field, '==', identifier));
 
   const querySnapshot = await getDocs(queryRef);
@@ -111,7 +110,7 @@ export const getFireStoreDataByFieldName = async (
   if (!querySnapshot.empty) {
     const docSnap = querySnapshot.docs[0];
 
-    return { id: docSnap.id, ...docSnap.data() };
+    return { id: docSnap.id, ...docSnap.data() } as T;
   }
 };
 
@@ -211,4 +210,13 @@ export const getFirestoreTeamMembers = async (
   });
 
   return result;
+};
+
+export const getDataArrayWithRefArray = async <T extends DocumentData>(
+  refArray: DocumentReference<T>[],
+): Promise<T[]> => {
+  const resultPromises = refArray.map((ref) => getDoc(ref));
+  const snapshots = await Promise.all(resultPromises);
+
+  return snapshots.map((docSnap) => docSnap.data()!);
 };

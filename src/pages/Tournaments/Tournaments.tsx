@@ -1,14 +1,16 @@
 import { FC } from 'react';
 
-import { Container } from '@mantine/core';
+import { Box, Container } from '@mantine/core';
 
 import { TournamentsList } from 'components/tournaments';
 
 const Tournaments: FC = () => {
   return (
-    <Container size="md">
-      <TournamentsList />
-    </Container>
+    <Box pt="3rem">
+      <Container size="md">
+        <TournamentsList />
+      </Container>
+    </Box>
   );
 };
 

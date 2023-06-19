@@ -58,7 +58,7 @@ export const ClientsList: FC = () => {
         <Table mb="xl" striped highlightOnHover withBorder withColumnBorders mt="md">
           <thead>
             <tr>
-              <th>{t('common.fio')}</th>
+              <th>{t('common.fullName')}</th>
               <th>{t('common.nickname')}</th>
               <th>{t('common.phone')}</th>
             </tr>
@@ -68,7 +68,7 @@ export const ClientsList: FC = () => {
             {clients?.map(({ id, name, nickName, phone }) => (
               <tr
                 className={classes.clientContainer}
-                onClick={() => handleClientClick(nickName)}
+                onClick={() => handleClientClick(nickName!)}
                 key={id}
               >
                 <td>{name}</td>

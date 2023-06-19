@@ -3,7 +3,7 @@ import { FC, lazy, Suspense, useCallback, useEffect } from 'react';
 import { Notifications } from '@mantine/notifications';
 import { Route, Routes } from 'react-router-dom';
 
-import { FooterSocial, HeaderMegaMenu } from 'components';
+import { BookingsAddressInfo, HeaderMegaMenu } from 'components';
 import { LoaderScreen, ProtectedRoute, RenderContentContainer } from 'components/shared';
 import { Paths } from 'constants/paths';
 import { Roles } from 'constants/userRoles';
@@ -17,6 +17,7 @@ const Profile = lazy(() => import('pages/Profile/Profile'));
 const Clients = lazy(() => import('pages/Clients/Clients'));
 const ClientInfo = lazy(() => import('pages/ClientInfo/ClientInfo'));
 const TeamInfo = lazy(() => import('pages/TeamInfo/TeamInfo'));
+const Bookings = lazy(() => import('pages/Bookings/Bookings'));
 const NotFound = lazy(() => import('pages/NotFound/NotFound'));
 
 const App: FC = () => {
@@ -33,7 +34,7 @@ const App: FC = () => {
 
   return (
     <RenderContentContainer isFetching={isFetching}>
-      <Notifications autoClose={5000} position="bottom-right" />
+      <Notifications autoClose={5000} position="top-center" />
 
       <HeaderMegaMenu />
 
@@ -74,6 +75,22 @@ const App: FC = () => {
               }
             />
             <Route
+              path={Paths.bookings}
+              element={
+                <ProtectedRoute isPrivate roles={[Roles.USER, Roles.ADMIN]}>
+                  <Bookings />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path={`${Paths.bookings}/:id`}
+              element={
+                <ProtectedRoute isPrivate roles={[Roles.USER, Roles.ADMIN]}>
+                  <BookingsAddressInfo />
+                </ProtectedRoute>
+              }
+            />
+            <Route
               path={Paths.profile}
               element={
                 <ProtectedRoute isPrivate roles={[Roles.USER, Roles.ADMIN]}>
@@ -101,8 +118,6 @@ const App: FC = () => {
           </Routes>
         </Suspense>
       </div>
-
-      <FooterSocial />
     </RenderContentContainer>
   );
 };

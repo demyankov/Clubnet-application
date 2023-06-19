@@ -8,8 +8,9 @@ import {
   getFirestoreData,
   getFireStoreDataByFieldName,
 } from 'integrations/firebase';
+import { IUser } from 'store/slices/auth/types';
 import { BoundStore } from 'store/store';
-import { GenericStateCreator, IUser } from 'store/types';
+import { GenericStateCreator } from 'store/types';
 
 type ClientFilter = {
   fio?: string;
@@ -100,17 +101,19 @@ export const clientSlice: GenericStateCreator<BoundStore> = (set, get) => ({
     );
 
     try {
-      const data = await getFireStoreDataByFieldName(
+      const data = await getFireStoreDataByFieldName<IUser>(
         DatabasePaths.Users,
         nickname,
         'nickName',
       );
 
-      set(
-        produce((state: BoundStore) => {
-          state.client = data;
-        }),
-      );
+      if (data) {
+        set(
+          produce((state: BoundStore) => {
+            state.client = data;
+          }),
+        );
+      }
     } catch (error) {
       errorHandler(error as Error);
     } finally {

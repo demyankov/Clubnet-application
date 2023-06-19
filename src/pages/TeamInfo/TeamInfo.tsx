@@ -30,7 +30,9 @@ const TeamInfo: FC = () => {
   const theme = useMantineTheme();
 
   useEffect(() => {
-    getTeamById(id!);
+    if (id) {
+      getTeamById(id);
+    }
   }, [getTeamById, id]);
 
   const currentGame = GAMES.find((game) => game.label === currentTeam?.game);

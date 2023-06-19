@@ -4,8 +4,9 @@ import { produce } from 'immer';
 import { DatabasePaths } from 'constants/databasePaths';
 import { errorHandler } from 'helpers';
 import { getFireStoreDataByFieldName } from 'integrations/firebase/database';
+import { IUser } from 'store/slices/auth/types';
 import { BoundStore } from 'store/store';
-import { GenericStateCreator, IUser } from 'store/types';
+import { GenericStateCreator } from 'store/types';
 
 export interface IState {
   isAuth: boolean;
@@ -42,12 +43,15 @@ export const initSlice: GenericStateCreator<BoundStore> = (set, get) => ({
 
       try {
         const userId = `user-${user.uid}`;
-        const userData = await getFireStoreDataByFieldName(DatabasePaths.Users, userId);
+        const userData = await getFireStoreDataByFieldName<IUser>(
+          DatabasePaths.Users,
+          userId,
+        );
 
         if (userData) {
           set(
             produce((state: BoundStore) => {
-              state.user = { ...(userData as IUser) };
+              state.user = { ...userData };
               state.isAuth = true;
             }),
           );

@@ -63,20 +63,20 @@ export const TournamentsModal: FC = () => {
     },
   });
 
-  const handleSubmit = async (): Promise<void> => {
+  const handleSubmit = (): void => {
     const expectedDate = form.values.expectedDate
       ? new Date(form.values.expectedDate).toString()
       : '';
     const registrationDate = new Date().toString();
 
-    await addTournament({
+    addTournament({
       ...form.values,
       id: uniqueIdGenerator(DatabaseId.Tournament),
       expectedDate,
       registrationDate,
     });
 
-    await getTournaments();
+    getTournaments();
 
     form.reset();
     modals.close('addTournamentModal');

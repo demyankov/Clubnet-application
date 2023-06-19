@@ -31,13 +31,13 @@ export const ProfileCreateTeamModal: FC = () => {
     validate: (values) => requiredFieldsGenerator<IFormValues>(values),
   });
 
-  const handleSubmit = async (): Promise<void> => {
-    await addTeam({
+  const handleSubmit = (): void => {
+    addTeam({
       ...form.values,
       id: uniqueIdGenerator(DatabaseId.Team),
     });
 
-    await getTeams();
+    getTeams();
     form.reset();
     modals.close('ProfileCreateTeamModal');
   };

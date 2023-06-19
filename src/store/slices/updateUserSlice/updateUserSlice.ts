@@ -8,8 +8,9 @@ import {
   updateFirestoreData,
   uploadImageAndGetURL,
 } from 'integrations/firebase';
+import { IUser, EditableUserFields } from 'store/slices/auth/types';
 import { BoundStore } from 'store/store';
-import { EditableUserFields, GenericStateCreator, IUser } from 'store/types';
+import { GenericStateCreator } from 'store/types';
 
 export interface IUpdateUser {
   isUserImageFetching: boolean;

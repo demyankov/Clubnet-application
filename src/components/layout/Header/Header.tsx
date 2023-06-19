@@ -34,7 +34,7 @@ const useStyles = createStyles((theme) => ({
     fontWeight: 500,
     fontSize: theme.fontSizes.sm,
 
-    [theme.fn.smallerThan('sm')]: {
+    [theme.fn.smallerThan('md')]: {
       height: rem(42),
       display: 'flex',
       alignItems: 'center',
@@ -54,13 +54,13 @@ const useStyles = createStyles((theme) => ({
   },
 
   hiddenMobile: {
-    [theme.fn.smallerThan('sm')]: {
+    [theme.fn.smallerThan('md')]: {
       display: 'none',
     },
   },
 
   hiddenDesktop: {
-    [theme.fn.largerThan('sm')]: {
+    [theme.fn.largerThan('md')]: {
       display: 'none',
     },
   },
@@ -84,7 +84,7 @@ export const HeaderMegaMenu: FC = () => {
   };
 
   return (
-    <Header height={60} px="md">
+    <Header height={60} px="md" zIndex="unset">
       <Group position="apart" sx={{ height: '100%' }} className={classes.inner}>
         <DiReact size={40} />
 
@@ -95,9 +95,14 @@ export const HeaderMegaMenu: FC = () => {
             </Link>
           )}
           {isAuth && (
-            <Link to={Paths.tournaments} className={classes.link}>
-              {t('header.tournaments')}
-            </Link>
+            <>
+              <Link to={Paths.tournaments} className={classes.link}>
+                {t('header.tournaments')}
+              </Link>
+              <Link to={Paths.bookings} className={classes.link}>
+                {t('header.bookings')}
+              </Link>
+            </>
           )}
         </Group>
 
@@ -136,22 +141,32 @@ export const HeaderMegaMenu: FC = () => {
         <ScrollArea h={`calc(100vh - ${rem(60)})`} mx="-md">
           <Divider my="sm" color={theme.colorScheme === 'dark' ? 'dark.5' : 'gray.1'} />
 
-          <Link onClick={handleCloseDrawer} to={Paths.home} className={classes.link}>
-            {t('header.home')}
-          </Link>
           {isAuth && (
-            <Link
-              onClick={handleCloseDrawer}
-              to={Paths.tournaments}
-              className={classes.link}
-            >
-              {t('header.tournaments')}
-            </Link>
-          )}
-          {isAuth && (
-            <Link onClick={handleCloseDrawer} to={Paths.profile} className={classes.link}>
-              {t('header.profile')}
-            </Link>
+            <>
+              <Link
+                onClick={handleCloseDrawer}
+                to={Paths.tournaments}
+                className={classes.link}
+              >
+                {t('header.tournaments')}
+              </Link>
+
+              <Link
+                onClick={handleCloseDrawer}
+                to={Paths.bookings}
+                className={classes.link}
+              >
+                {t('header.bookings')}
+              </Link>
+
+              <Link
+                onClick={handleCloseDrawer}
+                to={Paths.profile}
+                className={classes.link}
+              >
+                {t('header.profile')}
+              </Link>
+            </>
           )}
 
           <Divider my="sm" color={theme.colorScheme === 'dark' ? 'dark.5' : 'gray.1'} />

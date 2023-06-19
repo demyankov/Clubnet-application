@@ -6,8 +6,8 @@ import { modals } from '@mantine/modals';
 import { useTranslation } from 'react-i18next';
 
 import { requiredFieldsGenerator } from 'helpers/requiredFieldsGenerator';
+import { IUser } from 'store/slices/auth/types';
 import { useAuth } from 'store/store';
-import { IUser } from 'store/types';
 
 export const ProfileUpdateUserModal: FC = () => {
   const { user, isUpdateUserInfoFetching, updateUserDataField } = useAuth(

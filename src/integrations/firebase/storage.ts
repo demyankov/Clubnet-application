@@ -5,6 +5,7 @@ import {
   getDownloadURL,
   deleteObject,
 } from 'firebase/storage';
+import { t } from 'i18next';
 
 import { Images } from 'constants/storageFolders';
 
@@ -16,7 +17,7 @@ export const uploadImageAndGetURL = async (
   const maxSize = 3.5 * 1024 * 1024; // 3,5mb
 
   if (image.size > maxSize) {
-    throw Error('Image file must be not larger then 3,5mb');
+    throw Error(t('notifications.errorImageMaxSize').toString());
   }
 
   const storage = getStorage();

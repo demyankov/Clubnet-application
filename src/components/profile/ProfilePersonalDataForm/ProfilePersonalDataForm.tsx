@@ -6,8 +6,8 @@ import { IconPhoneCall, IconSettings } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
 
 import { ProfileUpdateUserModal } from 'components/profile';
+import { IUser } from 'store/slices/auth/types';
 import { useAuth } from 'store/store';
-import { IUser } from 'store/types';
 
 export const ProfilePersonalDataForm: FC = () => {
   const { user } = useAuth((state) => state);

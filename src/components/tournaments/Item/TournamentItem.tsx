@@ -33,9 +33,9 @@ export const TournamentItem: FC<{ data: ITournamentData }> = ({ data }) => {
     navigate(`${Paths.tournaments}/${id}`);
   };
 
-  const handleDeleteClick = async (): Promise<void> => {
-    await deleteTournament(data.id, data.image);
-    await getTournaments();
+  const handleDeleteClick = (): void => {
+    deleteTournament(data.id, data.image);
+    getTournaments();
   };
 
   const handleButtonClick = (e: MouseEvent): void => {
@@ -43,7 +43,7 @@ export const TournamentItem: FC<{ data: ITournamentData }> = ({ data }) => {
     modals.openConfirmModal({
       title: t('modals.deleteTournament'),
       centered: true,
-      children: <Text size="sm">{t('modals.agreeToDelete')}</Text>,
+      children: <Text size="sm">{t('modals.agreeToDeleteTournament')}</Text>,
       labels: { confirm: t('modals.btnDelete'), cancel: t('modals.btnCancel') },
       confirmProps: { color: 'red' },
       onConfirm: () => handleDeleteClick(),

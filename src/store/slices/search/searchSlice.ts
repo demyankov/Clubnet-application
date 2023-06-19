@@ -4,8 +4,9 @@ import { produce } from 'immer';
 import { DatabasePaths } from 'constants/databasePaths';
 import { errorHandler } from 'helpers';
 import { Filter, getFirestoreData } from 'integrations/firebase';
+import { IUser } from 'store/slices/auth/types';
 import { BoundStore } from 'store/store';
-import { GenericStateCreator, IUser } from 'store/types';
+import { GenericStateCreator } from 'store/types';
 
 export interface ISearch {
   isSearching: boolean;

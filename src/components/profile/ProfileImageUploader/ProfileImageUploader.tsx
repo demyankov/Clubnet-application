@@ -6,8 +6,8 @@ import { BiUpload } from 'react-icons/bi';
 import { RiDeleteBin6Line } from 'react-icons/ri';
 
 import { ALLOWED_IMAGE_FORMATS } from 'constants/allowedImageFormats';
+import { IUser } from 'store/slices/auth/types';
 import { useAuth } from 'store/store';
-import { IUser } from 'store/types';
 
 export const ProfileImageUploader: FC = () => {
   const { user, isUserImageFetching, updateUserImage, deleteUserImage } = useAuth(
@@ -16,12 +16,12 @@ export const ProfileImageUploader: FC = () => {
   const { hovered, ref } = useHover();
   const currentUser = user as IUser;
 
-  const handleUpload = async (image: File): Promise<void> => {
-    await updateUserImage(image);
+  const handleUpload = (image: File): void => {
+    updateUserImage(image);
   };
 
-  const handleDeleteImage = async (): Promise<void> => {
-    await deleteUserImage();
+  const handleDeleteImage = (): void => {
+    deleteUserImage();
   };
 
   return (

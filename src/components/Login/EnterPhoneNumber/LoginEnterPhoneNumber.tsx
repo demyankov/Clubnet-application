@@ -14,15 +14,23 @@ export const LoginEnterPhoneNumber: FC<LoginViewsProps> = ({ setTempPhone }) => 
 
   const { t } = useTranslation();
 
-  const { values, errors, onSubmit, getInputProps } = useForm({
+  const {
+    values: { phone },
+    errors,
+    onSubmit,
+    getInputProps,
+  } = useForm({
     initialValues: {
       phone: '',
     },
 
     validate: {
       phone: (value) => {
-        const processedPhone = formatPhoneNumber(value);
+        if (!value) {
+          return t('modals.requiredField');
+        }
 
+        const processedPhone = formatPhoneNumber(value);
         const prefixRegex = /^\+375\s?(25|29|33|44)/;
 
         if (!prefixRegex.test(processedPhone)) {
@@ -34,7 +42,7 @@ export const LoginEnterPhoneNumber: FC<LoginViewsProps> = ({ setTempPhone }) => 
     },
   });
 
-  const handleSubmit = ({ phone }: typeof values): void => {
+  const handleSubmit = (): void => {
     const processedPhone = formatPhoneNumber(phone);
 
     sendSmsCode(processedPhone);
@@ -51,7 +59,7 @@ export const LoginEnterPhoneNumber: FC<LoginViewsProps> = ({ setTempPhone }) => 
       <Input.Wrapper
         id="phone-input"
         label={t('form.yourPhone')}
-        required
+        withAsterisk
         mt="xs"
         inputMode="tel"
       >
@@ -59,7 +67,6 @@ export const LoginEnterPhoneNumber: FC<LoginViewsProps> = ({ setTempPhone }) => 
           component={IMaskInput}
           mask="+375 (00) 000-00-00"
           id="phone-input"
-          required
           mt="xs"
           placeholder={t('login.phonePlaceholder')}
           {...getInputProps('phone')}

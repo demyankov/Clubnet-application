@@ -32,7 +32,8 @@ const Login: FC = () => {
   const StepComponent = SIGN_IN_STEP_VIEWS[currentStep];
 
   const resetRecaptchaWidget = (): void => {
-    (widgetRef.current as HTMLDivElement).innerHTML = '<div id="captcha" />';
+    (widgetRef.current as HTMLDivElement).innerHTML =
+      '<div id="captcha"  style="visibility: hidden;"/>';
   };
 
   useEffect(() => {
@@ -54,7 +55,7 @@ const Login: FC = () => {
       />
 
       <div ref={widgetRef}>
-        <div id="captcha" />
+        <div id="captcha" style={{ visibility: 'hidden' }} />
       </div>
     </Card>
   );

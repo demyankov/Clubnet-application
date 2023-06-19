@@ -36,10 +36,10 @@ export const LoginConfirmCode: FC<LoginViewsProps> = ({
     checkSmsCode(code);
   };
 
-  const handleSendCode = async (): Promise<void> => {
+  const handleSendCode = (): void => {
     resetRecaptchaWidget();
 
-    await sendSmsCode(tempPhone);
+    sendSmsCode(tempPhone);
 
     restart();
   };

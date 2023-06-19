@@ -1,12 +1,21 @@
 export const ru = {
   translation: {
-    header: {
-      clients: 'Клиенты',
-      tournaments: 'Турниры',
-      signin: 'Войти',
-      signout: 'Выйти',
-      profile: 'Профиль',
+    address: {
+      back: 'Назад к адресам',
+      addTable: 'Добавить стол',
+      deleteAddress: 'Удалить адрес',
+      agreeToDeleteAddress:
+        'Вы собираетесь удалить адрес. Это действие является безвозвратным. Вы уверены?',
+      setWorkingHours: 'Задайте рабочие часы',
+      applyToAll: 'Применить для всех',
+      save: 'Сохранить',
     },
+
+    clients: {
+      clients: 'Клиенты',
+      addClient: 'Добавить клиента',
+    },
+
     common: {
       total: 'Всего: ',
       search: 'Поиск',
@@ -16,22 +25,26 @@ export const ru = {
       fio: 'ФИО',
       emptyLit: 'Список пуст',
     },
-    profile: {
-      name: 'Имя',
+
+    establishments: {
+      createEstablishment: 'Создать заведение',
+      deleteEstablishment: 'Удалить заведение',
+      agreeToDeleteEstablishment:
+        'Вы собираетесь удалить заведение. Это действие является безвозвратным. Вы уверены?',
+      noEstablishments: 'Пока заведений нет',
+      name: 'Название',
+      estName: 'Название заведения',
+      addAddress: 'Добавить адрес',
+      city: 'Город',
+      cityPlaceholder: 'Минск',
+      address: 'Адрес',
+      addressPlaceholder: 'ул. Мира, 42',
       phone: 'Телефон',
-      email: 'Email',
-      uploadImage: 'Загрузить картинку',
-      update: 'Обновить',
-      save: 'Сохранить',
-      profileTeams: 'Команды',
-      profileFriends: 'Друзья',
-      profileStats: 'Статистика',
+      workingHours: 'Часы работы',
+      create: 'Создать',
+      goBack: 'Назад',
     },
-    notFound: {
-      title: 'Что-то не так...',
-      info: 'Страница, которую вы пытаетесь открыть, не существует. Возможно, вы опечатались, либо страницу переместили на другой URL. Если вы считаете, что это ошибка, свяжитесь с поддержкой.',
-      back: 'Вернуться на домашнюю страницу',
-    },
+
     form: {
       signinHeader: 'Войдите',
       yourPhone: 'Ваш телефон',
@@ -47,9 +60,44 @@ export const ru = {
       nicknameExists: 'Ник уже зарегистрирован',
       toSetNickname: 'Установить ник',
     },
-    footer: {
-      crafted: 'создано с любовью thelastandrew',
+
+    header: {
+      clients: 'Клиенты',
+      tournaments: 'Турниры',
+      signin: 'Войти',
+      signout: 'Выйти',
+      profile: 'Профиль',
+      bookings: 'Бронирования',
     },
+
+    login: {
+      phonePlaceholder: 'Введите номер телефона',
+    },
+
+    modals: {
+      createTournament: 'Создать',
+      startTime: 'Начало турнира',
+      gameMode: 'Режим',
+      tournamentName: 'Имя',
+      countOfMembers: 'Количество участников',
+      tournamentFormat: 'Формат',
+      game: 'Игра',
+      addImage: 'Добавьте изображение',
+      deleteTournament: 'Удалить турнир',
+      btnDelete: 'Удалить',
+      btnCancel: 'Назад',
+      agreeToDelete:
+        'Вы уверены что хотите удалить этот турнир? Это действие является безвозвратным!',
+      requiredField: 'Это поле является обязательным',
+      shouldBeMultiple: 'Значение должно быть кратным указанному режиму игры',
+    },
+
+    notFound: {
+      title: 'Что-то не так...',
+      info: 'Страница, которую вы пытаетесь открыть, не существует. Возможно, вы опечатались, либо страницу переместили на другой URL. Если вы считаете, что это ошибка, свяжитесь с поддержкой.',
+      back: 'Вернуться на домашнюю страницу',
+    },
+
     notifications: {
       successHeader: 'Успех',
       successDelete: 'Турнир успешно удален',
@@ -67,6 +115,36 @@ export const ru = {
       emptyTournaments: 'Больше турниров нет!',
       maxTeamsCount: 'Вы не можете создать больше 5 команд',
     },
+
+    profile: {
+      name: 'Имя',
+      phone: 'Телефон',
+      email: 'Email',
+      uploadImage: 'Загрузить картинку',
+      update: 'Обновить',
+      save: 'Сохранить',
+      profileTeams: 'Команды',
+      profileFriends: 'Друзья',
+      profileStats: 'Статистика',
+    },
+
+    search: {
+      empty: 'Ничего не найдено',
+      searchPlaceholder: 'Поиск друзей...',
+    },
+
+    teams: {
+      modalTitle: 'Создайте команду',
+      modalNameLabel: 'Введите название команды',
+      modalTagLabel: 'Введите тег',
+      createButtonText: 'Создать команду',
+      maxLength: 'Макс. символов: ',
+      aboutTeam: 'О команде',
+      teamInfo: 'Информация',
+      teamImage: 'Изображение команды',
+      settings: 'Настройки',
+    },
+
     tournaments: {
       createButtonText: 'Создать турнир',
       modalTitle: 'Создайте турнир',
@@ -85,44 +163,17 @@ export const ru = {
       totalCount: 'Всего',
       maxCount: 'Макс. количество: ',
     },
-    teams: {
-      modalTitle: 'Создайте команду',
-      modalNameLabel: 'Введите название команды',
-      modalTagLabel: 'Введите тег',
-      createButtonText: 'Создать команду',
-      maxLength: 'Макс. символов: ',
-      aboutTeam: 'О команде',
-      teamInfo: 'Информация',
-      teamImage: 'Изображение команды',
-      settings: 'Настройки',
-    },
-    modals: {
-      createTournament: 'Создать',
-      startTime: 'Начало турнира',
-      gameMode: 'Режим',
-      tournamentName: 'Имя',
-      countOfMembers: 'Количество участников',
-      tournamentFormat: 'Формат',
-      game: 'Игра',
-      addImage: 'Добавьте изображение',
-      deleteTournament: 'Удалить турнир',
-      btnDelete: 'Удалить',
-      btnCancel: 'Назад',
-      agreeToDelete:
-        'Вы уверены что хотите удалить этот турнир? Это действие является безвозвратным!',
-      requiredField: 'Это поле является обязательным',
-      shouldBeMultiple: 'Значение должно быть кратным указанному режиму игры',
-    },
-    login: {
-      phonePlaceholder: 'Введите номер телефона',
-    },
-    clients: {
-      clients: 'Клиенты',
-      addClient: 'Добавить клиента',
-    },
-    search: {
-      empty: 'Ничего не найдено',
-      searchPlaceholder: 'Поиск друзей...',
+
+    workingDays: {
+      Mon: 'Пн',
+      Tue: 'Вт',
+      Wed: 'Ср',
+      Thu: 'Чт',
+      Fri: 'Пт',
+      Sat: 'Сб',
+      Sun: 'Вс',
+      daily: 'Ежедневно',
+      monFri: 'Пн-Пт',
     },
   },
 };

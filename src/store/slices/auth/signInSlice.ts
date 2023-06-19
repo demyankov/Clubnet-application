@@ -13,8 +13,9 @@ import {
   getFireStoreDataByFieldName,
   setFirestoreData,
 } from 'integrations/firebase/database';
+import { IUser } from 'store/slices/auth/types';
 import { BoundStore } from 'store/store';
-import { GenericStateCreator, IUser } from 'store/types';
+import { GenericStateCreator } from 'store/types';
 
 export interface ISignIn {
   signIn: {
@@ -89,12 +90,12 @@ export const signInSlice: GenericStateCreator<BoundStore> = (set, get) => ({
 
         if (user) {
           const userId = `user-${user.uid}`;
-          const isUserExist = await getFireStoreDataByFieldName(
+          const userData = await getFireStoreDataByFieldName<IUser>(
             DatabasePaths.Users,
             userId,
           );
 
-          if (isUserExist) {
+          if (userData) {
             set(
               produce((state: BoundStore) => {
                 state.signIn.isCompletedRegistration = true;
@@ -154,7 +155,7 @@ export const signInSlice: GenericStateCreator<BoundStore> = (set, get) => ({
 
         const currentUser = get().user as IUser;
 
-        await setFirestoreData(DatabasePaths.Users, currentUser.id, {
+        await setFirestoreData<IUser>(DatabasePaths.Users, currentUser.id, {
           ...currentUser,
           nickName,
         });

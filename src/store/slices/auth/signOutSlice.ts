@@ -29,6 +29,7 @@ export const signOutSlice: GenericStateCreator<BoundStore> = (set, get) => ({
           produce((state: BoundStore) => {
             state.isAuth = false;
             state.user = null;
+            state.signIn.isCompletedRegistration = false;
             state.signIn.currentStep = SignInSteps.EnterPhoneNumber;
           }),
         );

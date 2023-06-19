@@ -16,8 +16,9 @@ import {
   updateFirestoreData,
   uploadImageAndGetURL,
 } from 'integrations/firebase';
+import { IUser } from 'store/slices/auth/types';
 import { BoundStore } from 'store/store';
-import { GenericStateCreator, IUser } from 'store/types';
+import { GenericStateCreator } from 'store/types';
 
 export interface ITeamMember {
   userLink: Nullable<DocumentReference<DocumentData>>;
@@ -40,10 +41,10 @@ export interface ITeams {
   teams: ITeam[];
   currentTeam: Nullable<ITeam>;
   members: IUser[];
-  addTeam: (teamData: ITeam) => void;
-  getTeams: () => void;
-  getTeamById: (id: string) => void;
-  updateTeam: (data: ITeamFormValues) => any;
+  addTeam: (teamData: ITeam) => Promise<void>;
+  getTeams: () => Promise<void>;
+  getTeamById: (id: string) => Promise<void>;
+  updateTeam: (data: ITeamFormValues) => Promise<void>;
 }
 
 export const teamsSlice: GenericStateCreator<BoundStore> = (set, get) => ({
@@ -148,15 +149,21 @@ export const teamsSlice: GenericStateCreator<BoundStore> = (set, get) => ({
     );
 
     try {
-      const currentTeam = await getFireStoreDataByFieldName(DatabasePaths.Teams, id);
-      const members = await getFirestoreTeamMembers(currentTeam.members);
-
-      set(
-        produce((state: BoundStore) => {
-          state.currentTeam = currentTeam;
-          state.members = members;
-        }),
+      const currentTeam = await getFireStoreDataByFieldName<ITeam>(
+        DatabasePaths.Teams,
+        id,
       );
+
+      if (currentTeam && currentTeam.members?.length) {
+        const members = await getFirestoreTeamMembers(currentTeam.members);
+
+        set(
+          produce((state: BoundStore) => {
+            state.currentTeam = currentTeam;
+            state.members = members;
+          }),
+        );
+      }
     } catch (error) {
       errorHandler(error as Error);
     } finally {

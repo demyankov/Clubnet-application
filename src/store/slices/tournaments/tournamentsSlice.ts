@@ -1,4 +1,4 @@
-import { QueryDocumentSnapshot } from 'firebase/firestore';
+import { QueryDocumentSnapshot, Timestamp } from 'firebase/firestore';
 import { produce } from 'immer';
 
 import { DatabasePaths } from 'constants/databasePaths';
@@ -29,6 +29,7 @@ interface IAddTournamentData {
 
 export interface ITournamentData extends Omit<IAddTournamentData, 'image'> {
   image: string;
+  timestamp: Timestamp;
 }
 
 export interface ITournaments {
@@ -70,9 +71,13 @@ export const tournamentsSlice: GenericStateCreator<BoundStore> = (set, get) => (
         data.id,
       );
 
+      const date = data.expectedDate ? new Date(data.expectedDate) : new Date();
+      const timestamp = Timestamp.fromDate(date);
+
       await setFirestoreData<ITournamentData>(DatabasePaths.Tournaments, data.id, {
         ...data,
         image,
+        timestamp,
       });
 
       successNotification('tournamentSuccess');
@@ -180,13 +185,18 @@ export const tournamentsSlice: GenericStateCreator<BoundStore> = (set, get) => (
       }),
     );
     try {
-      const data = await getFireStoreDataByFieldName(DatabasePaths.Tournaments, id);
-
-      set(
-        produce((state: BoundStore) => {
-          state.currentTournament = data;
-        }),
+      const data = await getFireStoreDataByFieldName<ITournamentData>(
+        DatabasePaths.Tournaments,
+        id,
       );
+
+      if (data) {
+        set(
+          produce((state: BoundStore) => {
+            state.currentTournament = data;
+          }),
+        );
+      }
     } catch (error) {
       errorHandler(error as Error);
     } finally {

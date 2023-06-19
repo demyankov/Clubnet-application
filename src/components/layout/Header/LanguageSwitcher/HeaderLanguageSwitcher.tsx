@@ -10,7 +10,7 @@ import { Language, LANGUAGE_SWITCHER_CONFIG } from 'constants/languageSwitcherCo
 export const HeaderLanguageSwitcher: FC = () => {
   const { i18n } = useTranslation();
   const [currentLanguage, setCurrentLanguage] = useLocalStorage<Language>({
-    key: 'language',
+    key: 'i18nextLng',
     defaultValue: Language.Ru,
     getInitialValueInEffect: true,
   });

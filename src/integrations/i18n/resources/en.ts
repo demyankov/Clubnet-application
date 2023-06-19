@@ -1,49 +1,50 @@
 export const en = {
   translation: {
-    header: {
-      home: 'Home',
-      tournaments: 'Tournaments',
-      signin: 'Sign In',
-      signout: 'Sign out',
-      profile: 'Profile',
-      clients: 'Clients',
+    address: {
+      back: 'Back to addresses',
+      addTable: 'Add table',
+      deleteAddress: 'Delete address',
+      agreeToDeleteAddress:
+        'You are about to delete the address. This action is irrevocable. Are you sure?',
+      setWorkingHours: 'Set working hours',
+      applyToAll: 'Apply to all',
+      save: 'Save',
     },
+
+    clients: {
+      clients: 'Clients',
+      addClient: 'Add client',
+    },
+
     common: {
       total: 'Total: ',
       search: 'Search',
       reset: 'Reset',
       phone: 'Phone',
       nickname: 'Nickname',
-      fio: 'Full name',
+      fullName: 'Full name',
       emptyLit: 'Empty list',
     },
-    home: {
-      title: 'A <1>modern</1> React <br/> components library',
-      info: 'Build fully functional accessible web applications faster than ever – Mantine includes more than 120 customizable components and hooks to cover you in any situation',
-      typescript:
-        '<0>TypeScript based</0> – build type safe applications, all components and hooks export types',
-      free: '<0>Free and open source</0> – all packages have MIT license, you can use Mantine in any project',
-      focus:
-        '<0>No annoying focus ring</0> – focus ring will appear only when user navigates with keyboard',
-      start: 'Get started',
-      source: 'Source code',
-    },
-    profile: {
+
+    establishments: {
+      createEstablishment: 'Create Establishment',
+      deleteEstablishment: 'Delete establishment',
+      agreeToDeleteEstablishment:
+        'You are about to delete the establishment. This action is irrevocable. Are you sure?',
+      noEstablishments: 'No establishments yet',
       name: 'Name',
+      estName: 'Establishment name',
+      addAddress: 'Add address',
+      city: 'City',
+      cityPlaceholder: 'Minsk',
+      address: 'Address',
+      addressPlaceholder: 'Mira st., 42',
       phone: 'Phone',
-      email: 'Email',
-      'upload-image': 'Upload image',
-      update: 'Update',
-      save: 'Save',
-      profileTeams: 'Teams',
-      profileFriends: 'Friends',
-      profileStats: 'Stats',
+      workingHours: 'Working hours',
+      create: 'Create',
+      goBack: 'Go back',
     },
-    notFound: {
-      title: 'Something is not right...',
-      info: 'Page you are trying to open does not exist. You may have mistyped the address, or the page has been moved to another URL. If you think this is an error contact support.',
-      back: 'Get back to home page',
-    },
+
     form: {
       signinHeader: 'Sign in',
       yourPhone: 'Your phone',
@@ -59,55 +60,20 @@ export const en = {
       nicknameExists: 'Nickname already registered',
       toSetNickname: 'Set nickname',
     },
-    footer: {
-      crafted: 'crafted with love by thelastandrew',
-    },
-    notifications: {
-      successHeader: 'Success',
-      errorHeader: 'Error',
-      successDelete: 'The tournament was successfully deleted',
-      successAddedTeam: 'The team was successfully added',
-      sameTeam: 'A team with this tag already exists',
-      successCommon: 'Congratulations!',
-      errorCommon: 'Something went wrong',
-      errorSignin: 'Sign in failed',
-      successSignin: 'Welcome!',
-      errorTooManyRequests: 'Too many requests, try again later.',
-      errorVerification: 'Wrong verification code. Try again.',
-      errorPhone: 'Invalid phone number',
-      tournamentSuccess: 'The tournament has been successfully added!',
-      emptyTournaments: 'There are no more tournaments!',
-      maxTeamsCount: "You can't create more than 5 teams",
-    },
-    tournaments: {
+
+    header: {
+      clients: 'Clients',
       tournaments: 'Tournaments',
-      createButtonText: 'Create a tournament',
-      modalTitle: 'Create a Tournament',
-      createTournament: 'Create',
-      submit: 'Submit',
-      noTournaments: 'There are no tournaments yet',
-      unknownInfo: 'Unknown',
-      match: 'Match',
-      members: 'Members',
-      rules: 'Rules',
-      details: 'Details',
-      teamSize: 'Team size',
-      tournamentRegistration: 'Registration',
-      showMore: 'Show more',
-      totalCount: 'Total',
-      maxCount: 'Max count: ',
+      signin: 'Sign In',
+      signout: 'Sign out',
+      profile: 'Profile',
+      bookings: 'Bookings',
     },
-    teams: {
-      modalTitle: 'Create team',
-      modalNameLabel: 'Enter name',
-      modalTagLabel: 'Enter tag',
-      createButtonText: 'Create team',
-      maxLength: 'Max length: ',
-      aboutTeam: 'About',
-      teamInfo: 'Information',
-      teamImage: 'Team image',
-      settings: 'Settings',
+
+    login: {
+      phonePlaceholder: 'Enter phone number',
     },
+
     modals: {
       createTournament: 'Create',
       startTime: 'Tournament start time',
@@ -125,16 +91,89 @@ export const en = {
       requiredField: 'This field is required!',
       shouldBeMultiple: 'The value must be a multiple of the specified game mode',
     },
-    login: {
-      phonePlaceholder: 'Enter phone number',
+
+    notFound: {
+      title: 'Something is not right...',
+      info: 'Page you are trying to open does not exist. You may have mistyped the address, or the page has been moved to another URL. If you think this is an error contact support.',
+      back: 'Get back to home page',
     },
-    clients: {
-      clients: 'Clients',
-      addClient: 'Add client',
+
+    notifications: {
+      successHeader: 'Success',
+      errorHeader: 'Error',
+      successDelete: 'The tournament was successfully deleted',
+      successAddedTeam: 'The team was successfully added',
+      sameTeam: 'A team with this tag already exists',
+      successCommon: 'Congratulations!',
+      errorCommon: 'Something went wrong',
+      errorSignin: 'Sign in failed',
+      successSignin: 'Welcome!',
+      errorTooManyRequests: 'Too many requests, try again later.',
+      errorVerification: 'Wrong verification code. Try again.',
+      errorPhone: 'Invalid phone number',
+      tournamentSuccess: 'The tournament has been successfully added!',
+      emptyTournaments: 'There are no more tournaments!',
+      maxTeamsCount: "You can't create more than 5 teams",
     },
+
+    profile: {
+      name: 'Name',
+      phone: 'Phone',
+      email: 'Email',
+      'upload-image': 'Upload image',
+      update: 'Update',
+      save: 'Save',
+      profileTeams: 'Teams',
+      profileFriends: 'Friends',
+      profileStats: 'Stats',
+    },
+
     search: {
       empty: 'No results found',
       searchPlaceholder: 'Search friends...',
+    },
+
+    teams: {
+      modalTitle: 'Create team',
+      modalNameLabel: 'Enter name',
+      modalTagLabel: 'Enter tag',
+      createButtonText: 'Create team',
+      maxLength: 'Max length: ',
+      aboutTeam: 'About',
+      teamInfo: 'Information',
+      teamImage: 'Team image',
+      settings: 'Settings',
+    },
+
+    tournaments: {
+      tournaments: 'Tournaments',
+      createButtonText: 'Create a tournament',
+      modalTitle: 'Create a Tournament',
+      createTournament: 'Create',
+      submit: 'Submit',
+      noTournaments: 'There are no tournaments yet',
+      unknownInfo: 'Unknown',
+      match: 'Match',
+      members: 'Members',
+      rules: 'Rules',
+      details: 'Details',
+      teamSize: 'Team size',
+      tournamentRegistration: 'Registration',
+      showMore: 'Show more',
+      totalCount: 'Total',
+      maxCount: 'Maximum count: ',
+    },
+
+    workingDays: {
+      Mon: 'Mon',
+      Tue: 'Tue',
+      Wed: 'Wed',
+      Thu: 'Thu',
+      Fri: 'Fri',
+      Sat: 'Sat',
+      Sun: 'Sun',
+      daily: 'Daily',
+      monFri: 'Mon-Fri',
     },
   },
 };

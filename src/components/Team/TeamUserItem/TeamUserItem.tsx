@@ -4,7 +4,7 @@ import { createStyles, Group, Image, Text, UnstyledButton } from '@mantine/core'
 import { IconCrown } from '@tabler/icons-react';
 
 import { useTeamMemberRole } from 'hooks';
-import { IUser } from 'store/types';
+import { IUser } from 'store/slices/auth/types';
 
 const useStyles = createStyles((theme) => ({
   user: {

@@ -8,6 +8,8 @@ import {
   signOutSlice,
   updateUserSlice,
   tournamentsSlice,
+  establishmentSlice,
+  addressSlice,
   ITournaments,
   IState,
   ISignIn,
@@ -19,6 +21,8 @@ import {
   IClients,
   searchSlice,
   ISearch,
+  IEstablishmentActions,
+  IAdressActions,
 } from 'store/slices';
 
 export interface BoundStore
@@ -30,6 +34,8 @@ export interface BoundStore
     ITeams,
     IClients,
     ISearch {}
+
+export interface BookingStore extends IEstablishmentActions, IAdressActions {}
 
 export const useAuth = create(
   devtools(
@@ -63,6 +69,15 @@ export const useSearch = create(
   devtools(
     immer<BoundStore>((...a) => ({
       ...searchSlice(...a),
+    })),
+  ),
+);
+
+export const useBookings = create(
+  devtools(
+    immer<BookingStore>((...a) => ({
+      ...establishmentSlice(...a),
+      ...addressSlice(...a),
     })),
   ),
 );
