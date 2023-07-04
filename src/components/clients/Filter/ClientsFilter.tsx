@@ -7,6 +7,7 @@ import { IoIosSearch } from 'react-icons/io';
 import { IoClose } from 'react-icons/io5';
 import { IMaskInput } from 'react-imask';
 
+import { isDarkTheme } from 'helpers';
 import { useClients } from 'store/store';
 
 export const ClientsFilter: FC = () => {
@@ -37,8 +38,9 @@ export const ClientsFilter: FC = () => {
       <Box
         mt="xl"
         sx={(theme) => ({
-          backgroundColor:
-            theme.colorScheme === 'dark' ? theme.colors.dark[6] : theme.colors.gray[0],
+          backgroundColor: isDarkTheme(theme.colorScheme)
+            ? theme.colors.dark[6]
+            : theme.colors.gray[0],
           padding: theme.spacing.xl,
           borderRadius: theme.radius.md,
         })}

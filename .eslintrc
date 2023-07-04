@@ -48,20 +48,12 @@
       "error",
       {
         "newlines-between": "always",
-        "pathGroupsExcludedImportTypes": [
-          "react"
-        ],
+        "pathGroupsExcludedImportTypes": ["react"],
         "alphabetize": {
           "order": "asc",
           "caseInsensitive": true
         },
-        "groups": [
-          "builtin",
-          "external",
-          "parent",
-          "sibling",
-          "index"
-        ],
+        "groups": ["builtin", "external", "parent", "sibling", "index"],
         "pathGroups": [
           {
             "pattern": "react",
@@ -84,25 +76,13 @@
       },
       {
         "blankLine": "always",
-        "prev": [
-          "const",
-          "let",
-          "var"
-        ],
+        "prev": ["const", "let", "var"],
         "next": "*"
       },
       {
         "blankLine": "any",
-        "prev": [
-          "const",
-          "let",
-          "var"
-        ],
-        "next": [
-          "const",
-          "let",
-          "var"
-        ]
+        "prev": ["const", "let", "var"],
+        "next": ["const", "let", "var"]
       }
     ],
     "no-shadow": "off",
@@ -115,10 +95,7 @@
       "error",
       {
         "props": true,
-        "ignorePropertyModificationsFor": [
-          "state",
-          "self"
-        ]
+        "ignorePropertyModificationsFor": ["state", "self"]
       }
     ],
     "default-param-last": "off",
@@ -130,10 +107,7 @@
     "react/jsx-filename-extension": [
       1,
       {
-        "extensions": [
-          ".jsx",
-          ".tsx"
-        ]
+        "extensions": [".jsx", ".tsx"]
       }
     ],
     "react/function-component-definition": [
@@ -149,88 +123,37 @@
         "html": "ignore"
       }
     ],
-    "@typescript-eslint/no-unused-vars": [
-      "error"
-    ],
+    "@typescript-eslint/no-unused-vars": ["error"],
     "@typescript-eslint/explicit-function-return-type": [
       "error",
       {
         "allowExpressions": true,
-        "allowedNames": [
-          "ignoredFunctionDeclaration"
-        ]
+        "allowedNames": ["ignoredFunctionDeclaration"]
       }
     ]
   },
   "settings": {
     "import/resolver": {
       "node": {
-        "extensions": [
-          ".ts",
-          ".tsx",
-          ".js",
-          ".jsx"
-        ],
-        "moduleDirectory": [
-          "node_modules",
-          "src/"
-        ]
+        "extensions": [".ts", ".tsx", ".js", ".jsx"],
+        "moduleDirectory": ["node_modules", "src/"]
       }
     },
     "alias": {
       "map": [
-        [
-          "api",
-          "./src/api"
-        ],
-        [
-          "assets",
-          "./src/assets"
-        ],
-        [
-          "components",
-          "./src/components"
-        ],
-        [
-          "constants",
-          "./src/constants"
-        ],
-        [
-          "enums",
-          "./src/enums"
-        ],
-        [
-          "hooks",
-          "./src/hooks"
-        ],
-        [
-          "pages",
-          "./src/pages"
-        ],
-        [
-          "routes",
-          "./src/routes"
-        ],
-        [
-          "services",
-          "./src/services"
-        ],
-        [
-          "store",
-          "./src/store"
-        ],
-        [
-          "styles",
-          "./src/styles"
-        ],
-        [
-          "types",
-          "./src/types"
-        ],
-        [
-          "utils",
-          "./src/utils"
-        ]
+        ["api", "./src/api"],
+        ["assets", "./src/assets"],
+        ["components", "./src/components"],
+        ["constants", "./src/constants"],
+        ["enums", "./src/enums"],
+        ["hooks", "./src/hooks"],
+        ["pages", "./src/pages"],
+        ["routes", "./src/routes"],
+        ["services", "./src/services"],
+        ["store", "./src/store"],
+        ["styles", "./src/styles"],
+        ["types", "./src/types"],
+        ["utils", "./src/utils"]
       ]
     }
   }

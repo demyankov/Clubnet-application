@@ -44,7 +44,9 @@ export const TeamLink: FC<Props> = ({ teamData: { game, id, image, name, tag } }
           </Text>
         </div>
 
-        <IconChevronRight size="0.9rem" stroke={1.5} />
+        <div style={{ paddingRight: '10px' }}>
+          <IconChevronRight size="0.9rem" stroke={1.5} />
+        </div>
       </Group>
     </Card>
   );

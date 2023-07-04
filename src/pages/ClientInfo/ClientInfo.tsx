@@ -1,6 +1,5 @@
 import { FC, useEffect } from 'react';
 
-import { Container } from '@mantine/core';
 import { useParams } from 'react-router-dom';
 
 import { ClientsItem } from 'components';
@@ -16,11 +15,7 @@ const ClientInfo: FC = () => {
     }
   }, [getClientByNickname, nickname]);
 
-  return (
-    <Container size="md">
-      <ClientsItem />
-    </Container>
-  );
+  return <ClientsItem />;
 };
 
 export default ClientInfo;

@@ -36,7 +36,7 @@ export const ClientsList: FC = () => {
 
   return (
     <>
-      <Title mt="md" order={2}>
+      <Title mb="mb" order={2}>
         {t('clients.clients')}
       </Title>
 

@@ -1,6 +1,7 @@
 import React, { FC } from 'react';
 
 import {
+  Box,
   Burger,
   Button,
   createStyles,
@@ -9,28 +10,28 @@ import {
   Group,
   Header,
   rem,
-  ScrollArea,
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { useTranslation } from 'react-i18next';
-import { DiReact } from 'react-icons/di';
 import { Link } from 'react-router-dom';
 
 import { HeaderLanguageSwitcher, HeaderThemeToggler, HeaderUserMenu } from 'components';
 import { HeaderSearch } from 'components/layout/Header/HeaderSearch/Search';
 import { Paths } from 'constants/paths';
-import { useUserRole } from 'hooks';
+import { isDarkTheme } from 'helpers';
+import { useRole } from 'hooks';
 import { useAuth } from 'store/store';
 
 const useStyles = createStyles((theme) => ({
   link: {
     display: 'flex',
     alignItems: 'center',
+    justifyContent: 'center',
     height: '100%',
     paddingLeft: theme.spacing.md,
     paddingRight: theme.spacing.md,
     textDecoration: 'none',
-    color: theme.colorScheme === 'dark' ? theme.white : theme.black,
+    color: isDarkTheme(theme.colorScheme) ? theme.white : theme.black,
     fontWeight: 500,
     fontSize: theme.fontSizes.sm,
 
@@ -42,25 +43,27 @@ const useStyles = createStyles((theme) => ({
     },
 
     ...theme.fn.hover({
-      backgroundColor:
-        theme.colorScheme === 'dark' ? theme.colors.dark[6] : theme.colors.gray[0],
+      backgroundColor: isDarkTheme(theme.colorScheme)
+        ? theme.colors.dark[6]
+        : theme.colors.gray[0],
     }),
   },
 
   inner: {
-    maxWidth: rem(960),
-    marginLeft: 'auto',
-    marginRight: 'auto',
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: '0 16px',
   },
 
   hiddenMobile: {
-    [theme.fn.smallerThan('md')]: {
+    [theme.fn.smallerThan(700)]: {
       display: 'none',
     },
   },
 
   hiddenDesktop: {
-    [theme.fn.largerThan('md')]: {
+    [theme.fn.largerThan(700)]: {
       display: 'none',
     },
   },
@@ -74,9 +77,7 @@ export const HeaderMegaMenu: FC = () => {
     isAuth,
     signOut: { signOut },
   } = useAuth((state) => state);
-
-  const { isAdmin } = useUserRole();
-
+  const { isAdmin } = useRole();
   const { t } = useTranslation();
 
   const handleSignOut = (): void => {
@@ -84,41 +85,16 @@ export const HeaderMegaMenu: FC = () => {
   };
 
   return (
-    <Header height={60} px="md" zIndex="unset">
+    <Header height={60} zIndex={10000000}>
       <Group position="apart" sx={{ height: '100%' }} className={classes.inner}>
-        <DiReact size={40} />
+        <Box>{isAuth && <HeaderUserMenu />}</Box>
 
-        <Group sx={{ height: '100%' }} spacing={0} className={classes.hiddenMobile}>
-          {isAuth && isAdmin && (
-            <Link to={Paths.clients} className={classes.link}>
-              {t('header.clients')}
-            </Link>
-          )}
-          {isAuth && (
-            <>
-              <Link to={Paths.tournaments} className={classes.link}>
-                {t('header.tournaments')}
-              </Link>
-              <Link to={Paths.bookings} className={classes.link}>
-                {t('header.bookings')}
-              </Link>
-            </>
-          )}
-        </Group>
-
-        <Group className={classes.hiddenMobile}>
+        <Group position="apart" className={classes.hiddenMobile}>
           {isAuth && <HeaderSearch />}
 
           <HeaderLanguageSwitcher />
 
           <HeaderThemeToggler />
-
-          {!isAuth && (
-            <Button component={Link} to={Paths.signin}>
-              {t('header.signin')}
-            </Button>
-          )}
-          {isAuth && <HeaderUserMenu />}
         </Group>
 
         <Group className={classes.hiddenDesktop}>
@@ -134,52 +110,53 @@ export const HeaderMegaMenu: FC = () => {
         opened={drawerOpened}
         onClose={handleCloseDrawer}
         size="100%"
-        padding="md"
+        padding="25px 0"
         className={classes.hiddenDesktop}
         zIndex={1000000}
       >
-        <ScrollArea h={`calc(100vh - ${rem(60)})`} mx="-md">
-          <Divider my="sm" color={theme.colorScheme === 'dark' ? 'dark.5' : 'gray.1'} />
+        {isAuth && (
+          <>
+            <Link
+              onClick={handleCloseDrawer}
+              to={Paths.tournaments}
+              className={classes.link}
+            >
+              {t('navbar.tournaments')}
+            </Link>
 
-          {isAuth && (
-            <>
+            <Link
+              onClick={handleCloseDrawer}
+              to={Paths.bookings}
+              className={classes.link}
+            >
+              {t('navbar.bookings')}
+            </Link>
+
+            <Link onClick={handleCloseDrawer} to={Paths.profile} className={classes.link}>
+              {t('navbar.profile')}
+            </Link>
+            {isAdmin && (
               <Link
                 onClick={handleCloseDrawer}
-                to={Paths.tournaments}
+                to={Paths.clients}
                 className={classes.link}
               >
-                {t('header.tournaments')}
+                {t('navbar.clients')}
               </Link>
-
-              <Link
-                onClick={handleCloseDrawer}
-                to={Paths.bookings}
-                className={classes.link}
-              >
-                {t('header.bookings')}
-              </Link>
-
-              <Link
-                onClick={handleCloseDrawer}
-                to={Paths.profile}
-                className={classes.link}
-              >
-                {t('header.profile')}
-              </Link>
-            </>
-          )}
-
-          <Divider my="sm" color={theme.colorScheme === 'dark' ? 'dark.5' : 'gray.1'} />
-
-          <Group position="center" grow pb="xl" px="md">
-            {!isAuth && (
-              <Button onClick={handleCloseDrawer} component={Link} to={Paths.signin}>
-                {t('header.signin')}
-              </Button>
             )}
-            {isAuth && <Button onClick={handleSignOut}>{t('header.signout')}</Button>}
-          </Group>
-        </ScrollArea>
+          </>
+        )}
+
+        <Divider my="sm" color={isDarkTheme(theme.colorScheme) ? 'dark.5' : 'gray.1'} />
+
+        <Group position="center" grow pb="xl" px="md">
+          {!isAuth && (
+            <Button onClick={handleCloseDrawer} component={Link} to={Paths.signin}>
+              {t('navbar.signin')}
+            </Button>
+          )}
+          {isAuth && <Button onClick={handleSignOut}>{t('navbar.signout')}</Button>}
+        </Group>
       </Drawer>
     </Header>
   );

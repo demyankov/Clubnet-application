@@ -12,6 +12,7 @@ import { useLocalStorage } from '@mantine/hooks';
 import { ModalsProvider } from '@mantine/modals';
 
 import { Theme } from 'constants/theme';
+import { isDarkTheme } from 'helpers';
 
 interface IState {
   currentTheme: ColorScheme;
@@ -34,11 +35,9 @@ export const ThemeContextProvider: FC<PropsWithChildren> = ({ children }) => {
     getInitialValueInEffect: true,
   });
 
-  const isDarkTheme = colorScheme === Theme.Dark;
-
   const toggleColorScheme = useCallback(
-    () => (): void => setColorScheme(isDarkTheme ? Theme.Light : Theme.Dark),
-    [isDarkTheme, setColorScheme],
+    () => (): void => setColorScheme(isDarkTheme(colorScheme) ? Theme.Light : Theme.Dark),
+    [setColorScheme, colorScheme],
   );
 
   const state: IState = useMemo(

@@ -1,13 +1,13 @@
 import { FC, useEffect, useState } from 'react';
 
-import { Box, Container, Modal } from '@mantine/core';
+import { Box, Modal } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { useTranslation } from 'react-i18next';
 
 import {
-  BookingsEstablishment,
   ADD_ADDRESS_STEPS,
   AddAddressSteps,
+  BookingsEstablishment,
   IFormValues,
 } from 'components';
 import { initialValues } from 'constants/initialValues';
@@ -36,7 +36,7 @@ const Bookings: FC = () => {
   const StepComponent = ADD_ADDRESS_STEPS[currentStep];
 
   return (
-    <Box pt="3rem">
+    <Box>
       <Modal
         centered
         opened={opened}
@@ -54,10 +54,7 @@ const Bookings: FC = () => {
           handleOnClose={handleOnClose}
         />
       </Modal>
-
-      <Container size="md">
-        <BookingsEstablishment open={open} />
-      </Container>
+      <BookingsEstablishment open={open} />
     </Box>
   );
 };

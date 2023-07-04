@@ -18,6 +18,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.MY_GITHUB_TOKEN }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           LANGUAGE: English
-          MODEL: "text-davinci-002"
+          MODEL: 'text-davinci-002'
           top_p: 1
           temperature: 1

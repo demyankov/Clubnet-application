@@ -1,7 +1,5 @@
 import { FC, useEffect } from 'react';
 
-import { Container } from '@mantine/core';
-
 import { ClientsList } from 'components';
 import { useClients } from 'store/store';
 
@@ -12,11 +10,7 @@ const Clients: FC = () => {
     getClients();
   }, [getClients]);
 
-  return (
-    <Container size="md">
-      <ClientsList />
-    </Container>
-  );
+  return <ClientsList />;
 };
 
 export default Clients;

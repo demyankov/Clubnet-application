@@ -61,7 +61,8 @@ export const ru = {
       toSetNickname: 'Установить ник',
     },
 
-    header: {
+    navbar: {
+      home: 'Домой',
       clients: 'Клиенты',
       tournaments: 'Турниры',
       signin: 'Войти',

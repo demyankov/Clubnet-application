@@ -30,7 +30,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { RenderContentContainer } from 'components/shared';
 import { Paths } from 'constants/paths';
-import { useUserRole } from 'hooks';
+import { useRole } from 'hooks';
 import { useBookings } from 'store/store';
 
 const useStyles = createStyles((theme) => ({
@@ -73,7 +73,7 @@ export const BookingsEstablishment: FC<Props> = ({ open }) => {
     addressActions: { isAddressFetching, addresses },
   } = useBookings((state) => state);
   const [name, setName] = useState<string>('');
-  const { isAdmin } = useUserRole();
+  const { isAdmin } = useRole();
   const navigate = useNavigate();
   const { t } = useTranslation();
   const { classes } = useStyles();
@@ -194,7 +194,7 @@ export const BookingsEstablishment: FC<Props> = ({ open }) => {
 
         <Divider my="sm" label={isAdmin ? label : null} labelPosition="center" />
 
-        <Grid p="md">
+        <Grid p="md" justify="center">
           {addressCards}
 
           {isAdmin && (

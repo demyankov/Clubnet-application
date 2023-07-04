@@ -3,18 +3,20 @@ import { FC } from 'react';
 import { createStyles, Group, Image, Text, UnstyledButton } from '@mantine/core';
 import { IconCrown } from '@tabler/icons-react';
 
-import { useTeamMemberRole } from 'hooks';
+import { isDarkTheme } from 'helpers';
+import { useRole } from 'hooks';
 import { IUser } from 'store/slices/auth/types';
 
 const useStyles = createStyles((theme) => ({
   user: {
     display: 'block',
     width: '100%',
-    color: theme.colorScheme === 'dark' ? theme.colors.dark[0] : theme.black,
+    color: isDarkTheme(theme.colorScheme) ? theme.colors.dark[0] : theme.black,
 
     '&:hover': {
-      backgroundColor:
-        theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[0],
+      backgroundColor: isDarkTheme(theme.colorScheme)
+        ? theme.colors.dark[8]
+        : theme.colors.gray[0],
     },
   },
 }));
@@ -24,7 +26,7 @@ type Props = { member: IUser };
 export const TeamUserItem: FC<Props> = ({ member: { nickName, role, image, name } }) => {
   const { classes } = useStyles();
 
-  const { isCaptain } = useTeamMemberRole(role);
+  const { isCaptain } = useRole(role);
 
   return (
     <UnstyledButton className={classes.user} p={13}>

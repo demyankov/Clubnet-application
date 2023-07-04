@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { Paths } from 'constants/paths';
 import { dateFormatting } from 'helpers/dateFormatting';
-import { useUserRole } from 'hooks';
+import { useRole } from 'hooks';
 import { ITournamentData } from 'store/slices';
 import { useTournaments } from 'store/store';
 
@@ -26,7 +26,7 @@ const useStyles = createStyles({
 export const TournamentItem: FC<{ data: ITournamentData }> = ({ data }) => {
   const { classes } = useStyles();
   const navigate = useNavigate();
-  const { isAdmin } = useUserRole();
+  const { isAdmin } = useRole();
   const { deleteTournament, getTournaments } = useTournaments((store) => store);
 
   const handleCardClick = (id: string): void => {
@@ -84,7 +84,9 @@ export const TournamentItem: FC<{ data: ITournamentData }> = ({ data }) => {
           )}
           <Box display="flex">
             <IconUsersGroup color="#1971C2" />
-            <Text ml="xs">0/{data.countOfMembers}</Text>
+            <Text ml="xs" style={{ width: '45px' }}>
+              0/{data.countOfMembers}
+            </Text>
           </Box>
         </Group>
       </Group>

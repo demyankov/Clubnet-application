@@ -1,19 +1,10 @@
 import { FC, ReactElement, useEffect } from 'react';
 
-import {
-  Badge,
-  Button,
-  Container,
-  Group,
-  BackgroundImage,
-  Tabs,
-  Text,
-} from '@mantine/core';
+import { Badge, Button, Group, Tabs, Text } from '@mantine/core';
 import { modals } from '@mantine/modals';
 import { IconPlus } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
 
-import teamBgHeader from 'assets/images/shared/teamBgHeader.jpg';
 import {
   ProfileCreateTeamModal,
   ProfileImageUploader,
@@ -45,74 +36,68 @@ const Profile: FC = () => {
 
   return (
     <>
-      <BackgroundImage src={teamBgHeader}>
-        <Container size="md">
-          <Group mih={350} pt="20px" pb="20px">
-            <ProfileImageUploader />
-            <ProfilePersonalDataForm />
-          </Group>
-        </Container>
-      </BackgroundImage>
+      <Group mih={150} pt="20px" pb="20px">
+        <ProfileImageUploader />
+        <ProfilePersonalDataForm />
+      </Group>
 
-      <Container size="md">
-        <Tabs defaultValue="teams" h="100%" mt={20}>
-          <Tabs.List mb={30}>
-            <Tabs.Tab
-              value="teams"
-              rightSection={
-                <Badge w={16} h={16} variant="filled" size="xs" p={0}>
-                  {teams.length}
-                </Badge>
-              }
-            >
+      <Tabs defaultValue="teams" h="100%" mt={20}>
+        <Tabs.List mb={30}>
+          <Tabs.Tab
+            value="teams"
+            rightSection={
+              <Badge w={16} h={16} variant="filled" size="xs" p={0}>
+                {teams.length}
+              </Badge>
+            }
+          >
+            {t('profile.profileTeams')}
+          </Tabs.Tab>
+          <Tabs.Tab
+            value="friends"
+            rightSection={
+              <Badge w={16} h={16} variant="filled" size="xs" p={0}>
+                0
+              </Badge>
+            }
+          >
+            {t('profile.profileFriends')}
+          </Tabs.Tab>
+          <Tabs.Tab value="stats">{t('profile.profileStats')}</Tabs.Tab>
+        </Tabs.List>
+
+        <Tabs.Panel value="teams" mih={350} mb={60}>
+          <Group mb={30} align="center">
+            <Text fz="xl" fw={700} inline align="center">
               {t('profile.profileTeams')}
-            </Tabs.Tab>
-            <Tabs.Tab
-              value="friends"
-              rightSection={
-                <Badge w={16} h={16} variant="filled" size="xs" p={0}>
-                  0
-                </Badge>
-              }
+            </Text>
+
+            <Button
+              onClick={handleOpenModal}
+              variant="light"
+              w={30}
+              h={30}
+              p={0}
+              radius="100%"
             >
-              {t('profile.profileFriends')}
-            </Tabs.Tab>
-            <Tabs.Tab value="stats">{t('profile.profileStats')}</Tabs.Tab>
-          </Tabs.List>
+              <IconPlus size={15} />
+            </Button>
+          </Group>
+          {teams.length && teamsItems}
+        </Tabs.Panel>
 
-          <Tabs.Panel value="teams" mih={350} mb={60}>
-            <Group mb={20}>
-              <Text fz="xl" fw={700} mb={10}>
-                {t('profile.profileTeams')}
-              </Text>
+        <Tabs.Panel value="friends" mih={350} mb={60}>
+          <Text fz="xl" fw={700} mb={10}>
+            {t('profile.profileFriends')}
+          </Text>
+        </Tabs.Panel>
 
-              <Button
-                onClick={handleOpenModal}
-                variant="light"
-                w={30}
-                h={30}
-                p={0}
-                radius="100%"
-              >
-                <IconPlus size={15} />
-              </Button>
-            </Group>
-            {teams.length ? teamsItems : null}
-          </Tabs.Panel>
-
-          <Tabs.Panel value="friends" mih={350} mb={60}>
-            <Text fz="xl" fw={700} mb={10}>
-              {t('profile.profileFriends')}
-            </Text>
-          </Tabs.Panel>
-
-          <Tabs.Panel value="stats" mih={350} mb={60}>
-            <Text fz="xl" fw={700} mb={10}>
-              {t('profile.profileStats')}
-            </Text>
-          </Tabs.Panel>
-        </Tabs>
-      </Container>
+        <Tabs.Panel value="stats" mih={350} mb={60}>
+          <Text fz="xl" fw={700} mb={10}>
+            {t('profile.profileStats')}
+          </Text>
+        </Tabs.Panel>
+      </Tabs>
     </>
   );
 };

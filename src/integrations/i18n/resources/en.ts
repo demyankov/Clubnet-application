@@ -61,7 +61,8 @@ export const en = {
       toSetNickname: 'Set nickname',
     },
 
-    header: {
+    navbar: {
+      home: 'Home',
       clients: 'Clients',
       tournaments: 'Tournaments',
       signin: 'Sign In',

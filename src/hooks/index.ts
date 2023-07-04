@@ -1,3 +1,2 @@
-export * from 'hooks/useUserRole';
+export * from 'hooks/useRole';
 export * from 'hooks/useTimer';
-export * from 'hooks/useTeamMemberRole';

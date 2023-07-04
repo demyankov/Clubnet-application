@@ -7,13 +7,13 @@ import { useTranslation } from 'react-i18next';
 import { RenderContentContainer } from 'components/shared';
 import { TournamentItem, TournamentsModal } from 'components/tournaments';
 import { groupByDate } from 'helpers/groupByDate';
-import { useUserRole } from 'hooks';
+import { useRole } from 'hooks';
 import { ITournamentData } from 'store/slices';
 import { useTournaments } from 'store/store';
 
 export const TournamentsList: FC = () => {
   const { t } = useTranslation();
-  const { isAdmin } = useUserRole();
+  const { isAdmin } = useRole();
   const {
     isFetching,
     getTournaments,
@@ -55,7 +55,7 @@ export const TournamentsList: FC = () => {
 
   return (
     <>
-      <Title mt="md" order={2}>
+      <Title mb="md" order={2}>
         {t('tournaments.tournaments')}
       </Title>
 
