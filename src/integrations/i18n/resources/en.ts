@@ -85,10 +85,14 @@ export const en = {
       game: 'Game',
       addImage: 'Add image',
       deleteTournament: 'Delete tournament',
+      deleteTeam: 'Delete team',
+      successDeletedTeam: 'The team was successfully deleted',
       btnDelete: 'Delete',
       btnCancel: 'Cancel',
       agreeToDelete:
         'Are you sure you want to delete this tournament? This action is irrevocable!',
+      agreeToDeleteTeam:
+        'Are you sure you want to delete this team? This action is irrevocable!',
       requiredField: 'This field is required!',
       shouldBeMultiple: 'The value must be a multiple of the specified game mode',
     },

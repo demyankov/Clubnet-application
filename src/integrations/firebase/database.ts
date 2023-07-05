@@ -163,7 +163,10 @@ export const getFirestoreTeams = async (
 
   const docsQuery = query(
     collectionRef,
-    where('members', 'array-contains', { userLink: userRef, role: Roles.CAPTAIN }),
+    where('members', 'array-contains', {
+      userLink: userRef,
+      role: Roles.CAPTAIN,
+    }),
   );
   const querySnapshot = await getDocs(docsQuery);
 

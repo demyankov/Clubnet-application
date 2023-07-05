@@ -20,7 +20,7 @@ interface IFormValues {
 
 export const ProfileCreateTeamModal: FC = () => {
   const { t } = useTranslation();
-  const { isTeamFetching, addTeam, getTeams } = useAuth((store) => store);
+  const { isTeamFetching, addTeam } = useAuth((store) => store);
 
   const form = useForm<IFormValues>({
     initialValues: {
@@ -37,7 +37,6 @@ export const ProfileCreateTeamModal: FC = () => {
       id: uniqueIdGenerator(DatabaseId.Team),
     });
 
-    getTeams();
     form.reset();
     modals.close('ProfileCreateTeamModal');
   };

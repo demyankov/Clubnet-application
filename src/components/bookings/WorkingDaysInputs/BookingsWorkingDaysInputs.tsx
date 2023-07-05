@@ -46,7 +46,9 @@ export const BookingsWorkingDaysInputs: FC<Props> = ({
             <Checkbox
               label={t(`workingDays.${day}`)}
               size="sm"
-              {...getInputProps(`workingHours.${day}.isAvailable`, { type: 'checkbox' })}
+              {...getInputProps(`workingHours.${day}.isAvailable`, {
+                type: 'checkbox',
+              })}
             />
 
             <Flex>

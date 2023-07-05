@@ -59,7 +59,11 @@ export const clientSlice: GenericStateCreator<BoundStore> = (set, get) => ({
       }
 
       if (filter?.nickname) {
-        filters.push({ field: 'nickName', operator: '>=', value: filter?.nickname });
+        filters.push({
+          field: 'nickName',
+          operator: '>=',
+          value: filter?.nickname,
+        });
       }
 
       if (filter?.fio) {

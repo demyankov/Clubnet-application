@@ -1,11 +1,14 @@
-import { FC } from 'react';
+import { FC, MouseEvent } from 'react';
 
-import { Card, createStyles, Group, Image, Text } from '@mantine/core';
+import { Button, Card, createStyles, Group, Image, Text } from '@mantine/core';
+import { modals } from '@mantine/modals';
 import { IconChevronRight } from '@tabler/icons-react';
+import { t } from 'i18next';
 import { useNavigate } from 'react-router-dom';
 
 import { Paths } from 'constants/paths';
 import { ITeam } from 'store/slices';
+import { useAuth } from 'store/store';
 
 const useStyles = createStyles({
   item: {
@@ -16,11 +19,26 @@ const useStyles = createStyles({
   },
 });
 
-type Props = { teamData: ITeam };
+type Props = {
+  teamData: ITeam;
+};
 
 export const TeamLink: FC<Props> = ({ teamData: { game, id, image, name, tag } }) => {
   const { classes } = useStyles();
   const navigate = useNavigate();
+  const { deleteTeam } = useAuth((store) => store);
+
+  const handleButtonClick = (e: MouseEvent<HTMLButtonElement>): void => {
+    e.stopPropagation();
+    modals.openConfirmModal({
+      title: t('modals.deleteTeam'),
+      centered: true,
+      children: <Text size="sm">{t('modals.agreeToDeleteTeam')}</Text>,
+      labels: { confirm: t('modals.btnDelete'), cancel: t('modals.btnCancel') },
+      confirmProps: { color: 'red' },
+      onConfirm: () => deleteTeam(id),
+    });
+  };
 
   return (
     <Card
@@ -44,9 +62,18 @@ export const TeamLink: FC<Props> = ({ teamData: { game, id, image, name, tag } }
           </Text>
         </div>
 
-        <div style={{ paddingRight: '10px' }}>
-          <IconChevronRight size="0.9rem" stroke={1.5} />
-        </div>
+        <Button
+          variant="light"
+          color="red"
+          size="xs"
+          mr="16px"
+          uppercase
+          onClick={handleButtonClick}
+        >
+          {t('modals.btnDelete')}
+        </Button>
+
+        <IconChevronRight size="0.9rem" stroke={1.5} />
       </Group>
     </Card>
   );

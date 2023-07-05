@@ -85,10 +85,13 @@ export const ru = {
       game: 'Игра',
       addImage: 'Добавьте изображение',
       deleteTournament: 'Удалить турнир',
+      deleteTeam: 'Удалить команду',
       btnDelete: 'Удалить',
       btnCancel: 'Назад',
       agreeToDelete:
         'Вы уверены что хотите удалить этот турнир? Это действие является безвозвратным!',
+      agreeToDeleteTeam:
+        'Вы уверены что хотите удалить эту команду? Это действие является безвозвратным!',
       requiredField: 'Это поле является обязательным',
       shouldBeMultiple: 'Значение должно быть кратным указанному режиму игры',
     },
@@ -102,6 +105,7 @@ export const ru = {
     notifications: {
       successHeader: 'Успех',
       successDelete: 'Турнир успешно удален',
+      successDeletedTeam: 'Команда успешно удалена',
       successAddedTeam: 'Команда успешно создана',
       sameTeam: 'Команда с таким тегом уже существует',
       errorHeader: 'Ошибка',

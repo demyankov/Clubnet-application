@@ -15,6 +15,7 @@ import {
   getFirestoreTeams,
   updateFirestoreData,
   uploadImageAndGetURL,
+  deleteFirestoreData,
 } from 'integrations/firebase';
 import { IUser } from 'store/slices/auth/types';
 import { BoundStore } from 'store/store';
@@ -45,6 +46,7 @@ export interface ITeams {
   getTeams: () => Promise<void>;
   getTeamById: (id: string) => Promise<void>;
   updateTeam: (data: ITeamFormValues) => Promise<void>;
+  deleteTeam: (teamId: string) => Promise<void>;
 }
 
 export const teamsSlice: GenericStateCreator<BoundStore> = (set, get) => ({
@@ -102,6 +104,7 @@ export const teamsSlice: GenericStateCreator<BoundStore> = (set, get) => ({
       );
 
       successNotification('successAddedTeam');
+      get().getTeams();
     } catch (error) {
       errorHandler(error as Error);
     } finally {
@@ -120,16 +123,18 @@ export const teamsSlice: GenericStateCreator<BoundStore> = (set, get) => ({
       }),
     );
 
-    const currentUser = get().user as IUser;
-
     try {
-      const data = await getFirestoreTeams(DatabasePaths.Users, currentUser.id);
+      const id = get().user?.id;
 
-      set(
-        produce((state: BoundStore) => {
-          state.teams = data;
-        }),
-      );
+      if (id) {
+        const data = await getFirestoreTeams(DatabasePaths.Users, id);
+
+        set(
+          produce((state: BoundStore) => {
+            state.teams = data;
+          }),
+        );
+      }
     } catch (error) {
       errorHandler(error as Error);
     } finally {
@@ -214,6 +219,28 @@ export const teamsSlice: GenericStateCreator<BoundStore> = (set, get) => ({
       set(
         produce((state: BoundStore) => {
           state.isUpdateTeamFetching = false;
+        }),
+      );
+    }
+  },
+
+  deleteTeam: async (teamId) => {
+    set(
+      produce((state: BoundStore) => {
+        state.isTeamFetching = true;
+      }),
+    );
+    try {
+      await deleteFirestoreData(DatabasePaths.Teams, teamId);
+
+      successNotification('successDeletedTeam');
+      get().getTeams();
+    } catch (error) {
+      errorHandler(error as Error);
+    } finally {
+      set(
+        produce((state: BoundStore) => {
+          state.isTeamFetching = false;
         }),
       );
     }

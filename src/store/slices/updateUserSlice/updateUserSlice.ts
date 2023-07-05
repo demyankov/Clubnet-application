@@ -73,7 +73,9 @@ export const updateUserSlice: GenericStateCreator<BoundStore> = (set, get) => ({
         await deleteImageFromStorage(currentUser.image);
       }
 
-      await updateFirestoreData(DatabasePaths.Users, currentUser.id, { image: null });
+      await updateFirestoreData(DatabasePaths.Users, currentUser.id, {
+        image: null,
+      });
 
       set(
         produce((state: BoundStore) => {
