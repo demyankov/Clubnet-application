@@ -85,7 +85,7 @@ export const HeaderMegaMenu: FC = () => {
   };
 
   return (
-    <Header height={60} zIndex={10000000}>
+    <Header height={60} zIndex={399}>
       <Group position="apart" sx={{ height: '100%' }} className={classes.inner}>
         <Box>{isAuth && <HeaderUserMenu />}</Box>
 

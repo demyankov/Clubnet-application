@@ -107,6 +107,7 @@ export const en = {
       successHeader: 'Success',
       errorHeader: 'Error',
       successDelete: 'The tournament was successfully deleted',
+      successDeletedTeam: 'The team was successfully deleted',
       successAddedTeam: 'The team was successfully added',
       sameTeam: 'A team with this tag already exists',
       successCommon: 'Congratulations!',
