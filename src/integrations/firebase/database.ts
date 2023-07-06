@@ -15,8 +15,9 @@ import {
   startAfter,
   updateDoc,
   where,
-  WhereFilterOp,
   DocumentReference,
+  startAt,
+  endAt,
 } from 'firebase/firestore';
 
 import { DatabasePaths } from 'constants/databasePaths';
@@ -26,7 +27,6 @@ import { ITeam, ITeamMember } from 'store/slices';
 
 export interface Filter<V> {
   field: string;
-  operator: WhereFilterOp;
   value: V;
 }
 
@@ -63,6 +63,7 @@ export const getFirestoreData = async <T, V>(
   collectionPath: DatabasePaths,
   filters: Filter<V>[] = [],
   lastVisible: Nullable<QueryDocumentSnapshot> = null,
+  totalCounter?: number,
 ): Promise<FirestoreOutput<T>> => {
   const collectionRef = collection(db, collectionPath);
 
@@ -74,13 +75,28 @@ export const getFirestoreData = async <T, V>(
   );
 
   const countFromServer = await getCountFromServer(collectionRef);
-  const totalCount = countFromServer.data().count;
 
   filters.forEach((filter) => {
     queryRef = query(
       collectionRef,
-      where(filter.field, filter.operator, filter.value),
-      orderBy(filter.field, 'asc'),
+      orderBy(filter.field),
+      startAt(filter.value),
+      endAt(`${filter?.value}\uf8ff`),
+    );
+  });
+
+  const fullQuerySnapshot = await getDocs(queryRef);
+  const filteredTotalCounter = fullQuerySnapshot.size;
+
+  const totalCount = filters.length ? filteredTotalCounter : countFromServer.data().count;
+
+  filters.forEach((filter) => {
+    queryRef = query(
+      collectionRef,
+      orderBy(filter.field),
+      startAt(filter.value),
+      endAt(`${filter?.value}\uf8ff`),
+      limit(totalCounter || defaultLimit),
     );
   });
 

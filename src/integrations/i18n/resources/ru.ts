@@ -22,7 +22,7 @@ export const ru = {
       reset: 'Сбросить',
       phone: 'Телефон',
       nickname: 'Никнейм',
-      fio: 'ФИО',
+      fullName: 'ФИО',
       emptyLit: 'Список пуст',
     },
 

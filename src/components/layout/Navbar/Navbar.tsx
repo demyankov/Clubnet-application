@@ -42,7 +42,7 @@ export const NavbarMegaMenu: FC = () => {
       className={classes.hiddenMobile}
     >
       {isAuth && (
-        <Navbar.Section grow mt={50}>
+        <Navbar.Section grow>
           <Stack justify="center" spacing={10}>
             <NavbarLink to={Paths.home} icon={IconHome2} label={t('navbar.home')} />
             <NavbarLink
@@ -68,9 +68,12 @@ export const NavbarMegaMenu: FC = () => {
       )}
       <Navbar.Section>
         <Stack justify="center" spacing={10}>
-          <Divider my="sm" color={isDarkTheme(theme.colorScheme) ? 'dark.5' : 'gray.1'} />
           {isAuth ? (
             <>
+              <Divider
+                my="sm"
+                color={isDarkTheme(theme.colorScheme) ? 'dark.5' : 'gray.1'}
+              />
               <NavbarLink
                 to={Paths.profile}
                 icon={IconSettings}

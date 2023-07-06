@@ -37,7 +37,6 @@ export const searchSlice: GenericStateCreator<BoundStore> = (set, get) => ({
       if (value) {
         filters.push({
           field: 'nickName',
-          operator: '==',
           value,
         });
       }

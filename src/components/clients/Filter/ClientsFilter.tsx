@@ -57,12 +57,9 @@ export const ClientsFilter: FC = () => {
             <Input.Error>{form.errors.phone}</Input.Error>
           </Input.Wrapper>
 
-          <TextInput
-            label={t('common.nickname') as string}
-            {...form.getInputProps('nickname')}
-          />
+          <TextInput label={t('common.nickname')} {...form.getInputProps('nickname')} />
 
-          <TextInput label={t('common.fio') as string} {...form.getInputProps('fio')} />
+          <TextInput label={t('common.fullName')} {...form.getInputProps('fio')} />
         </Group>
       </Box>
 

@@ -27,8 +27,10 @@ export interface IClients {
   getClients: (filter?: ClientFilter) => void;
   getMoreClients: () => void;
   getClientByNickname: (nickname: string) => void;
+  getAllFilteredClients: () => void;
   totalCount: number;
   querySnapshot: any;
+  filters: Filter<string>[];
 }
 
 export const clientSlice: GenericStateCreator<BoundStore> = (set, get) => ({
@@ -39,6 +41,7 @@ export const clientSlice: GenericStateCreator<BoundStore> = (set, get) => ({
   client: null,
   querySnapshot: null,
   totalCount: 0,
+  filters: [],
 
   getClients: async (filter) => {
     set(
@@ -53,24 +56,21 @@ export const clientSlice: GenericStateCreator<BoundStore> = (set, get) => ({
       if (filter?.phone) {
         filters.push({
           field: 'phone',
-          operator: '==',
-          value: formatPhoneNumber(filter?.phone),
+          value: formatPhoneNumber(filter.phone),
         });
       }
 
       if (filter?.nickname) {
         filters.push({
           field: 'nickName',
-          operator: '>=',
-          value: filter?.nickname,
+          value: filter.nickname,
         });
       }
 
       if (filter?.fio) {
         filters.push({
           field: 'name',
-          operator: '>=',
-          value: filter?.fio,
+          value: filter.fio,
         });
       }
 
@@ -84,6 +84,7 @@ export const clientSlice: GenericStateCreator<BoundStore> = (set, get) => ({
           state.clients = data;
           state.totalCount = totalCount;
           state.querySnapshot = querySnapshot;
+          state.filters = filters;
         }),
       );
     } catch (error) {
@@ -141,14 +142,15 @@ export const clientSlice: GenericStateCreator<BoundStore> = (set, get) => ({
 
       const { data, totalCount, querySnapshot } = await getFirestoreData<IUser, string>(
         DatabasePaths.Users,
-        [],
+        get().filters,
         // TODO: fix any
         lastVisible as any,
+        get().totalCount,
       );
 
       set(
         produce((state: BoundStore) => {
-          state.clients = [...state.clients, ...data];
+          state.clients = get().filters.length ? data : [...state.clients, ...data];
           state.totalCount = totalCount;
           state.querySnapshot = querySnapshot;
         }),

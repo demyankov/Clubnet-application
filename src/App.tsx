@@ -22,15 +22,15 @@ const App: FC = () => {
   }, [fetchUserData, isCompletedRegistration]);
 
   return (
-    <RenderContentContainer isFetching={isFetching}>
-      <Notifications autoClose={5000} position="top-center" />
+    <AppShell
+      navbarOffsetBreakpoint="700"
+      padding="md"
+      navbar={<NavbarMegaMenu />}
+      header={<HeaderMegaMenu />}
+    >
+      <RenderContentContainer isFetching={isFetching}>
+        <Notifications autoClose={5000} position="top-center" />
 
-      <AppShell
-        navbarOffsetBreakpoint="700"
-        padding="md"
-        navbar={<NavbarMegaMenu />}
-        header={<HeaderMegaMenu />}
-      >
         <div className="container">
           <Suspense fallback={<LoaderScreen />}>
             <Routes>
@@ -40,8 +40,8 @@ const App: FC = () => {
             </Routes>
           </Suspense>
         </div>
-      </AppShell>
-    </RenderContentContainer>
+      </RenderContentContainer>
+    </AppShell>
   );
 };
 
