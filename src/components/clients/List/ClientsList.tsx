@@ -12,10 +12,12 @@ import {
   Title,
   useMantineTheme,
 } from '@mantine/core';
+import { modals } from '@mantine/modals';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
 import { ClientsFilter } from 'components';
+import { ClientsModal } from 'components/clients/Modal/ClientsModal';
 import { RenderContentContainer } from 'components/shared';
 import { Paths } from 'constants/paths';
 import { Roles } from 'constants/userRoles';
@@ -45,8 +47,14 @@ export const ClientsList: FC = () => {
 
   const IsShowMoreButtonShown = totalCount > clients.length;
 
-  const handleClientCreate = (): void => {};
-
+  const handleClientCreate = (): void => {
+    modals.open({
+      modalId: 'addClientsModal',
+      title: t('clients.addClient'),
+      children: <ClientsModal />,
+      centered: true,
+    });
+  };
   const handleClientClick = useCallback(
     (nickname: string): void => {
       navigate(`${Paths.clients}/${nickname}`);

@@ -120,6 +120,8 @@ export const ru = {
       tournamentSuccess: 'Турнир успешно добавлен',
       emptyTournaments: 'Больше турниров нет!',
       maxTeamsCount: 'Вы не можете создать больше 5 команд',
+      successAddedUser: 'Пользователь успешно создан',
+      errorAddedUser: 'Пользователь с таким номером существует',
     },
 
     profile: {

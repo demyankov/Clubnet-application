@@ -1,14 +1,16 @@
+import { getDatabase, push, ref } from 'firebase/database';
 import { produce } from 'immer';
 
 import { DatabasePaths } from 'constants/databasePaths';
-import { errorHandler } from 'helpers';
+import { errorHandler, errorNotification, successNotification } from 'helpers';
 import { formatPhoneNumber } from 'helpers/formatters';
 import {
   Filter,
   getFirestoreData,
   getFireStoreDataByFieldName,
+  setFirestoreData,
 } from 'integrations/firebase';
-import { IUser } from 'store/slices/auth/types';
+import { IAddUser, IUser } from 'store/slices/auth/types';
 import { BoundStore } from 'store/store';
 import { GenericStateCreator } from 'store/types';
 
@@ -31,6 +33,7 @@ export interface IClients {
   totalCount: number;
   querySnapshot: any;
   filters: Filter<string>[];
+  addUser: (user: IAddUser) => void;
 }
 
 export const clientSlice: GenericStateCreator<BoundStore> = (set, get) => ({
@@ -161,6 +164,48 @@ export const clientSlice: GenericStateCreator<BoundStore> = (set, get) => ({
       set(
         produce((state: BoundStore) => {
           state.isGetMoreFetching = false;
+        }),
+      );
+    }
+  },
+
+  addUser: async (user) => {
+    try {
+      set(
+        produce((state: BoundStore) => {
+          state.isClientsFetching = true;
+        }),
+      );
+      const userData = await getFireStoreDataByFieldName<IUser>(
+        DatabasePaths.Users,
+        formatPhoneNumber(user.phone),
+        'phone',
+      );
+
+      if (userData) {
+        errorNotification('errorAddedUser');
+
+        return;
+      }
+      const database = getDatabase();
+      const usersRef = ref(database, DatabasePaths.Users);
+      const newUserKey = push(usersRef).key;
+
+      const newUserId = `user${newUserKey}`;
+
+      await setFirestoreData(DatabasePaths.Users, newUserId, {
+        ...user,
+        role: 'user',
+        id: newUserId,
+      });
+      get().getClients();
+      successNotification('successAddedUser');
+    } catch (error) {
+      errorHandler(error as Error);
+    } finally {
+      set(
+        produce((state: BoundStore) => {
+          state.isClientsFetching = false;
         }),
       );
     }

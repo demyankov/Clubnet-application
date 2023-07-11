@@ -9,4 +9,9 @@ export interface IUser {
   role: Roles;
 }
 
+export interface IAddUser {
+  phone: string;
+  name: string;
+}
+
 export type EditableUserFields = Pick<IUser, 'name' | 'image' | 'role'>;

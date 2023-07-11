@@ -121,6 +121,8 @@ export const en = {
       tournamentSuccess: 'The tournament has been successfully added!',
       emptyTournaments: 'There are no more tournaments!',
       maxTeamsCount: "You can't create more than 5 teams",
+      successAddedUser: 'User successfully created',
+      errorAddedUser: 'User with this number exists',
     },
 
     profile: {
