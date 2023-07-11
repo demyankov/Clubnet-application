@@ -1,8 +1,9 @@
 import React, { FC } from 'react';
 
-import { createStyles, rem, Tooltip } from '@mantine/core';
+import { ActionIcon, createStyles, rem, Tooltip } from '@mantine/core';
+import { IconLogout } from '@tabler/icons-react';
 import { IconType } from 'react-icons';
-import { Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 
 import { isDarkTheme } from 'helpers';
 
@@ -22,6 +23,11 @@ export const useStyles = createStyles((theme) => ({
         : theme.colors.gray[0],
     },
   },
+  linkActive: {
+    backgroundColor: isDarkTheme(theme.colorScheme)
+      ? theme.colors.dark[5]
+      : theme.colors.gray[0],
+  },
   hiddenMobile: {
     [theme.fn.smallerThan(700)]: {
       display: 'none',
@@ -36,14 +42,29 @@ interface NavbarLinkProps {
   onClick?: () => void;
 }
 
-export const NavbarLink: FC<NavbarLinkProps> = ({ icon: Icon, label, onClick, to }) => {
-  const { classes } = useStyles();
+export const NavbarLink: FC<NavbarLinkProps> = ({
+  icon: Icon,
+  label,
+  onClick,
+  to = '',
+}) => {
+  const { classes, cx } = useStyles();
+
+  const setActive = ({ isActive }: { isActive: boolean }): string => {
+    return isActive ? cx(classes.link, classes.linkActive) : classes.link;
+  };
 
   return (
     <Tooltip label={label} position="right" transitionProps={{ duration: 0 }}>
-      <Link to={to || ''} onClick={onClick} className={classes.link}>
-        <Icon size="1.7rem" stroke="2" />
-      </Link>
+      {onClick ? (
+        <ActionIcon onClick={onClick} className={classes.link}>
+          <IconLogout />
+        </ActionIcon>
+      ) : (
+        <NavLink to={to} className={setActive}>
+          <Icon size="1.7rem" stroke="2" />
+        </NavLink>
+      )}
     </Tooltip>
   );
 };

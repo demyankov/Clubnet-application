@@ -1,12 +1,25 @@
 import { FC, useCallback } from 'react';
 
-import { Button, Center, createStyles, Group, Table, Text, Title } from '@mantine/core';
+import {
+  Avatar,
+  Badge,
+  Button,
+  Center,
+  createStyles,
+  Group,
+  Table,
+  Text,
+  Title,
+  useMantineTheme,
+} from '@mantine/core';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
 import { ClientsFilter } from 'components';
 import { RenderContentContainer } from 'components/shared';
 import { Paths } from 'constants/paths';
+import { Roles } from 'constants/userRoles';
+import { isDarkTheme } from 'helpers';
 import { useClients } from 'store/store';
 
 const useStyles = createStyles(() => ({
@@ -15,10 +28,17 @@ const useStyles = createStyles(() => ({
   },
 }));
 
+const roleColors: Record<Roles, string> = {
+  [Roles.USER]: 'blue',
+  [Roles.ADMIN]: 'pink',
+  [Roles.CAPTAIN]: 'cyan',
+};
+
 export const ClientsList: FC = () => {
   const { classes } = useStyles();
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const theme = useMantineTheme();
 
   const { clients, isClientsFetching, totalCount, getMoreClients, isGetMoreFetching } =
     useClients((state) => state);
@@ -55,25 +75,49 @@ export const ClientsList: FC = () => {
         isEmpty={!clients?.length}
         emptyTitle={t('common.emptyLit')}
       >
-        <Table mb="xl" striped highlightOnHover withBorder withColumnBorders mt="md">
+        <Table mb="xl" striped highlightOnHover mt="md">
           <thead>
             <tr>
               <th>{t('common.fullName')}</th>
+              <th>{t('common.role')}</th>
               <th>{t('common.nickname')}</th>
               <th>{t('common.phone')}</th>
             </tr>
           </thead>
 
           <tbody>
-            {clients?.map(({ id, name, nickName, phone }) => (
+            {clients?.map(({ id, name, nickName, phone, role, image }) => (
               <tr
                 className={classes.clientContainer}
                 onClick={() => handleClientClick(nickName!)}
                 key={id}
               >
-                <td>{name}</td>
-                <td>{nickName}</td>
-                <td>{phone}</td>
+                <td>
+                  <Group spacing="sm">
+                    <Avatar size={30} src={image} radius={30} variant="gradient" />
+                    <Text fz="sm" fw={500}>
+                      {name}
+                    </Text>
+                  </Group>
+                </td>
+                <td>
+                  <Badge
+                    color={roleColors[role]}
+                    variant={isDarkTheme(theme.colorScheme) ? 'light' : 'outline'}
+                  >
+                    {role}
+                  </Badge>
+                </td>
+                <td>
+                  <Text fz="sm" fw={500}>
+                    {nickName}
+                  </Text>
+                </td>
+                <td>
+                  <Text fz="sm" c="dimmed">
+                    {phone}
+                  </Text>
+                </td>
               </tr>
             ))}
           </tbody>

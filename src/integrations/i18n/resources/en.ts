@@ -23,6 +23,7 @@ export const en = {
       phone: 'Phone',
       nickname: 'Nickname',
       fullName: 'Full name',
+      role: 'Role',
       emptyLit: 'Empty list',
     },
 
@@ -132,6 +133,7 @@ export const en = {
       profileTeams: 'Teams',
       profileFriends: 'Friends',
       profileStats: 'Stats',
+      createTeam: 'Create a team and participate in tournaments',
     },
 
     search: {

@@ -83,7 +83,13 @@ const Profile: FC = () => {
               <IconPlus size={15} />
             </Button>
           </Group>
-          {teams.length && teamsItems}
+          {teams.length ? (
+            teamsItems
+          ) : (
+            <Text fz="xl" fw={700} mb={10}>
+              {t('profile.createTeam')}
+            </Text>
+          )}
         </Tabs.Panel>
 
         <Tabs.Panel value="friends" mih={350} mb={60}>

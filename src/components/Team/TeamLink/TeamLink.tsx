@@ -61,19 +61,20 @@ export const TeamLink: FC<Props> = ({ teamData: { game, id, image, name, tag } }
             {game}
           </Text>
         </div>
+        <Group pr="16px">
+          <Button
+            variant="light"
+            color="red"
+            size="xs"
+            mr="16px"
+            uppercase
+            onClick={handleButtonClick}
+          >
+            {t('modals.btnDelete')}
+          </Button>
 
-        <Button
-          variant="light"
-          color="red"
-          size="xs"
-          mr="16px"
-          uppercase
-          onClick={handleButtonClick}
-        >
-          {t('modals.btnDelete')}
-        </Button>
-
-        <IconChevronRight size="0.9rem" stroke={1.5} />
+          <IconChevronRight size="0.9rem" stroke={1.5} />
+        </Group>
       </Group>
     </Card>
   );

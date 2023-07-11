@@ -23,6 +23,7 @@ export const ru = {
       phone: 'Телефон',
       nickname: 'Никнейм',
       fullName: 'ФИО',
+      role: 'Роль',
       emptyLit: 'Список пуст',
     },
 
@@ -131,6 +132,7 @@ export const ru = {
       profileTeams: 'Команды',
       profileFriends: 'Друзья',
       profileStats: 'Статистика',
+      createTeam: 'Создайте команду и участвуйте в турнирах.',
     },
 
     search: {
