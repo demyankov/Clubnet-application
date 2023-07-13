@@ -28,6 +28,10 @@ const useStyles = createStyles(() => ({
   clientContainer: {
     cursor: 'pointer',
   },
+  container: {
+    position: 'relative',
+    minHeight: 'calc(100vh - 300.89px)',
+  },
 }));
 
 const roleColors: Record<Roles, string> = {
@@ -77,68 +81,69 @@ export const ClientsList: FC = () => {
       </Group>
 
       <ClientsFilter />
-
-      <RenderContentContainer
-        isFetching={isClientsFetching}
-        isEmpty={!clients?.length}
-        emptyTitle={t('common.emptyLit')}
-      >
-        <Table mb="xl" striped highlightOnHover mt="md">
-          <thead>
-            <tr>
-              <th>{t('common.fullName')}</th>
-              <th>{t('common.role')}</th>
-              <th>{t('common.nickname')}</th>
-              <th>{t('common.phone')}</th>
-            </tr>
-          </thead>
-
-          <tbody>
-            {clients?.map(({ id, name, nickName, phone, role, image }) => (
-              <tr
-                className={classes.clientContainer}
-                onClick={() => handleClientClick(nickName!)}
-                key={id}
-              >
-                <td>
-                  <Group spacing="sm">
-                    <Avatar size={30} src={image} radius={30} variant="gradient" />
-                    <Text fz="sm" fw={500}>
-                      {name}
-                    </Text>
-                  </Group>
-                </td>
-                <td>
-                  <Badge
-                    color={roleColors[role]}
-                    variant={isDarkTheme(theme.colorScheme) ? 'light' : 'outline'}
-                  >
-                    {role}
-                  </Badge>
-                </td>
-                <td>
-                  <Text fz="sm" fw={500}>
-                    {nickName}
-                  </Text>
-                </td>
-                <td>
-                  <Text fz="sm" c="dimmed">
-                    {phone}
-                  </Text>
-                </td>
+      <div className={classes.container}>
+        <RenderContentContainer
+          isFetching={isClientsFetching}
+          isEmpty={!clients?.length}
+          emptyTitle={t('common.emptyLit')}
+        >
+          <Table mb="xl" striped highlightOnHover mt="md">
+            <thead>
+              <tr>
+                <th>{t('common.fullName')}</th>
+                <th>{t('common.role')}</th>
+                <th>{t('common.nickname')}</th>
+                <th>{t('common.phone')}</th>
               </tr>
-            ))}
-          </tbody>
-        </Table>
+            </thead>
 
-        <Center mb="xl">
-          {IsShowMoreButtonShown && (
-            <Button onClick={getMoreClients} loading={isGetMoreFetching}>
-              {t('tournaments.showMore')}
-            </Button>
-          )}
-        </Center>
-      </RenderContentContainer>
+            <tbody>
+              {clients?.map(({ id, name, nickName, phone, role, image }) => (
+                <tr
+                  className={classes.clientContainer}
+                  onClick={() => handleClientClick(nickName!)}
+                  key={id}
+                >
+                  <td>
+                    <Group spacing="sm">
+                      <Avatar size={30} src={image} radius={30} variant="gradient" />
+                      <Text fz="sm" fw={500}>
+                        {name}
+                      </Text>
+                    </Group>
+                  </td>
+                  <td>
+                    <Badge
+                      color={roleColors[role]}
+                      variant={isDarkTheme(theme.colorScheme) ? 'light' : 'outline'}
+                    >
+                      {role}
+                    </Badge>
+                  </td>
+                  <td>
+                    <Text fz="sm" fw={500}>
+                      {nickName}
+                    </Text>
+                  </td>
+                  <td>
+                    <Text fz="sm" c="dimmed">
+                      {phone}
+                    </Text>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </Table>
+
+          <Center mb="xl">
+            {IsShowMoreButtonShown && (
+              <Button onClick={getMoreClients} loading={isGetMoreFetching}>
+                {t('tournaments.showMore')}
+              </Button>
+            )}
+          </Center>
+        </RenderContentContainer>
+      </div>
     </>
   );
 };
