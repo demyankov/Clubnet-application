@@ -6,10 +6,10 @@ import {
   IconHome2,
   IconLogin,
   IconLogout,
-  IconPepper,
   IconSettings,
 } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
+import { FaUsers } from 'react-icons/fa';
 import { GiConsoleController } from 'react-icons/gi';
 
 import { NavbarLink, useStyles } from 'components/layout/Navbar/NavbarLink/NavbarLink';
@@ -57,11 +57,7 @@ export const NavbarMegaMenu: FC = () => {
             />
 
             {isAdmin && (
-              <NavbarLink
-                to={Paths.clients}
-                icon={IconPepper}
-                label={t('navbar.clients')}
-              />
+              <NavbarLink to={Paths.clients} icon={FaUsers} label={t('navbar.clients')} />
             )}
           </Stack>
         </Navbar.Section>
