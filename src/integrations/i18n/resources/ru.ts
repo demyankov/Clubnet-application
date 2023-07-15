@@ -25,6 +25,7 @@ export const ru = {
       fullName: 'ФИО',
       role: 'Роль',
       emptyLit: 'Список пуст',
+      balance: 'Баланс',
     },
 
     establishments: {
@@ -95,6 +96,10 @@ export const ru = {
         'Вы уверены что хотите удалить эту команду? Это действие является безвозвратным!',
       requiredField: 'Это поле является обязательным',
       shouldBeMultiple: 'Значение должно быть кратным указанному режиму игры',
+      modifyBalance: 'Изменить баланс',
+      currentBalance: 'Текущий баланс',
+      reduce: 'Списать',
+      add: 'Начислить',
     },
 
     notFound: {

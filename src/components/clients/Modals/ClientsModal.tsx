@@ -6,19 +6,15 @@ import { modals } from '@mantine/modals';
 import { useTranslation } from 'react-i18next';
 import { IMaskInput } from 'react-imask';
 
+import { IClientsModalFormValues } from 'components/clients/types';
 import { formatPhoneNumber } from 'helpers/formatters';
 import { useClients } from 'store/store';
-
-interface IFormValues {
-  name: string;
-  phone: string;
-}
 
 export const ClientsModal: FC = () => {
   const { t } = useTranslation();
   const { addUser, isClientsFetching } = useClients((state) => state);
 
-  const form = useForm<IFormValues>({
+  const form = useForm<IClientsModalFormValues>({
     initialValues: {
       name: '',
       phone: '',

@@ -1,14 +1,15 @@
 import { FC } from 'react';
 
-import { Avatar, Box, createStyles, Group } from '@mantine/core';
+import { Avatar, Box, createStyles, Flex, Group, Text } from '@mantine/core';
 import { useNavigate } from 'react-router-dom';
 
+import { UserBalance } from 'components/shared';
 import { Paths } from 'constants/paths';
 import { useAuth } from 'store/store';
 
 const useStyles = createStyles((theme) => ({
   hiddenMobile: {
-    [theme.fn.smallerThan(500)]: {
+    [theme.fn.smallerThan(400)]: {
       display: 'none',
     },
   },
@@ -28,11 +29,18 @@ export const HeaderUserMenu: FC = () => {
   const { user } = useAuth((state) => state);
 
   return (
-    <Group>
+    <Group spacing="sm">
       <Box className={classes.avatarContainer}>
         <Avatar src={user?.image} onClick={() => navigate(Paths.profile)} />
       </Box>
-      <Box className={classes.hiddenMobile}>{user?.name}</Box>
+
+      <Flex direction="column">
+        <Text fz="xs" className={classes.hiddenMobile}>
+          {user?.name}
+        </Text>
+
+        <UserBalance balance={user?.balance} />
+      </Flex>
     </Group>
   );
 };

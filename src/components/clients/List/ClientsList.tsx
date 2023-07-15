@@ -1,8 +1,9 @@
-import { FC, useCallback } from 'react';
+import { FC, useCallback, MouseEvent } from 'react';
 
 import {
   Avatar,
   Badge,
+  Box,
   Button,
   Center,
   createStyles,
@@ -16,21 +17,34 @@ import { modals } from '@mantine/modals';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
-import { ClientsFilter } from 'components';
-import { ClientsModal } from 'components/clients/Modal/ClientsModal';
+import { UpdateBalanceModal, ClientsFilter, UserBalance } from 'components';
+import { ClientsModal } from 'components/clients';
 import { RenderContentContainer } from 'components/shared';
 import { Paths } from 'constants/paths';
 import { Roles } from 'constants/userRoles';
 import { isDarkTheme } from 'helpers';
-import { useClients } from 'store/store';
+import { useBalanceHistory, useClients } from 'store/store';
 
-const useStyles = createStyles(() => ({
+const useStyles = createStyles((theme) => ({
   clientContainer: {
     cursor: 'pointer',
   },
   container: {
     position: 'relative',
     minHeight: 'calc(100vh - 300.89px)',
+  },
+  balance: {
+    width: '60px',
+    minHeight: '40px',
+    borderRadius: '10px',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    '&:hover': {
+      backgroundColor: isDarkTheme(theme.colorScheme)
+        ? theme.colors.dark[8]
+        : theme.colors.dark[0],
+    },
   },
 }));
 
@@ -49,6 +63,8 @@ export const ClientsList: FC = () => {
   const { clients, isClientsFetching, totalCount, getMoreClients, isGetMoreFetching } =
     useClients((state) => state);
 
+  const { isBalanceFetching } = useBalanceHistory((state) => state);
+
   const IsShowMoreButtonShown = totalCount > clients.length;
 
   const handleClientCreate = (): void => {
@@ -65,6 +81,20 @@ export const ClientsList: FC = () => {
     },
     [navigate],
   );
+
+  const handleBalanceUpdate = (
+    e: MouseEvent<HTMLDivElement>,
+    id: string,
+    balance?: number,
+  ): void => {
+    e.stopPropagation();
+    modals.open({
+      modalId: 'updateBalanceModal',
+      title: t('modals.modifyBalance'),
+      children: <UpdateBalanceModal userId={id} balance={balance} />,
+      centered: true,
+    });
+  };
 
   return (
     <>
@@ -83,7 +113,7 @@ export const ClientsList: FC = () => {
       <ClientsFilter />
       <div className={classes.container}>
         <RenderContentContainer
-          isFetching={isClientsFetching}
+          isFetching={isClientsFetching || isBalanceFetching}
           isEmpty={!clients?.length}
           emptyTitle={t('common.emptyLit')}
         >
@@ -94,11 +124,11 @@ export const ClientsList: FC = () => {
                 <th>{t('common.role')}</th>
                 <th>{t('common.nickname')}</th>
                 <th>{t('common.phone')}</th>
+                <th>{t('common.balance')}</th>
               </tr>
             </thead>
-
             <tbody>
-              {clients?.map(({ id, name, nickName, phone, role, image }) => (
+              {clients?.map(({ id, name, nickName, phone, role, image, balance }) => (
                 <tr
                   className={classes.clientContainer}
                   onClick={() => handleClientClick(nickName!)}
@@ -129,6 +159,14 @@ export const ClientsList: FC = () => {
                     <Text fz="sm" c="dimmed">
                       {phone}
                     </Text>
+                  </td>
+                  <td>
+                    <Box
+                      className={classes.balance}
+                      onClick={(e) => handleBalanceUpdate(e, id, balance)}
+                    >
+                      <UserBalance balance={balance} />
+                    </Box>
                   </td>
                 </tr>
               ))}

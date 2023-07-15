@@ -17,8 +17,8 @@ export const ClientsFilter: FC = () => {
   const form = useForm({
     initialValues: {
       phone: '',
-      nickname: '',
-      fio: '',
+      nickName: '',
+      name: '',
     },
   });
 
@@ -57,9 +57,9 @@ export const ClientsFilter: FC = () => {
             <Input.Error>{form.errors.phone}</Input.Error>
           </Input.Wrapper>
 
-          <TextInput label={t('common.nickname')} {...form.getInputProps('nickname')} />
+          <TextInput label={t('common.nickname')} {...form.getInputProps('nickName')} />
 
-          <TextInput label={t('common.fullName')} {...form.getInputProps('fio')} />
+          <TextInput label={t('common.fullName')} {...form.getInputProps('name')} />
         </Group>
       </Box>
 

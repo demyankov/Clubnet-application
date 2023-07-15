@@ -1,3 +1,5 @@
+import { DocumentReference } from 'firebase/firestore';
+
 import { Roles } from 'constants/userRoles';
 
 export interface IUser {
@@ -6,6 +8,8 @@ export interface IUser {
   nickName: Nullable<string>;
   name: Nullable<string>;
   image: Nullable<string>;
+  balance?: number;
+  balanceHistory: DocumentReference[];
   role: Roles;
 }
 

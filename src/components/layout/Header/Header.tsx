@@ -73,6 +73,7 @@ export const HeaderMegaMenu: FC = () => {
   const [drawerOpened, { toggle: toggleDrawer, close: handleCloseDrawer }] =
     useDisclosure(false);
   const { classes, theme } = useStyles();
+
   const {
     isAuth,
     signOut: { signOut },

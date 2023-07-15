@@ -25,6 +25,7 @@ export const en = {
       fullName: 'Full name',
       role: 'Role',
       emptyLit: 'Empty list',
+      balance: 'Balance',
     },
 
     establishments: {
@@ -96,6 +97,10 @@ export const en = {
         'Are you sure you want to delete this team? This action is irrevocable!',
       requiredField: 'This field is required!',
       shouldBeMultiple: 'The value must be a multiple of the specified game mode',
+      modifyBalance: 'Modify balance',
+      currentBalance: 'Current balance',
+      reduce: 'Reduce',
+      add: 'Add',
     },
 
     notFound: {

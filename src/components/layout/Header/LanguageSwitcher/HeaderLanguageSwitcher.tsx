@@ -22,7 +22,7 @@ export const HeaderLanguageSwitcher: FC = () => {
 
   return (
     <Select
-      maw={100}
+      maw={70}
       value={currentLanguage}
       onChange={handleSelectLang}
       defaultValue={currentLanguage}

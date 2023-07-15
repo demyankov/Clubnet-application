@@ -1,8 +1,10 @@
 import { getDatabase, push, ref } from 'firebase/database';
+import { QueryDocumentSnapshot } from 'firebase/firestore';
 import { produce } from 'immer';
 
 import { DatabasePaths } from 'constants/databasePaths';
 import { errorHandler, errorNotification, successNotification } from 'helpers';
+import { convertFiltersToArray } from 'helpers/convertFiltersToArray';
 import { formatPhoneNumber } from 'helpers/formatters';
 import {
   Filter,
@@ -15,9 +17,9 @@ import { BoundStore } from 'store/store';
 import { GenericStateCreator } from 'store/types';
 
 type ClientFilter = {
-  fio?: string;
+  name?: string;
   phone?: string;
-  nickname?: string;
+  nickName?: string;
 };
 
 export interface IClients {
@@ -32,7 +34,7 @@ export interface IClients {
   getAllFilteredClients: () => void;
   totalCount: number;
   querySnapshot: any;
-  filters: Filter<string>[];
+  filter?: ClientFilter;
   addUser: (user: IAddUser) => void;
 }
 
@@ -45,6 +47,7 @@ export const clientSlice: GenericStateCreator<BoundStore> = (set, get) => ({
   querySnapshot: null,
   totalCount: 0,
   filters: [],
+  filter: {},
 
   getClients: async (filter) => {
     set(
@@ -54,28 +57,7 @@ export const clientSlice: GenericStateCreator<BoundStore> = (set, get) => ({
     );
 
     try {
-      const filters: Filter<string>[] = [];
-
-      if (filter?.phone) {
-        filters.push({
-          field: 'phone',
-          value: formatPhoneNumber(filter.phone),
-        });
-      }
-
-      if (filter?.nickname) {
-        filters.push({
-          field: 'nickName',
-          value: filter.nickname,
-        });
-      }
-
-      if (filter?.fio) {
-        filters.push({
-          field: 'name',
-          value: filter.fio,
-        });
-      }
+      const filters = convertFiltersToArray<Filter<string>, ClientFilter>(filter);
 
       const { data, totalCount, querySnapshot } = await getFirestoreData<IUser, string>(
         DatabasePaths.Users,
@@ -87,7 +69,7 @@ export const clientSlice: GenericStateCreator<BoundStore> = (set, get) => ({
           state.clients = data;
           state.totalCount = totalCount;
           state.querySnapshot = querySnapshot;
-          state.filters = filters;
+          state.filter = { ...filter };
         }),
       );
     } catch (error) {
@@ -141,19 +123,22 @@ export const clientSlice: GenericStateCreator<BoundStore> = (set, get) => ({
         }),
       );
 
-      const lastVisible = get().querySnapshot?.docs[get().querySnapshot.docs.length - 1];
+      const lastVisible: Nullable<QueryDocumentSnapshot> =
+        get().querySnapshot?.docs[get().querySnapshot.docs.length - 1];
+
+      const { filter } = get();
+      const filters = convertFiltersToArray<Filter<string>, ClientFilter>(filter);
 
       const { data, totalCount, querySnapshot } = await getFirestoreData<IUser, string>(
         DatabasePaths.Users,
-        get().filters,
-        // TODO: fix any
-        lastVisible as any,
+        filters,
+        lastVisible,
         get().totalCount,
       );
 
       set(
         produce((state: BoundStore) => {
-          state.clients = get().filters.length ? data : [...state.clients, ...data];
+          state.clients = filters.length ? data : [...state.clients, ...data];
           state.totalCount = totalCount;
           state.querySnapshot = querySnapshot;
         }),

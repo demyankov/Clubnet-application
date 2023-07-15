@@ -5,3 +5,4 @@ export * from 'components/layout/Header/HeaderUserMenu/HeaderUserMenu';
 export * from 'components/layout/Navbar/Navbar';
 export * from 'components/clients';
 export * from 'components/bookings';
+export * from 'components/shared/UserBalance/UserBalance';
