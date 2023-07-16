@@ -46,6 +46,9 @@ const useStyles = createStyles((theme) => ({
         : theme.colors.dark[0],
     },
   },
+  tableContainer: {
+    tableLayout: 'fixed',
+  },
 }));
 
 const roleColors: Record<Roles, string> = {
@@ -117,7 +120,13 @@ export const ClientsList: FC = () => {
           isEmpty={!clients?.length}
           emptyTitle={t('common.emptyLit')}
         >
-          <Table mb="xl" striped highlightOnHover mt="md">
+          <Table
+            className={classes.tableContainer}
+            mb="xl"
+            striped
+            highlightOnHover
+            mt="md"
+          >
             <thead>
               <tr>
                 <th>{t('common.fullName')}</th>
@@ -127,6 +136,7 @@ export const ClientsList: FC = () => {
                 <th>{t('common.balance')}</th>
               </tr>
             </thead>
+
             <tbody>
               {clients?.map(({ id, name, nickName, phone, role, image, balance }) => (
                 <tr
