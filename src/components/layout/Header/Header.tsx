@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 
 import {
-  Box,
+  ActionIcon,
   Burger,
   Button,
   createStyles,
@@ -13,8 +13,9 @@ import {
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
+import { ReactComponent as AppLogo } from 'assets/logo.svg';
 import { HeaderLanguageSwitcher, HeaderThemeToggler, HeaderUserMenu } from 'components';
 import { HeaderSearch } from 'components/layout/Header/HeaderSearch/Search';
 import { Paths } from 'constants/paths';
@@ -67,9 +68,16 @@ const useStyles = createStyles((theme) => ({
       display: 'none',
     },
   },
+
+  logo: {
+    width: '110px',
+    height: '38px',
+  },
 }));
 
 export const HeaderMegaMenu: FC = () => {
+  const navigate = useNavigate();
+
   const [drawerOpened, { toggle: toggleDrawer, close: handleCloseDrawer }] =
     useDisclosure(false);
   const { classes, theme } = useStyles();
@@ -85,10 +93,16 @@ export const HeaderMegaMenu: FC = () => {
     signOut();
   };
 
+  const handleLogoClick = (): void => {
+    navigate(Paths.home);
+  };
+
   return (
     <Header height={60} zIndex={399}>
-      <Group position="apart" sx={{ height: '100%' }} className={classes.inner}>
-        <Box>{isAuth && <HeaderUserMenu />}</Box>
+      <Group sx={{ height: '100%' }} className={classes.inner}>
+        <ActionIcon onClick={handleLogoClick} className={classes.logo}>
+          <AppLogo />
+        </ActionIcon>
 
         <Group position="apart" className={classes.hiddenMobile}>
           {isAuth && <HeaderSearch />}
@@ -96,6 +110,8 @@ export const HeaderMegaMenu: FC = () => {
           <HeaderLanguageSwitcher />
 
           <HeaderThemeToggler />
+
+          {isAuth && <HeaderUserMenu />}
         </Group>
 
         <Group className={classes.hiddenDesktop}>
