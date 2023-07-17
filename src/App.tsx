@@ -10,7 +10,7 @@ import { routes } from 'routes/routes';
 import { useAuth } from 'store/store';
 
 const App: FC = () => {
-  const { getUser, isFetching } = useAuth((state) => state);
+  const { getUser, isFetching, isAuthInitialized } = useAuth((state) => state);
   const { isCompletedRegistration } = useAuth((state) => state.signIn);
 
   const fetchUserData = useCallback(() => {
@@ -20,6 +20,10 @@ const App: FC = () => {
   useEffect(() => {
     fetchUserData();
   }, [fetchUserData, isCompletedRegistration]);
+
+  if (!isAuthInitialized) {
+    return <LoaderScreen />;
+  }
 
   return (
     <AppShell

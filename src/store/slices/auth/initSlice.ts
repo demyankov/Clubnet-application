@@ -13,6 +13,7 @@ import { GenericStateCreator } from 'store/types';
 export interface IState {
   isAuth: boolean;
   isFetching: boolean;
+  isAuthInitialized: boolean;
   user: Nullable<IUser>;
   getUser: () => Promise<void>;
 }
@@ -21,6 +22,7 @@ export const initSlice: GenericStateCreator<BoundStore> = (set, get) => ({
   ...get(),
   isAuth: false,
   isFetching: false,
+  isAuthInitialized: false,
   user: null,
 
   getUser: async () => {
@@ -33,6 +35,12 @@ export const initSlice: GenericStateCreator<BoundStore> = (set, get) => ({
     const auth = getAuth();
 
     onAuthStateChanged(auth, async (user) => {
+      set(
+        produce((state: BoundStore) => {
+          state.isAuthInitialized = true;
+        }),
+      );
+
       if (!user) {
         set(
           produce((state: BoundStore) => {
