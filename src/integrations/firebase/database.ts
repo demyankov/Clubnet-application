@@ -64,12 +64,13 @@ export const getFirestoreData = async <T, V>(
   filters: Filter<V>[] = [],
   lastVisible: Nullable<QueryDocumentSnapshot> = null,
   totalCounter?: number,
+  orderByField: string = 'id',
 ): Promise<FirestoreOutput<T>> => {
   const collectionRef = collection(db, collectionPath);
 
   let queryRef = query(
     collectionRef,
-    orderBy('id', 'asc'),
+    orderBy(orderByField, 'asc'),
     startAfter(lastVisible || 0),
     limit(defaultLimit),
   );

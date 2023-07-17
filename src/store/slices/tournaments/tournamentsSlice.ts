@@ -103,7 +103,7 @@ export const tournamentsSlice: GenericStateCreator<BoundStore> = (set, get) => (
       const { data, totalCount, querySnapshot } = await getFirestoreData<
         ITournamentData,
         string
-      >(DatabasePaths.Tournaments);
+      >(DatabasePaths.Tournaments, [], null, get().totalCount, 'timestamp');
 
       set(
         produce((state: BoundStore) => {
@@ -136,7 +136,7 @@ export const tournamentsSlice: GenericStateCreator<BoundStore> = (set, get) => (
       const { data, totalCount, querySnapshot } = await getFirestoreData<
         ITournamentData,
         string
-      >(DatabasePaths.Tournaments, [], lastVisible as any);
+      >(DatabasePaths.Tournaments, [], lastVisible, get().totalCount, 'timestamp');
 
       set(
         produce((state: BoundStore) => {
