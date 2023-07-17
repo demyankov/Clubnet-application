@@ -6,11 +6,11 @@ import { ClientsList } from 'components';
 import { useBalanceHistory, useClients } from 'store/store';
 
 const Clients: FC = () => {
-  const { getClients, filter } = useClients((state) => state);
+  const { getClients } = useClients((state) => state);
   const { balanceId } = useBalanceHistory((state) => state);
 
   useEffect(() => {
-    getClients(filter);
+    getClients();
   }, [getClients, balanceId]);
 
   return (

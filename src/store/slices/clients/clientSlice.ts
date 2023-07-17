@@ -49,7 +49,7 @@ export const clientSlice: GenericStateCreator<BoundStore> = (set, get) => ({
   filters: [],
   filter: {},
 
-  getClients: async (filter) => {
+  getClients: async () => {
     set(
       produce((state: BoundStore) => {
         state.isClientsFetching = true;
@@ -57,7 +57,9 @@ export const clientSlice: GenericStateCreator<BoundStore> = (set, get) => ({
     );
 
     try {
-      const filters = convertFiltersToArray<Filter<string>, ClientFilter>(filter);
+      const { filter: currentFilter } = get();
+
+      const filters = convertFiltersToArray<Filter<string>, ClientFilter>(currentFilter);
 
       const { data, totalCount, querySnapshot } = await getFirestoreData<IUser, string>(
         DatabasePaths.Users,
@@ -69,7 +71,6 @@ export const clientSlice: GenericStateCreator<BoundStore> = (set, get) => ({
           state.clients = data;
           state.totalCount = totalCount;
           state.querySnapshot = querySnapshot;
-          state.filter = { ...filter };
         }),
       );
     } catch (error) {
