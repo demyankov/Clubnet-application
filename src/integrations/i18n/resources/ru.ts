@@ -14,6 +14,9 @@ export const ru = {
     clients: {
       clients: 'Клиенты',
       addClient: 'Добавить клиента',
+      btnEdit: 'Изменить',
+      btnSave: 'Сохранить',
+      btnCancel: 'Отмена',
     },
 
     common: {
@@ -126,6 +129,7 @@ export const ru = {
       emptyTournaments: 'Больше турниров нет!',
       maxTeamsCount: 'Вы не можете создать больше 5 команд',
       successAddedUser: 'Пользователь успешно создан',
+      successUpdatedUser: 'Пользователь успешно обновлен',
       errorAddedUser: 'Пользователь с таким номером существует',
     },
 

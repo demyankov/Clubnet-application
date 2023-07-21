@@ -12,6 +12,7 @@ const TournamentInfo = lazy(() => import('pages/TournamentInfo/TournamentInfo'))
 const Profile = lazy(() => import('pages/Profile/Profile'));
 const Clients = lazy(() => import('pages/Clients/Clients'));
 const ClientInfo = lazy(() => import('pages/ClientInfo/ClientInfo'));
+const ClientEdit = lazy(() => import('pages/ClientEdit/ClientEdit'));
 const TeamInfo = lazy(() => import('pages/TeamInfo/TeamInfo'));
 const Bookings = lazy(() => import('pages/Bookings/Bookings'));
 const NotFound = lazy(() => import('pages/NotFound/NotFound'));
@@ -97,6 +98,14 @@ export const routes: IRoutes[] = [
     element: (
       <ProtectedRoute isPrivate roles={[Roles.ADMIN]}>
         <ClientInfo />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: `${Paths.clients}/:nickname/edit`,
+    element: (
+      <ProtectedRoute isPrivate roles={[Roles.ADMIN]}>
+        <ClientEdit />
       </ProtectedRoute>
     ),
   },

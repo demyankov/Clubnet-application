@@ -14,6 +14,9 @@ export const en = {
     clients: {
       clients: 'Clients',
       addClient: 'Add client',
+      btnEdit: 'Edit',
+      btnSave: 'Save',
+      btnCancel: 'Cancel',
     },
 
     common: {
@@ -127,6 +130,7 @@ export const en = {
       emptyTournaments: 'There are no more tournaments!',
       maxTeamsCount: "You can't create more than 5 teams",
       successAddedUser: 'User successfully created',
+      successUpdatedUser: 'User info successfully updated',
       errorAddedUser: 'User with this number exists',
     },
 

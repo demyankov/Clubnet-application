@@ -13,7 +13,7 @@ import {
   getFireStoreDataByFieldName,
   setFirestoreData,
 } from 'integrations/firebase/database';
-import { IUser } from 'store/slices/auth/types';
+import { EditableUserFields, IUser } from 'store/slices/auth/types';
 import { BoundStore } from 'store/store';
 import { GenericStateCreator } from 'store/types';
 
@@ -27,7 +27,7 @@ export interface ISignIn {
     checkSmsCode: (code: string, setFieldError?: SetFieldError<any>) => Promise<void>;
     nickNameExists: (
       nickName: string,
-      setFieldError: SetFieldError<any>,
+      setFieldError: SetFieldError<EditableUserFields>,
     ) => Promise<void>;
     setCurrentStep: (step: SignInSteps) => void;
   };

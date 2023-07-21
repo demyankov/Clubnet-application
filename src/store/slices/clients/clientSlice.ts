@@ -1,18 +1,25 @@
+// eslint-disable-next-line import/no-unresolved
+import { SetFieldError } from '@mantine/form/lib/types';
 import { getDatabase, push, ref } from 'firebase/database';
 import { QueryDocumentSnapshot } from 'firebase/firestore';
+import { t } from 'i18next';
 import { produce } from 'immer';
+import { NavigateFunction } from 'react-router-dom';
 
 import { DatabasePaths } from 'constants/databasePaths';
+import { Paths } from 'constants/paths';
 import { errorHandler, errorNotification, successNotification } from 'helpers';
 import { convertFiltersToArray } from 'helpers/convertFiltersToArray';
 import { formatPhoneNumber } from 'helpers/formatters';
 import {
+  checkFieldValueExists,
   Filter,
   getFirestoreData,
   getFireStoreDataByFieldName,
   setFirestoreData,
+  updateFirestoreData,
 } from 'integrations/firebase';
-import { IAddUser, IUser } from 'store/slices/auth/types';
+import { EditableUserFields, IAddUser, IUser } from 'store/slices/auth/types';
 import { BoundStore } from 'store/store';
 import { GenericStateCreator } from 'store/types';
 
@@ -22,12 +29,19 @@ type ClientFilter = {
   nickName?: string;
 };
 
+export type EditableClientFields = Partial<EditableUserFields>;
+
 export interface IClients {
   isClientsFetching: boolean;
   isGetMoreFetching: boolean;
   clients: IUser[];
   client: Nullable<IUser>;
   addClient: (clientData: IUser) => void;
+  updateClientData: (
+    updatedClientData: EditableClientFields,
+    setFieldError: SetFieldError<EditableClientFields>,
+    navigate: NavigateFunction,
+  ) => Promise<void>;
   getClients: (filter?: ClientFilter) => void;
   getMoreClients: () => void;
   getClientByNickname: (nickname: string) => void;
@@ -186,6 +200,49 @@ export const clientSlice: GenericStateCreator<BoundStore> = (set, get) => ({
       });
       get().getClients();
       successNotification('successAddedUser');
+    } catch (error) {
+      errorHandler(error as Error);
+    } finally {
+      set(
+        produce((state: BoundStore) => {
+          state.isClientsFetching = false;
+        }),
+      );
+    }
+  },
+  updateClientData: async (updatedClientData, setFieldError, navigate) => {
+    set(
+      produce((state: BoundStore) => {
+        state.isClientsFetching = true;
+      }),
+    );
+
+    if (updatedClientData.nickName) {
+      const isNicknameExists = await checkFieldValueExists(
+        DatabasePaths.Users,
+        'nickName',
+        updatedClientData.nickName,
+      );
+
+      if (isNicknameExists) {
+        setFieldError('nickName', t('form.nicknameExists'));
+
+        return;
+      }
+    }
+
+    const currentClient = get().client as IUser;
+
+    try {
+      await updateFirestoreData(DatabasePaths.Users, currentClient.id, updatedClientData);
+
+      set(
+        produce((state: BoundStore) => {
+          state.client = { ...currentClient, ...updatedClientData };
+        }),
+      );
+      successNotification('successUpdatedUser');
+      navigate(`${Paths.clients}`);
     } catch (error) {
       errorHandler(error as Error);
     } finally {

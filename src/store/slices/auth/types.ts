@@ -18,4 +18,7 @@ export interface IAddUser {
   name: string;
 }
 
-export type EditableUserFields = Pick<IUser, 'name' | 'image' | 'role'>;
+export type EditableUserFields = Pick<
+  IUser,
+  'name' | 'image' | 'role' | 'nickName' | 'phone'
+>;
