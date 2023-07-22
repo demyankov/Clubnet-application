@@ -9,7 +9,7 @@ import { useAuth } from 'store/store';
 
 const useStyles = createStyles((theme) => ({
   hiddenMobile: {
-    [theme.fn.smallerThan(400)]: {
+    [theme.fn.smallerThan(370)]: {
       display: 'none',
     },
   },
@@ -36,7 +36,7 @@ export const HeaderUserMenu: FC = () => {
 
       <Flex direction="column">
         <Text fz="xs" className={classes.hiddenMobile}>
-          {user?.name}
+          {user?.nickName}
         </Text>
 
         <UserBalance balance={user?.balance} />

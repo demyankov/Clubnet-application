@@ -26,7 +26,10 @@ import { useAuth } from 'store/store';
 const useStyles = createStyles((theme) => ({
   link: {
     display: 'flex',
-    alignItems: 'center',
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+    flexWrap: 'wrap',
+    alignContent: 'flex-start',
     justifyContent: 'center',
     height: '100%',
     paddingLeft: theme.spacing.md,
@@ -64,7 +67,11 @@ const useStyles = createStyles((theme) => ({
   },
 
   hiddenDesktop: {
+    justifyContent: 'flex-end',
+    width: '62%',
+    gap: '3%',
     [theme.fn.largerThan(700)]: {
+      backgroundColor: 'green',
       display: 'none',
     },
   },
@@ -96,6 +103,9 @@ export const HeaderMegaMenu: FC = () => {
   const handleLogoClick = (): void => {
     navigate(Paths.home);
   };
+  const dividerForMobile = (
+    <Divider my="sm" color={isDarkTheme(theme.colorScheme) ? 'dark.5' : 'gray.1'} />
+  );
 
   return (
     <Header height={60} zIndex={399}>
@@ -129,10 +139,14 @@ export const HeaderMegaMenu: FC = () => {
         size="100%"
         padding="25px 0"
         className={classes.hiddenDesktop}
-        zIndex={1000000}
+        zIndex={-1}
       >
         {isAuth && (
           <>
+            <Link onClick={handleCloseDrawer} to={Paths.profile} className={classes.link}>
+              <HeaderUserMenu />
+            </Link>
+            {dividerForMobile}
             <Link
               onClick={handleCloseDrawer}
               to={Paths.tournaments}
@@ -148,10 +162,6 @@ export const HeaderMegaMenu: FC = () => {
             >
               {t('navbar.bookings')}
             </Link>
-
-            <Link onClick={handleCloseDrawer} to={Paths.profile} className={classes.link}>
-              {t('navbar.profile')}
-            </Link>
             {isAdmin && (
               <Link
                 onClick={handleCloseDrawer}
@@ -163,9 +173,7 @@ export const HeaderMegaMenu: FC = () => {
             )}
           </>
         )}
-
-        <Divider my="sm" color={isDarkTheme(theme.colorScheme) ? 'dark.5' : 'gray.1'} />
-
+        {dividerForMobile}
         <Group position="center" grow pb="xl" px="md">
           {!isAuth && (
             <Button onClick={handleCloseDrawer} component={Link} to={Paths.signin}>
