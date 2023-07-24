@@ -38,7 +38,7 @@ const useStyles = createStyles((theme) => ({
     minHeight: '40px',
     borderRadius: '10px',
     display: 'flex',
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     alignItems: 'center',
     '&:hover': {
       backgroundColor: isDarkTheme(theme.colorScheme)
