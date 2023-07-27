@@ -122,9 +122,13 @@ export const HeaderMegaMenu: FC = () => {
 
           <HeaderThemeToggler />
 
-          {isAuth && <HeaderUserMenu />}
+          {isAuth && (
+            <>
+              <HeaderNotify />
 
-          <HeaderNotify />
+              <HeaderUserMenu />
+            </>
+          )}
         </Group>
 
         <Group className={classes.hiddenDesktop}>
