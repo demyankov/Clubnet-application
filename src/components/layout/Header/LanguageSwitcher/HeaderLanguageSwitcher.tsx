@@ -16,7 +16,7 @@ export const HeaderLanguageSwitcher: FC = () => {
   });
 
   const handleSelectLang = async (language: Language): Promise<void> => {
-    await setCurrentLanguage(language);
+    setCurrentLanguage(language);
     await i18n.changeLanguage(language);
   };
 
@@ -25,7 +25,6 @@ export const HeaderLanguageSwitcher: FC = () => {
       maw={100}
       value={currentLanguage}
       onChange={handleSelectLang}
-      defaultValue={currentLanguage}
       icon={<IconWorld />}
       data={LANGUAGE_SWITCHER_CONFIG}
     />

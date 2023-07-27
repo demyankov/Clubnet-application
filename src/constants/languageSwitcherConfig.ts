@@ -10,5 +10,5 @@ interface ILanguage {
 
 export const LANGUAGE_SWITCHER_CONFIG: ILanguage[] = [
   { label: 'EN', value: Language.En },
-  { label: 'РУ', value: Language.Ru },
+  { label: 'RU', value: Language.Ru },
 ];
