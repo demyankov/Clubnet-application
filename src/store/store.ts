@@ -25,6 +25,8 @@ import {
   IAdressActions,
   balanceHistorySlice,
   IBalanceHistory,
+  IFriends,
+  friendSlice,
 } from 'store/slices';
 
 export interface BoundStore
@@ -36,6 +38,7 @@ export interface BoundStore
     ITeams,
     IClients,
     IBalanceHistory,
+    IFriends,
     ISearch {}
 
 export interface BookingStore extends IEstablishmentActions, IAdressActions {}
@@ -89,6 +92,14 @@ export const useBalanceHistory = create(
   devtools(
     immer<BoundStore>((...a) => ({
       ...balanceHistorySlice(...a),
+    })),
+  ),
+);
+
+export const useFriends = create(
+  devtools(
+    immer<BoundStore>((...a) => ({
+      ...friendSlice(...a),
     })),
   ),
 );

@@ -1,19 +1,11 @@
 import React, { FC, useCallback, useEffect, useState } from 'react';
 
-import {
-  Avatar,
-  Center,
-  createStyles,
-  Group,
-  Loader,
-  Paper,
-  Text,
-  TextInput,
-} from '@mantine/core';
+import { Center, createStyles, Loader, Paper, Text, TextInput } from '@mantine/core';
 import { useClickOutside, useDebouncedValue } from '@mantine/hooks';
 import { useTranslation } from 'react-i18next';
 import { IoClose, IoSearch } from 'react-icons/io5';
 
+import { SearchClient } from 'components/layout/Header/HeaderSearch/SearchClient';
 import { useSearch } from 'store/store';
 
 const useStyles = createStyles(() => ({
@@ -26,6 +18,7 @@ const useStyles = createStyles(() => ({
     position: 'absolute',
     maxWidth: '230px',
     width: '100%',
+    cursor: 'pointer',
   },
 }));
 
@@ -78,19 +71,7 @@ export const HeaderSearch: FC = () => {
       {isDropdownOpen && (
         <Paper shadow="xs" p="md" mt="xs" className={classes.dropdown}>
           {searchResults.map((client) => (
-            <Group mb="md" key={client.id} spacing="sm">
-              <Avatar size={40} src={client?.image} radius={40} />
-
-              <div>
-                <Text fz="sm" fw={500}>
-                  {client?.nickName}
-                </Text>
-
-                <Text fz="xs" c="dimmed">
-                  {client?.name}
-                </Text>
-              </div>
-            </Group>
+            <SearchClient key={client.id} client={client} />
           ))}
 
           {resultText && <Text>{resultText}</Text>}

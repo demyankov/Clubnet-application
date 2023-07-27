@@ -9,3 +9,4 @@ export * from 'store/slices/clients/balanceHistorySlice';
 export * from 'store/slices/search/searchSlice';
 export * from 'store/slices/bookings/establishmentSlice';
 export * from 'store/slices/bookings/addressSlice';
+export * from 'store/slices/friends/friendSlice';

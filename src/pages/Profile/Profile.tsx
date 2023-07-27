@@ -10,12 +10,16 @@ import {
   ProfileImageUploader,
   ProfilePersonalDataForm,
 } from 'components/profile';
+import { ProfileFriends } from 'components/profile/ProfileFriends/ProfileFriends';
 import { TeamLink } from 'components/Team';
-import { useAuth } from 'store/store';
+import { FriendStatus } from 'constants/friendStatus';
+import { TabsValues } from 'constants/tabs';
+import { useAuth, useFriends } from 'store/store';
 
 const Profile: FC = () => {
   const { t } = useTranslation();
-  const { getTeams, teams } = useAuth((store) => store);
+  const { getTeams, teams, user } = useAuth((store) => store);
+  const { getFriends, getFriendRequests, totalCount } = useFriends((store) => store);
 
   const handleOpenModal = (): void => {
     modals.open({
@@ -28,7 +32,11 @@ const Profile: FC = () => {
 
   useEffect(() => {
     getTeams();
-  }, [getTeams]);
+    if (user) {
+      getFriends(user.id);
+      getFriendRequests(user.id, FriendStatus.sent);
+    }
+  }, [getTeams, getFriendRequests, getFriends, user]);
 
   const teamsItems: ReactElement[] = teams.map((team) => (
     <TeamLink key={team.id} teamData={team} />
@@ -41,10 +49,10 @@ const Profile: FC = () => {
         <ProfilePersonalDataForm />
       </Group>
 
-      <Tabs defaultValue="teams" h="100%" mt={20}>
+      <Tabs defaultValue={TabsValues.teams} h="100%" mt={20}>
         <Tabs.List mb={30}>
           <Tabs.Tab
-            value="teams"
+            value={TabsValues.teams}
             rightSection={
               <Badge w={16} h={16} variant="filled" size="xs" p={0}>
                 {teams.length}
@@ -54,19 +62,19 @@ const Profile: FC = () => {
             {t('profile.profileTeams')}
           </Tabs.Tab>
           <Tabs.Tab
-            value="friends"
+            value={TabsValues.friends}
             rightSection={
               <Badge w={16} h={16} variant="filled" size="xs" p={0}>
-                0
+                {totalCount}
               </Badge>
             }
           >
             {t('profile.profileFriends')}
           </Tabs.Tab>
-          <Tabs.Tab value="stats">{t('profile.profileStats')}</Tabs.Tab>
+          <Tabs.Tab value={TabsValues.stats}>{t('profile.profileStats')}</Tabs.Tab>
         </Tabs.List>
 
-        <Tabs.Panel value="teams" mih={350} mb={60}>
+        <Tabs.Panel value={TabsValues.teams} mih={350} mb={60}>
           <Group mb={30} align="center">
             <Text fz="xl" fw={700} inline align="center">
               {t('profile.profileTeams')}
@@ -92,13 +100,11 @@ const Profile: FC = () => {
           )}
         </Tabs.Panel>
 
-        <Tabs.Panel value="friends" mih={350} mb={60}>
-          <Text fz="xl" fw={700} mb={10}>
-            {t('profile.profileFriends')}
-          </Text>
+        <Tabs.Panel value={TabsValues.friends} mih={350} mb={60}>
+          <ProfileFriends userId={user?.id || ''} />
         </Tabs.Panel>
 
-        <Tabs.Panel value="stats" mih={350} mb={60}>
+        <Tabs.Panel value={TabsValues.stats} mih={350} mb={60}>
           <Text fz="xl" fw={700} mb={10}>
             {t('profile.profileStats')}
           </Text>

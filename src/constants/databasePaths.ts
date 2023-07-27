@@ -7,4 +7,5 @@ export enum DatabasePaths {
   Tables = 'tables',
   Orders = 'orders',
   BalanceHistory = 'balanceHistory',
+  Friends = 'friends',
 }

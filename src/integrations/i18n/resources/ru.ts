@@ -50,6 +50,15 @@ export const ru = {
       goBack: 'Назад',
     },
 
+    player: {
+      addFriend: 'Добавить в друзья',
+      rejectFriend: 'Отклонить',
+      isFriend: 'Твой друг',
+      removeFriend: 'Удалить друга',
+      friendRequest: 'Запрос отправлен',
+      noAvatar: 'отсутствует аватар',
+    },
+
     form: {
       signinHeader: 'Войдите',
       yourPhone: 'Ваш телефон',
@@ -131,6 +140,10 @@ export const ru = {
       successAddedUser: 'Пользователь успешно создан',
       successUpdatedUser: 'Пользователь успешно обновлен',
       errorAddedUser: 'Пользователь с таким номером существует',
+      requestDeclined: 'Запрос в друзья отклонен',
+      requestSent: 'Запрос отправлен',
+      successfullyAdded: 'Друг успешно добавлен',
+      successfullyRemoved: 'Друг успешно удален',
     },
 
     profile: {
@@ -144,6 +157,16 @@ export const ru = {
       profileFriends: 'Друзья',
       profileStats: 'Статистика',
       createTeam: 'Создайте команду и участвуйте в турнирах.',
+      friends: 'Друзья',
+      sent: 'Полученные',
+      request: 'Отправленные',
+      addedFriend: 'Добавил вас в друзья',
+      wantsAdded: 'Хочет добавить вас в друзья',
+      notifications: 'Уведомления',
+      daysAgo: 'д. назад',
+      hoursAgo: 'ч. назад',
+      minutes: 'м. назад',
+      seconds: 'с. назад',
     },
 
     search: {

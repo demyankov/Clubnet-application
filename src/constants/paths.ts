@@ -3,6 +3,7 @@ export enum Paths {
   signin = '/signin',
   tournaments = '/tournaments',
   profile = '/profile',
+  player = '/players',
   teams = '/teams',
   clients = '/clients',
   bookings = '/bookings',

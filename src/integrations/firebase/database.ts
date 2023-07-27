@@ -39,7 +39,7 @@ type FirestoreOutput<T> = {
 const defaultLimit = 10;
 
 export const setFirestoreData = async <T extends DocumentData>(
-  path: DatabasePaths,
+  path: DatabasePaths | string,
   id: string,
   data: T,
 ): Promise<DocumentReference<T>> => {
@@ -51,7 +51,7 @@ export const setFirestoreData = async <T extends DocumentData>(
 };
 
 export const deleteFirestoreData = async (
-  path: DatabasePaths,
+  path: DatabasePaths | string,
   id: string,
 ): Promise<void> => {
   const docRef = doc(db, path, id);
@@ -60,7 +60,7 @@ export const deleteFirestoreData = async (
 };
 
 export const getFirestoreData = async <T, V>(
-  collectionPath: DatabasePaths,
+  collectionPath: DatabasePaths | string,
   filters: Filter<V>[] = [],
   lastVisible: Nullable<QueryDocumentSnapshot> = null,
   totalCounter?: number,
@@ -132,7 +132,7 @@ export const getFireStoreDataByFieldName = async <T>(
 };
 
 export const updateFirestoreData = async (
-  path: DatabasePaths,
+  path: DatabasePaths | string,
   id: string,
   propToUpdate: { [x: string]: any },
 ): Promise<void> => {

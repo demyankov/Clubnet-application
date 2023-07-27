@@ -17,6 +17,7 @@ import { Link, useNavigate } from 'react-router-dom';
 
 import { ReactComponent as AppLogo } from 'assets/logo.svg';
 import { HeaderLanguageSwitcher, HeaderThemeToggler, HeaderUserMenu } from 'components';
+import { HeaderNotify } from 'components/layout/Header/HeaderNotify/HeaderNotify';
 import { HeaderSearch } from 'components/layout/Header/HeaderSearch/Search';
 import { Paths } from 'constants/paths';
 import { isDarkTheme } from 'helpers';
@@ -122,6 +123,8 @@ export const HeaderMegaMenu: FC = () => {
           <HeaderThemeToggler />
 
           {isAuth && <HeaderUserMenu />}
+
+          <HeaderNotify />
         </Group>
 
         <Group className={classes.hiddenDesktop}>

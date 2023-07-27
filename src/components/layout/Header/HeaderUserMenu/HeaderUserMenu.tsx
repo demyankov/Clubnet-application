@@ -1,11 +1,11 @@
-import { FC } from 'react';
+import { FC, useEffect } from 'react';
 
 import { Avatar, Box, createStyles, Flex, Group, Text } from '@mantine/core';
 import { useNavigate } from 'react-router-dom';
 
 import { UserBalance } from 'components/shared';
 import { Paths } from 'constants/paths';
-import { useAuth } from 'store/store';
+import { useAuth, useFriends } from 'store/store';
 
 const useStyles = createStyles((theme) => ({
   hiddenMobile: {
@@ -27,11 +27,22 @@ export const HeaderUserMenu: FC = () => {
   const navigate = useNavigate();
 
   const { user } = useAuth((state) => state);
+  const { getNotifyFriend } = useFriends((state) => state);
+
+  useEffect(() => {
+    if (user) {
+      getNotifyFriend(user?.id);
+    }
+  }, [getNotifyFriend, user]);
+
+  const navigateToProfile = (): void => {
+    navigate(Paths.profile);
+  };
 
   return (
     <Group spacing="sm">
       <Box className={classes.avatarContainer}>
-        <Avatar src={user?.image} onClick={() => navigate(Paths.profile)} />
+        <Avatar src={user?.image} onClick={navigateToProfile} />
       </Box>
 
       <Flex direction="column">

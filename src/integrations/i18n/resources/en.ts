@@ -48,6 +48,26 @@ export const en = {
       workingHours: 'Working hours',
       create: 'Create',
       goBack: 'Go back',
+      email: 'Email',
+      uploadImage: 'Upload image',
+      update: 'Update',
+      save: 'Save',
+      profileTeams: 'Teams',
+      profileFriends: 'Friends',
+      profileStats: 'Stats',
+    },
+    player: {
+      addFriend: 'Add friend',
+      rejectFriend: 'Reject friend',
+      isFriend: 'You are friends',
+      removeFriend: 'Remove friend',
+      friendRequest: 'Request sent',
+      noAvatar: 'no avatar',
+    },
+    notFound: {
+      title: 'Something is not right...',
+      info: 'Page you are trying to open does not exist. You may have mistyped the address, or the page has been moved to another URL. If you think this is an error contact support.',
+      back: 'Get back to home page',
     },
 
     form: {
@@ -106,12 +126,6 @@ export const en = {
       add: 'Add',
     },
 
-    notFound: {
-      title: 'Something is not right...',
-      info: 'Page you are trying to open does not exist. You may have mistyped the address, or the page has been moved to another URL. If you think this is an error contact support.',
-      back: 'Get back to home page',
-    },
-
     notifications: {
       successHeader: 'Success',
       errorHeader: 'Error',
@@ -132,19 +146,33 @@ export const en = {
       successAddedUser: 'User successfully created',
       successUpdatedUser: 'User info successfully updated',
       errorAddedUser: 'User with this number exists',
+      requestDeclined: 'Friend request declined',
+      requestSent: 'Request sent',
+      successfullyAdded: 'Friend successfully added',
+      successfullyRemoved: 'Friend successfully removed',
     },
 
     profile: {
       name: 'Name',
       phone: 'Phone',
       email: 'Email',
-      'upload-image': 'Upload image',
+      uploadImage: 'Upload image',
       update: 'Update',
       save: 'Save',
       profileTeams: 'Teams',
       profileFriends: 'Friends',
       profileStats: 'Stats',
       createTeam: 'Create a team and participate in tournaments',
+      friends: 'Friends',
+      sent: 'Sent',
+      request: 'Request',
+      addedFriend: 'Added you to friends',
+      wantsAdded: 'Wants to add you as a friend',
+      notifications: 'Notifications',
+      daysAgo: 'd. ago',
+      hoursAgo: 'h. ago',
+      minutes: 'm. ago',
+      seconds: 's. ago',
     },
 
     search: {
