@@ -34,12 +34,9 @@ const useStyles = createStyles((theme) => ({
     minHeight: 'calc(100vh - 300.89px)',
   },
   balance: {
-    width: '60px',
-    minHeight: '40px',
+    display: 'inline-block',
+    padding: '10px',
     borderRadius: '10px',
-    display: 'flex',
-    justifyContent: 'flex-start',
-    alignItems: 'center',
     '&:hover': {
       backgroundColor: isDarkTheme(theme.colorScheme)
         ? theme.colors.dark[8]
@@ -93,7 +90,7 @@ export const ClientsList: FC = () => {
     e.stopPropagation();
     modals.open({
       modalId: 'updateBalanceModal',
-      title: t('modals.modifyBalance'),
+      title: t('balance.modifyBalance'),
       children: <UpdateBalanceModal userId={id} balance={balance} />,
       centered: true,
     });

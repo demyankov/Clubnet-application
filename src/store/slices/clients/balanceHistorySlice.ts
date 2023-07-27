@@ -4,7 +4,7 @@ import { produce } from 'immer';
 
 import { DatabaseId } from 'constants/databaseId';
 import { DatabasePaths } from 'constants/databasePaths';
-import { errorHandler, uniqueIdGenerator } from 'helpers';
+import { errorHandler, successNotification, uniqueIdGenerator } from 'helpers';
 import {
   getDataArrayWithRefArray,
   getFireStoreDataByFieldName,
@@ -81,7 +81,15 @@ export const balanceHistorySlice: GenericStateCreator<BoundStore> = (set, get) =
           state.balanceId = balanceId;
         }),
       );
+
       modals.close('updateBalanceModal');
+
+      if (balance > 0) {
+        successNotification('successfullyAddBalance');
+
+        return;
+      }
+      successNotification('successfullyDebitBalance');
       resetForm();
     } catch (error) {
       errorHandler(error as Error);

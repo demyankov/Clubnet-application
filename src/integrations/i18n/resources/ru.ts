@@ -1,3 +1,5 @@
+import { MAX_BALANCE } from 'components/clients/config';
+
 export const ru = {
   translation: {
     address: {
@@ -17,6 +19,14 @@ export const ru = {
       btnEdit: 'Изменить',
       btnSave: 'Сохранить',
       btnCancel: 'Отмена',
+    },
+
+    balance: {
+      modifyBalance: 'Изменить баланс',
+      currentBalance: 'Текущий баланс',
+      reduce: 'Списать',
+      add: 'Начислить',
+      exceededLimit: `Лимит ${MAX_BALANCE} превышен`,
     },
 
     common: {
@@ -108,10 +118,6 @@ export const ru = {
         'Вы уверены что хотите удалить эту команду? Это действие является безвозвратным!',
       requiredField: 'Это поле является обязательным',
       shouldBeMultiple: 'Значение должно быть кратным указанному режиму игры',
-      modifyBalance: 'Изменить баланс',
-      currentBalance: 'Текущий баланс',
-      reduce: 'Списать',
-      add: 'Начислить',
     },
 
     notFound: {
@@ -144,6 +150,8 @@ export const ru = {
       requestSent: 'Запрос отправлен',
       successfullyAdded: 'Друг успешно добавлен',
       successfullyRemoved: 'Друг успешно удален',
+      successfullyAddBalance: 'Баланс успешно добавлен',
+      successfullyDebitBalance: 'Баланс успешно списан',
     },
 
     profile: {

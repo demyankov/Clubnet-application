@@ -5,6 +5,7 @@ import { useForm } from '@mantine/form';
 import { useTranslation } from 'react-i18next';
 import { FaCoins } from 'react-icons/fa';
 
+import { MAX_BALANCE } from 'components/clients/config';
 import { IUpdateBalanceFormValues } from 'components/clients/types';
 import { useAuth, useBalanceHistory } from 'store/store';
 
@@ -25,6 +26,15 @@ export const UpdateBalanceModal: FC<Props> = ({ userId, balance = 0 }) => {
       addBalance: '',
       subtractBalance: '',
     },
+    validate: {
+      addBalance: (value) => {
+        if (+value + balance > MAX_BALANCE) {
+          return t('balance.exceededLimit');
+        }
+
+        return null;
+      },
+    },
   });
 
   const handleSubmit = ({ subtractBalance, addBalance }: typeof values): void => {
@@ -44,11 +54,10 @@ export const UpdateBalanceModal: FC<Props> = ({ userId, balance = 0 }) => {
       <Stack spacing="xl">
         <Text>1 рубль = 1 coin</Text>
         <Text>
-          {t('modals.currentBalance')}: {balance}
+          {t('balance.currentBalance')}: {balance}
         </Text>
-
         <NumberInput
-          label={t('modals.add')}
+          label={t('balance.add')}
           disabled={!!values.subtractBalance}
           icon={<FaCoins size="20" />}
           error
@@ -58,7 +67,7 @@ export const UpdateBalanceModal: FC<Props> = ({ userId, balance = 0 }) => {
         />
 
         <NumberInput
-          label={t('modals.reduce')}
+          label={t('balance.reduce')}
           disabled={!!values.addBalance || !balance}
           icon={<FaCoins size="20" />}
           max={balance}
@@ -73,7 +82,7 @@ export const UpdateBalanceModal: FC<Props> = ({ userId, balance = 0 }) => {
             type="submit"
             loading={isBalanceFetching}
           >
-            {!values.subtractBalance ? t('modals.add') : t('modals.reduce')}
+            {!values.subtractBalance ? t('balance.add') : t('balance.reduce')}
           </Button>
         </Group>
       </Stack>

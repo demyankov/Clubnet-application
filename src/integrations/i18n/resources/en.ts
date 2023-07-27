@@ -1,3 +1,5 @@
+import { MAX_BALANCE } from 'components/clients/config';
+
 export const en = {
   translation: {
     address: {
@@ -17,6 +19,14 @@ export const en = {
       btnEdit: 'Edit',
       btnSave: 'Save',
       btnCancel: 'Cancel',
+    },
+
+    balance: {
+      modifyBalance: 'Modify balance',
+      currentBalance: 'Current balance',
+      reduce: 'Reduce',
+      add: 'Add',
+      exceededLimit: `Limit ${MAX_BALANCE} exceeded`,
     },
 
     common: {
@@ -120,10 +130,6 @@ export const en = {
         'Are you sure you want to delete this team? This action is irrevocable!',
       requiredField: 'This field is required!',
       shouldBeMultiple: 'The value must be a multiple of the specified game mode',
-      modifyBalance: 'Modify balance',
-      currentBalance: 'Current balance',
-      reduce: 'Reduce',
-      add: 'Add',
     },
 
     notifications: {
@@ -150,6 +156,8 @@ export const en = {
       requestSent: 'Request sent',
       successfullyAdded: 'Friend successfully added',
       successfullyRemoved: 'Friend successfully removed',
+      successfullyAddBalance: 'Balance successfully replenished',
+      successfullyDebitBalance: 'Balance successfully debited',
     },
 
     profile: {
