@@ -11,7 +11,7 @@ import { isDarkTheme } from 'helpers';
 import { useClients } from 'store/store';
 
 export const ClientsFilter: FC = () => {
-  const { getClients, isClientsFetching } = useClients((state) => state);
+  const { setFilter, isClientsFetching } = useClients((state) => state);
   const { t } = useTranslation();
 
   const form = useForm({
@@ -23,12 +23,12 @@ export const ClientsFilter: FC = () => {
   });
 
   const handleSubmit = (values: typeof form.values): void => {
-    getClients(values);
+    setFilter(values);
   };
 
   const handleReset = (): void => {
     form.reset();
-    getClients();
+    setFilter();
   };
 
   const isButtonsDisabled = !form.isDirty() || isClientsFetching;
