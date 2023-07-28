@@ -12,7 +12,7 @@ i18n
     fallbackLng: Language.Ru,
     resources,
     detection: {
-      order: ['local_storage'],
-      caches: ['local_storage'],
+      order: ['localStorage'],
+      caches: ['localStorage'],
     },
   });
