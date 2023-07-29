@@ -10,23 +10,27 @@ import {
   tournamentsSlice,
   establishmentSlice,
   addressSlice,
+  teamsSlice,
+  clientSlice,
+  searchSlice,
+  tableSlice,
+  orderSlice,
+  balanceHistorySlice,
   ITournaments,
   IState,
   ISignIn,
   ISignOut,
   IUpdateUser,
   ITeams,
-  teamsSlice,
-  clientSlice,
   IClients,
-  searchSlice,
   ISearch,
   IEstablishmentActions,
-  IAdressActions,
-  balanceHistorySlice,
   IBalanceHistory,
   IFriends,
   friendSlice,
+  IAddressActions,
+  ITableActions,
+  IOrderActions,
 } from 'store/slices';
 
 export interface BoundStore
@@ -41,7 +45,11 @@ export interface BoundStore
     IFriends,
     ISearch {}
 
-export interface BookingStore extends IEstablishmentActions, IAdressActions {}
+export interface BookingStore
+  extends IEstablishmentActions,
+    IAddressActions,
+    ITableActions,
+    IOrderActions {}
 
 export const useAuth = create(
   devtools(
@@ -84,6 +92,8 @@ export const useBookings = create(
     immer<BookingStore>((...a) => ({
       ...establishmentSlice(...a),
       ...addressSlice(...a),
+      ...tableSlice(...a),
+      ...orderSlice(...a),
     })),
   ),
 );

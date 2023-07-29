@@ -11,8 +11,8 @@ import {
 } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
 
-import { hours } from 'constants/hours';
 import { weekdays } from 'constants/weekdays';
+import { generateHours } from 'helpers';
 import { IWorkingHours, WeekDays } from 'store/slices/bookings/types';
 
 const useStyles = createStyles({
@@ -37,6 +37,7 @@ export const BookingsWorkingDaysInputs: FC<Props> = ({
 }) => {
   const { t } = useTranslation();
   const { classes } = useStyles();
+  const HOURS = generateHours();
 
   return (
     <>
@@ -53,7 +54,7 @@ export const BookingsWorkingDaysInputs: FC<Props> = ({
 
             <Flex>
               <Select
-                data={hours}
+                data={HOURS}
                 disabled={!workingHours[day].isAvailable}
                 dropdownPosition="flip"
                 w={100}
@@ -63,7 +64,7 @@ export const BookingsWorkingDaysInputs: FC<Props> = ({
               />
               -
               <Select
-                data={hours}
+                data={HOURS}
                 disabled={!workingHours[day].isAvailable}
                 dropdownPosition="flip"
                 maxDropdownHeight={150}

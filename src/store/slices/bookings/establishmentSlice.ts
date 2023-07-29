@@ -10,8 +10,9 @@ import {
   updateFirestoreData,
   deleteFirestoreData,
   getDataArrayWithRefArray,
+  Filter,
 } from 'integrations/firebase';
-import { IAddress, IEstablishment } from 'store/slices/bookings/types';
+import { IAddress, IEstablishment, IOrder } from 'store/slices/bookings/types';
 import { BookingStore } from 'store/store';
 import { GenericStateCreator } from 'store/types';
 
@@ -49,7 +50,7 @@ export const establishmentSlice: GenericStateCreator<BookingStore> = (set, get) 
       );
 
       try {
-        const { data } = await getFirestoreData<IEstablishment, string>(
+        const { data } = await getFirestoreData<IEstablishment>(
           DatabasePaths.Establishments,
         );
 
@@ -80,6 +81,7 @@ export const establishmentSlice: GenericStateCreator<BookingStore> = (set, get) 
           set(
             produce((state: BookingStore) => {
               state.addressActions.addresses = addresses;
+              state.tableActions.tables = [];
             }),
           );
         }
@@ -206,10 +208,17 @@ export const establishmentSlice: GenericStateCreator<BookingStore> = (set, get) 
                 tables.forEach(async (table) => {
                   await deleteFirestoreData(DatabasePaths.Tables, table.id);
 
-                  if (table.orders.length) {
-                    const orders = await getDataArrayWithRefArray(table.orders);
+                  if (table.ordersCount) {
+                    const filter: Filter<IOrder> = {
+                      field: 'tableId',
+                      value: table.id,
+                    };
+                    const { data } = await getFirestoreData<IOrder>(
+                      DatabasePaths.Orders,
+                      [filter],
+                    );
 
-                    orders.forEach(async (order) => {
+                    data.forEach(async (order) => {
                       await deleteFirestoreData(DatabasePaths.Orders, order.id);
                     });
                   }

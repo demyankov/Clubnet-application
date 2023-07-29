@@ -16,3 +16,9 @@ export type AddressStepsProps = {
   setCurrentStep: Dispatch<SetStateAction<AddAddressSteps>>;
   handleOnClose: () => void;
 };
+
+export interface IHourValue {
+  value: string;
+  label: string;
+  disabled: boolean;
+}

@@ -52,6 +52,7 @@ const roleColors: Record<Roles, string> = {
   [Roles.USER]: 'blue',
   [Roles.ADMIN]: 'pink',
   [Roles.CAPTAIN]: 'cyan',
+  [Roles.MANAGER]: 'yellow',
 };
 
 export const ClientsList: FC = () => {

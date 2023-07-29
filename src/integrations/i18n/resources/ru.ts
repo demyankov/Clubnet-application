@@ -11,6 +11,8 @@ export const ru = {
       setWorkingHours: 'Задайте рабочие часы',
       applyToAll: 'Применить для всех',
       save: 'Сохранить',
+      addressSettings: 'Настройки адреса',
+      showOrders: 'Заказы',
     },
 
     clients: {
@@ -152,6 +154,12 @@ export const ru = {
       successfullyRemoved: 'Друг успешно удален',
       successfullyAddBalance: 'Баланс успешно добавлен',
       successfullyDebitBalance: 'Баланс успешно списан',
+      bookingPlaced: 'Бронирование успешно размещено',
+    },
+
+    orders: {
+      noOrders: 'Заказов нет',
+      table: 'Стол',
     },
 
     profile: {
@@ -192,6 +200,22 @@ export const ru = {
       teamInfo: 'Информация',
       teamImage: 'Изображение команды',
       settings: 'Настройки',
+    },
+
+    tables: {
+      table: 'стол №',
+      book: 'Забронировать',
+      orders: 'Заказы',
+      start: 'Начало',
+      end: 'Конец',
+      clear: 'Очистить',
+      delete: 'Удалить стол',
+      agreeToDeleteTable:
+        'Вы собираетесь удалить стол. Это действие является безвозвратным и повлечет за собой удаление всех заказов текущего стола. Вы уверены?',
+      customerName: 'Имя заказчика',
+      orderDetails: 'Детали заказа',
+      orderConfirmation:
+        'Вы можете просмотреть, отредактировать или удалить заказ в личном кабинете.',
     },
 
     tournaments: {

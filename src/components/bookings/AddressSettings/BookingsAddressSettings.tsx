@@ -16,7 +16,7 @@ import { IMaskInput } from 'react-imask';
 
 import { BookingsWorkingDaysInputs } from 'components';
 import { weekdays } from 'constants/weekdays';
-import { formatPhoneNumber } from 'helpers/formatters';
+import { validatePhone } from 'helpers';
 import { IWorkingHours, WeekDays } from 'store/slices/bookings/types';
 import { useBookings } from 'store/store';
 
@@ -63,20 +63,9 @@ export const BookingsAddressSettings: FC<Props> = ({ close }) => {
     validate: (values) => {
       const city = values.city ? null : t('modals.requiredField');
       const address = values.address ? null : t('modals.requiredField');
-      let phone = null;
+      const phone = validatePhone(values.phone);
       let workingHours = null;
       let isValid = false;
-
-      if (values.phone) {
-        const processedPhone = formatPhoneNumber(values.phone);
-        const prefixRegex = /^\+375\s?(25|29|33|44)/;
-
-        if (!prefixRegex.test(processedPhone)) {
-          phone = t('form.phoneFormat');
-        }
-      } else {
-        phone = t('modals.requiredField');
-      }
 
       weekdays.forEach((day) => {
         if (values.workingHours[day].isAvailable) {

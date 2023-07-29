@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { IMaskInput } from 'react-imask';
 
 import { IClientsModalFormValues } from 'components/clients/types';
-import { formatPhoneNumber } from 'helpers/formatters';
+import { validatePhone, formatPhoneNumber } from 'helpers';
 import { useClients } from 'store/store';
 
 export const ClientsModal: FC = () => {
@@ -24,20 +24,7 @@ export const ClientsModal: FC = () => {
           return t('modals.requiredField');
         }
       },
-      phone: (value) => {
-        if (!value) {
-          return t('modals.requiredField');
-        }
-
-        const processedPhone = formatPhoneNumber(value);
-        const prefixRegex = /^\+375\s?(25|29|33|44)/;
-
-        if (!prefixRegex.test(processedPhone) || formatPhoneNumber(value).length < 12) {
-          return t('form.phoneFormat');
-        }
-
-        return null;
-      },
+      phone: (value) => validatePhone(value),
     },
   });
 

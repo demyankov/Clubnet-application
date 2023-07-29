@@ -1,5 +1,5 @@
 import { modals } from '@mantine/modals';
-import { QueryDocumentSnapshot, Timestamp } from 'firebase/firestore';
+import { QueryDocumentSnapshot, QuerySnapshot, Timestamp } from 'firebase/firestore';
 import { produce } from 'immer';
 
 import { DatabasePaths } from 'constants/databasePaths';
@@ -45,7 +45,7 @@ export interface ITournaments {
   deleteTournament: (id: string, image: string) => Promise<void>;
   getTournamentById: (id: string) => Promise<void>;
   totalCount: number;
-  querySnapshot: any;
+  querySnapshot: Nullable<QuerySnapshot>;
 }
 
 export const tournamentsSlice: GenericStateCreator<BoundStore> = (set, get) => ({
@@ -103,10 +103,13 @@ export const tournamentsSlice: GenericStateCreator<BoundStore> = (set, get) => (
         }),
       );
 
-      const { data, totalCount, querySnapshot } = await getFirestoreData<
-        ITournamentData,
-        string
-      >(DatabasePaths.Tournaments, [], null, get().totalCount, 'timestamp');
+      const { data, totalCount, querySnapshot } = await getFirestoreData<ITournamentData>(
+        DatabasePaths.Tournaments,
+        [],
+        null,
+        get().totalCount,
+        'timestamp',
+      );
 
       set(
         produce((state: BoundStore) => {
@@ -134,12 +137,15 @@ export const tournamentsSlice: GenericStateCreator<BoundStore> = (set, get) => (
         }),
       );
 
-      const lastVisible = get().querySnapshot?.docs[get().querySnapshot.docs.length - 1];
+      const lastVisible = get().querySnapshot?.docs[get().querySnapshot!.docs.length - 1];
 
-      const { data, totalCount, querySnapshot } = await getFirestoreData<
-        ITournamentData,
-        string
-      >(DatabasePaths.Tournaments, [], lastVisible, get().totalCount, 'timestamp');
+      const { data, totalCount, querySnapshot } = await getFirestoreData<ITournamentData>(
+        DatabasePaths.Tournaments,
+        [],
+        lastVisible,
+        get().totalCount,
+        'timestamp',
+      );
 
       set(
         produce((state: BoundStore) => {

@@ -1,8 +1,8 @@
 import { formatPhoneNumber } from 'helpers/formatters';
 
-export const convertFiltersToArray = <R, T extends { [x: string]: string }>(
+export const convertFiltersToArray = <F, T extends { [x: string]: T[keyof T] }>(
   filter?: T,
-): R[] => {
+): F[] => {
   if (!filter) {
     return [];
   }
@@ -10,8 +10,8 @@ export const convertFiltersToArray = <R, T extends { [x: string]: string }>(
   return Object.keys(filter)
     .map((key) =>
       key === 'phone'
-        ? { field: key, value: formatPhoneNumber(filter[key]) }
+        ? { field: key, value: formatPhoneNumber(filter[key] as string) }
         : { field: key, value: filter[key] },
     )
-    .filter((filter) => filter.value.length > 0) as R[];
+    .filter((filter) => (filter.value as string).length > 0) as F[];
 };

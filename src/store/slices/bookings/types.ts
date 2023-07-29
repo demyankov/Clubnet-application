@@ -1,4 +1,4 @@
-import { DocumentReference } from 'firebase/firestore';
+import { DocumentReference, Timestamp } from 'firebase/firestore';
 
 import { IUser } from 'store/slices/auth/types';
 
@@ -37,15 +37,24 @@ export type IWorkingHours = Record<WeekDays, IDayHours>;
 
 export interface ITable {
   id: string;
+  name: number;
+  ordersCount: number;
+}
+
+interface IContact {
   name: string;
-  orders: DocumentReference<IOrder>[];
+  phone: string;
 }
 
 export interface IOrder {
   id: string;
-  start: Date;
-  finish: Date;
-  user: IUser;
+  tableId: string;
+  addressId: string;
+  date: string;
+  start: Timestamp;
+  finish: Timestamp;
+  contact: IContact;
+  owner: Nullable<DocumentReference<IUser>>;
 }
 
 export type AddressData = Omit<IAddress, 'id' | 'tables'>;

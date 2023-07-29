@@ -32,7 +32,7 @@ export const searchSlice: GenericStateCreator<BoundStore> = (set, get) => ({
         }),
       );
 
-      const filters: Filter<string>[] = [];
+      const filters: Filter<IUser>[] = [];
 
       if (value) {
         filters.push({
@@ -41,10 +41,7 @@ export const searchSlice: GenericStateCreator<BoundStore> = (set, get) => ({
         });
       }
 
-      const { data } = await getFirestoreData<IUser, string>(
-        DatabasePaths.Users,
-        filters,
-      );
+      const { data } = await getFirestoreData<IUser>(DatabasePaths.Users, filters);
 
       if (!data.length) {
         set(

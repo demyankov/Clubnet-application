@@ -16,9 +16,13 @@ import { useTranslation } from 'react-i18next';
 import { Link, useNavigate } from 'react-router-dom';
 
 import { ReactComponent as AppLogo } from 'assets/logo.svg';
-import { HeaderLanguageSwitcher, HeaderThemeToggler, HeaderUserMenu } from 'components';
-import { HeaderNotify } from 'components/layout/Header/HeaderNotify/HeaderNotify';
-import { HeaderSearch } from 'components/layout/Header/HeaderSearch/Search';
+import {
+  HeaderLanguageSwitcher,
+  HeaderThemeToggler,
+  HeaderUserMenu,
+  HeaderNotify,
+  HeaderSearch,
+} from 'components';
 import { Paths } from 'constants/paths';
 import { isDarkTheme } from 'helpers';
 import { useRole } from 'hooks';
@@ -109,7 +113,7 @@ export const HeaderMegaMenu: FC = () => {
   );
 
   return (
-    <Header height={60} zIndex={399}>
+    <Header height={60} zIndex={100}>
       <Group sx={{ height: '100%' }} className={classes.inner}>
         <ActionIcon onClick={handleLogoClick} className={classes.logo}>
           <AppLogo />
@@ -146,7 +150,7 @@ export const HeaderMegaMenu: FC = () => {
         size="100%"
         padding="25px 0"
         className={classes.hiddenDesktop}
-        zIndex={-1}
+        zIndex={150}
       >
         {isAuth && (
           <>

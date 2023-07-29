@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { IMaskInput } from 'react-imask';
 
 import { AddAddressSteps, AddressStepsProps } from 'components';
-import { formatPhoneNumber } from 'helpers/formatters';
+import { validatePhone, formatPhoneNumber } from 'helpers';
 import { useBookings } from 'store/store';
 
 export const BookingsAddAddressStep: FC<AddressStepsProps> = ({
@@ -28,20 +28,7 @@ export const BookingsAddAddressStep: FC<AddressStepsProps> = ({
       },
       city: (value) => (value ? null : t('modals.requiredField')),
       address: (value) => (value ? null : t('modals.requiredField')),
-      phone: (value) => {
-        if (!value) {
-          return t('modals.requiredField');
-        }
-
-        const processedPhone = formatPhoneNumber(value);
-        const prefixRegex = /^\+375\s?(25|29|33|44)/;
-
-        if (!prefixRegex.test(processedPhone)) {
-          return t('form.phoneFormat');
-        }
-
-        return null;
-      },
+      phone: (value) => validatePhone(value),
     },
   });
 

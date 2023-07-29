@@ -5,4 +5,6 @@ export enum DatabaseId {
   Establishment = 'est',
   Address = 'address',
   BalanceHistory = 'balanceHistory',
+  Tables = 'table',
+  Orders = 'order',
 }

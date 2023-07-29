@@ -68,7 +68,7 @@ export interface IFriends {
   totalCount: number;
   totalCountNotify: number;
   showCounter: number;
-  querySnapshot: any;
+  querySnapshot: Nullable<QuerySnapshot>;
   status: FriendStatus;
   addFriend: (data: IRequestData) => void;
   removeFriend: (data: IRequestData) => void;
@@ -115,14 +115,16 @@ export const friendSlice: GenericStateCreator<BoundStore> = (set, get) => ({
       status: filter || FriendStatus.friend,
     };
 
-    const friendFilter = convertFiltersToArray<Filter<string>, IFilterFriends>(
+    const friendFilter = convertFiltersToArray<Filter<IFriendRequest>, IFilterFriends>(
       dataFilter,
     );
 
-    const { data, totalCount, querySnapshot } = await getFirestoreData<
-      IFriendRequest,
-      string
-    >(path, friendFilter, null, totalCounter);
+    const { data, totalCount, querySnapshot } = await getFirestoreData<IFriendRequest>(
+      path,
+      friendFilter,
+      null,
+      totalCounter,
+    );
 
     const dataFriends = await getDataArrayWithRefArray<IUser>(
       data.map((friendRequest) => friendRequest.userRef),

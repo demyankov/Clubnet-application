@@ -25,9 +25,9 @@ import { Roles } from 'constants/userRoles';
 import { db } from 'integrations/firebase/firebase';
 import { ITeam, ITeamMember } from 'store/slices';
 
-export interface Filter<V> {
-  field: string;
-  value: V;
+export interface Filter<T> {
+  field: keyof T;
+  value: T[keyof T];
 }
 
 type FirestoreOutput<T> = {
@@ -59,9 +59,9 @@ export const deleteFirestoreData = async (
   await deleteDoc(docRef);
 };
 
-export const getFirestoreData = async <T, V>(
+export const getFirestoreData = async <T>(
   collectionPath: DatabasePaths | string,
-  filters: Filter<V>[] = [],
+  filters: Filter<T>[] = [],
   lastVisible: Nullable<QueryDocumentSnapshot> = null,
   totalCounter?: number,
   orderByField: string = 'id',
@@ -80,7 +80,7 @@ export const getFirestoreData = async <T, V>(
   filters.forEach((filter) => {
     queryRef = query(
       collectionRef,
-      orderBy(filter.field),
+      orderBy(filter.field as string),
       startAt(filter.value),
       endAt(`${filter?.value}\uf8ff`),
     );
@@ -94,7 +94,7 @@ export const getFirestoreData = async <T, V>(
   filters.forEach((filter) => {
     queryRef = query(
       collectionRef,
-      orderBy(filter.field),
+      orderBy(filter.field as string),
       startAt(filter.value),
       endAt(`${filter?.value}\uf8ff`),
       limit(totalCounter || defaultLimit),
@@ -239,4 +239,11 @@ export const getDataArrayWithRefArray = async <T extends DocumentData>(
   const snapshots = await Promise.all(resultPromises);
 
   return snapshots.map((docSnap) => docSnap.data()!);
+};
+
+export const getDocumentReference = async <T extends DocumentData>(
+  path: DatabasePaths,
+  id: string,
+): Promise<DocumentReference<T>> => {
+  return doc(db, path, id) as DocumentReference<T>;
 };

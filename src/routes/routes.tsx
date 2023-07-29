@@ -1,6 +1,6 @@
 import { lazy, ReactElement } from 'react';
 
-import { BookingsAddressInfo } from 'components';
+import { BookingsAddress } from 'components';
 import { ProtectedRoute } from 'components/shared';
 import { Paths } from 'constants/paths';
 import { Roles } from 'constants/userRoles';
@@ -74,7 +74,7 @@ export const routes: IRoutes[] = [
     path: `${Paths.bookings}/:id`,
     element: (
       <ProtectedRoute isPrivate roles={DEFAULT_ROLES}>
-        <BookingsAddressInfo />
+        <BookingsAddress />
       </ProtectedRoute>
     ),
   },

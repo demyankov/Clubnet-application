@@ -2,7 +2,7 @@
 import { SetFieldError } from '@mantine/form/lib/types';
 import { modals } from '@mantine/modals';
 import { getDatabase, push, ref } from 'firebase/database';
-import { QueryDocumentSnapshot } from 'firebase/firestore';
+import { QuerySnapshot } from 'firebase/firestore';
 import { t } from 'i18next';
 import { produce } from 'immer';
 import { NavigateFunction } from 'react-router-dom';
@@ -25,9 +25,9 @@ import { BoundStore } from 'store/store';
 import { GenericStateCreator } from 'store/types';
 
 type ClientFilter = {
-  name?: string;
-  phone?: string;
-  nickName?: string;
+  name?: IUser['name'];
+  phone?: IUser['phone'];
+  nickName?: IUser['nickName'];
 };
 
 export type EditableClientFields = Partial<EditableUserFields>;
@@ -49,9 +49,8 @@ export interface IClients {
   getAllFilteredClients: () => void;
   setFilter: (filter?: ClientFilter) => void;
   totalCount: number;
-  querySnapshot: any;
-  filters: Filter<string>[];
-  filter?: ClientFilter;
+  querySnapshot: Nullable<QuerySnapshot>;
+  filters: Filter<IUser>[];
   addUser: (user: IAddUser, resetForm: () => void) => void;
 }
 
@@ -66,7 +65,7 @@ export const clientSlice: GenericStateCreator<BoundStore> = (set, get) => ({
   filters: [],
 
   setFilter: (filter) => {
-    const filters = convertFiltersToArray<Filter<string>, ClientFilter>(filter);
+    const filters = convertFiltersToArray<Filter<IUser>, ClientFilter>(filter);
 
     set(
       produce((state: BoundStore) => {
@@ -86,7 +85,7 @@ export const clientSlice: GenericStateCreator<BoundStore> = (set, get) => ({
     try {
       const { filters } = get();
 
-      const { data, totalCount, querySnapshot } = await getFirestoreData<IUser, string>(
+      const { data, totalCount, querySnapshot } = await getFirestoreData<IUser>(
         DatabasePaths.Users,
         filters,
       );
@@ -149,12 +148,11 @@ export const clientSlice: GenericStateCreator<BoundStore> = (set, get) => ({
         }),
       );
 
-      const lastVisible: Nullable<QueryDocumentSnapshot> =
-        get().querySnapshot?.docs[get().querySnapshot.docs.length - 1];
+      const lastVisible = get().querySnapshot?.docs[get().querySnapshot!.docs.length - 1];
 
       const { filters } = get();
 
-      const { data, totalCount, querySnapshot } = await getFirestoreData<IUser, string>(
+      const { data, totalCount, querySnapshot } = await getFirestoreData<IUser>(
         DatabasePaths.Users,
         filters,
         lastVisible,

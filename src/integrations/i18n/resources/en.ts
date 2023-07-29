@@ -11,6 +11,8 @@ export const en = {
       setWorkingHours: 'Set working hours',
       applyToAll: 'Apply to all',
       save: 'Save',
+      addressSettings: 'Address settings',
+      showOrders: 'Orders',
     },
 
     clients: {
@@ -158,6 +160,12 @@ export const en = {
       successfullyRemoved: 'Friend successfully removed',
       successfullyAddBalance: 'Balance successfully replenished',
       successfullyDebitBalance: 'Balance successfully debited',
+      bookingPlaced: 'Booking successfully placed',
+    },
+
+    orders: {
+      noOrders: 'No orders',
+      table: 'Table',
     },
 
     profile: {
@@ -198,6 +206,21 @@ export const en = {
       teamInfo: 'Information',
       teamImage: 'Team image',
       settings: 'Settings',
+    },
+
+    tables: {
+      table: 'table #',
+      book: 'Book',
+      orders: 'Orders',
+      start: 'Start',
+      end: 'End',
+      clear: 'Clear',
+      delete: 'Delete table',
+      agreeToDeleteTable:
+        'You are about to delete the table. This action is irrevocable and will cause deleting of all the orders of the current table. Are you sure?',
+      customerName: "Customer's name",
+      orderDetails: 'Order details',
+      orderConfirmation: 'You can review, edit or delete the order in you profile.',
     },
 
     tournaments: {
