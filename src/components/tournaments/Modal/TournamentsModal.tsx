@@ -3,7 +3,6 @@ import { FC } from 'react';
 import { Button, FileInput, Group, Select, Stack, TextInput } from '@mantine/core';
 import { DateTimePicker } from '@mantine/dates';
 import { useForm } from '@mantine/form';
-import { modals } from '@mantine/modals';
 import { IconUpload } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
 
@@ -28,7 +27,7 @@ interface IFormValues {
 
 export const TournamentsModal: FC = () => {
   const { t, i18n } = useTranslation();
-  const { addTournament, getTournaments, isFetching } = useTournaments((state) => state);
+  const { addTournament, isFetching } = useTournaments((state) => state);
 
   const form = useForm<IFormValues>({
     initialValues: {
@@ -40,6 +39,7 @@ export const TournamentsModal: FC = () => {
       countOfMembers: '',
       image: null,
     },
+
     validate: (values) => {
       const requiredFields = requiredFieldsGenerator<IFormValues>(values);
 
@@ -69,17 +69,15 @@ export const TournamentsModal: FC = () => {
       : '';
     const registrationDate = new Date().toString();
 
-    addTournament({
-      ...form.values,
-      id: uniqueIdGenerator(DatabaseId.Tournament),
-      expectedDate,
-      registrationDate,
-    });
-
-    getTournaments();
-
-    form.reset();
-    modals.close('addTournamentModal');
+    addTournament(
+      {
+        ...form.values,
+        id: uniqueIdGenerator(DatabaseId.Tournament),
+        expectedDate,
+        registrationDate,
+      },
+      form.reset,
+    );
   };
 
   return (

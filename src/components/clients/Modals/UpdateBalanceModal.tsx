@@ -2,7 +2,6 @@ import { FC } from 'react';
 
 import { Button, Group, NumberInput, Stack, Text } from '@mantine/core';
 import { useForm } from '@mantine/form';
-import { modals } from '@mantine/modals';
 import { useTranslation } from 'react-i18next';
 import { FaCoins } from 'react-icons/fa';
 
@@ -37,10 +36,7 @@ export const UpdateBalanceModal: FC<Props> = ({ userId, balance = 0 }) => {
       adminId: user?.id as string,
     };
 
-    updateBalance(data);
-
-    reset();
-    modals.close('updateBalanceModal');
+    updateBalance(data, reset);
   };
 
   return (

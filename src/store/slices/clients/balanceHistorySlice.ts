@@ -1,3 +1,4 @@
+import { modals } from '@mantine/modals';
 import { arrayUnion, doc, increment, Timestamp } from 'firebase/firestore';
 import { produce } from 'immer';
 
@@ -19,7 +20,7 @@ export interface IBalanceHistory {
   isBalanceFetching: boolean;
   balanceId: string;
   history: IHistory[];
-  updateBalance: (data: IBalanceData) => void;
+  updateBalance: (data: IBalanceData, resetForm: () => void) => void;
   getBalanceHistory: (userId: string) => void;
 }
 
@@ -42,7 +43,7 @@ export const balanceHistorySlice: GenericStateCreator<BoundStore> = (set, get) =
   balanceId: '',
   history: [],
 
-  updateBalance: async ({ balance, adminId, userId }) => {
+  updateBalance: async ({ balance, adminId, userId }, resetForm) => {
     set(
       produce((state: BoundStore) => {
         state.isBalanceFetching = true;
@@ -80,6 +81,8 @@ export const balanceHistorySlice: GenericStateCreator<BoundStore> = (set, get) =
           state.balanceId = balanceId;
         }),
       );
+      modals.close('updateBalanceModal');
+      resetForm();
     } catch (error) {
       errorHandler(error as Error);
     } finally {

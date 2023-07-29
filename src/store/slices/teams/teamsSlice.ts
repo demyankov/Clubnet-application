@@ -1,3 +1,4 @@
+import { modals } from '@mantine/modals';
 import { DocumentData, DocumentReference } from 'firebase/firestore';
 import { produce } from 'immer';
 
@@ -42,7 +43,7 @@ export interface ITeams {
   teams: ITeam[];
   currentTeam: Nullable<ITeam>;
   members: IUser[];
-  addTeam: (teamData: ITeam) => Promise<void>;
+  addTeam: (teamData: ITeam, resetForm: () => void) => Promise<void>;
   getTeams: () => Promise<void>;
   getTeamById: (id: string) => Promise<void>;
   updateTeam: (data: ITeamFormValues) => Promise<void>;
@@ -57,7 +58,7 @@ export const teamsSlice: GenericStateCreator<BoundStore> = (set, get) => ({
   currentTeam: null,
   members: [],
 
-  addTeam: async (teamData: ITeam) => {
+  addTeam: async (teamData: ITeam, resetForm: () => void) => {
     set(
       produce((state: BoundStore) => {
         state.isTeamFetching = true;
@@ -102,9 +103,10 @@ export const teamsSlice: GenericStateCreator<BoundStore> = (set, get) => ({
         DatabasePaths.Teams,
         teamData,
       );
-
+      modals.close('ProfileCreateTeamModal');
+      resetForm();
       successNotification('successAddedTeam');
-      get().getTeams();
+      await get().getTeams();
     } catch (error) {
       errorHandler(error as Error);
     } finally {

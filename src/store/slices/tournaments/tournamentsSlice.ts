@@ -1,3 +1,4 @@
+import { modals } from '@mantine/modals';
 import { QueryDocumentSnapshot, Timestamp } from 'firebase/firestore';
 import { produce } from 'immer';
 
@@ -38,7 +39,7 @@ export interface ITournaments {
   isFetching: boolean;
   isGetMoreFetching: boolean;
   currentTournament: Nullable<ITournamentData>;
-  addTournament: (data: IAddTournamentData) => Promise<void>;
+  addTournament: (data: IAddTournamentData, resetForm: () => void) => Promise<void>;
   getTournaments: () => Promise<void>;
   getMoreTournaments: () => Promise<void>;
   deleteTournament: (id: string, image: string) => Promise<void>;
@@ -57,7 +58,7 @@ export const tournamentsSlice: GenericStateCreator<BoundStore> = (set, get) => (
   totalCount: 0,
   querySnapshot: null,
 
-  addTournament: async (data: IAddTournamentData) => {
+  addTournament: async (data: IAddTournamentData, resetForm: () => void) => {
     set(
       produce((state: BoundStore) => {
         state.isFetching = true;
@@ -79,8 +80,10 @@ export const tournamentsSlice: GenericStateCreator<BoundStore> = (set, get) => (
         image,
         timestamp,
       });
-
+      modals.close('addTournamentModal');
+      resetForm();
       successNotification('tournamentSuccess');
+      await get().getTournaments();
     } catch (error) {
       errorHandler(error as Error);
     } finally {

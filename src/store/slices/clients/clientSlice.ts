@@ -1,5 +1,6 @@
 // eslint-disable-next-line import/no-unresolved
 import { SetFieldError } from '@mantine/form/lib/types';
+import { modals } from '@mantine/modals';
 import { getDatabase, push, ref } from 'firebase/database';
 import { QueryDocumentSnapshot } from 'firebase/firestore';
 import { t } from 'i18next';
@@ -49,7 +50,7 @@ export interface IClients {
   totalCount: number;
   querySnapshot: any;
   filter?: ClientFilter;
-  addUser: (user: IAddUser) => void;
+  addUser: (user: IAddUser, resetForm: () => void) => void;
 }
 
 export const clientSlice: GenericStateCreator<BoundStore> = (set, get) => ({
@@ -169,7 +170,7 @@ export const clientSlice: GenericStateCreator<BoundStore> = (set, get) => ({
     }
   },
 
-  addUser: async (user) => {
+  addUser: async (user, resetForm) => {
     try {
       set(
         produce((state: BoundStore) => {
@@ -198,8 +199,10 @@ export const clientSlice: GenericStateCreator<BoundStore> = (set, get) => ({
         role: 'user',
         id: newUserId,
       });
-      get().getClients();
+      modals.close('addClientsModal');
+      resetForm();
       successNotification('successAddedUser');
+      get().getClients();
     } catch (error) {
       errorHandler(error as Error);
     } finally {

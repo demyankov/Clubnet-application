@@ -2,7 +2,6 @@ import { FC } from 'react';
 
 import { Button, Group, Input, Stack, TextInput } from '@mantine/core';
 import { useForm } from '@mantine/form';
-import { modals } from '@mantine/modals';
 import { useTranslation } from 'react-i18next';
 import { IMaskInput } from 'react-imask';
 
@@ -45,10 +44,7 @@ export const ClientsModal: FC = () => {
   const handleSubmit = (): void => {
     const phone = formatPhoneNumber(form.values.phone);
 
-    addUser({ ...form.values, phone });
-
-    form.reset();
-    modals.close('addClientsModal');
+    addUser({ ...form.values, phone }, form.reset);
   };
 
   return (

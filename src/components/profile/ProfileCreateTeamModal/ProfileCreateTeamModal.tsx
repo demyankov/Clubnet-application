@@ -2,7 +2,6 @@ import { FC } from 'react';
 
 import { Button, Group, Select, Stack, TextInput } from '@mantine/core';
 import { useForm } from '@mantine/form';
-import { modals } from '@mantine/modals';
 import { useTranslation } from 'react-i18next';
 
 import { SelectItem } from 'components/shared';
@@ -32,13 +31,13 @@ export const ProfileCreateTeamModal: FC = () => {
   });
 
   const handleSubmit = (): void => {
-    addTeam({
-      ...form.values,
-      id: uniqueIdGenerator(DatabaseId.Team),
-    });
-
-    form.reset();
-    modals.close('ProfileCreateTeamModal');
+    addTeam(
+      {
+        ...form.values,
+        id: uniqueIdGenerator(DatabaseId.Team),
+      },
+      form.reset,
+    );
   };
 
   return (
