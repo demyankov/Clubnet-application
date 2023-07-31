@@ -1,6 +1,6 @@
 import { FC, ReactElement, useEffect } from 'react';
 
-import { Badge, Button, Group, Tabs, Text } from '@mantine/core';
+import { Button, Group, Tabs, Text } from '@mantine/core';
 import { modals } from '@mantine/modals';
 import { IconPlus } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
@@ -11,6 +11,7 @@ import {
   ProfilePersonalDataForm,
 } from 'components/profile';
 import { ProfileFriends } from 'components/profile/ProfileFriends/ProfileFriends';
+import { BadgeTotalCount, RenderContentContainer } from 'components/shared';
 import { TeamLink } from 'components/Team';
 import { FriendStatus } from 'constants/friendStatus';
 import { TabsValues } from 'constants/tabs';
@@ -18,8 +19,15 @@ import { useAuth, useFriends } from 'store/store';
 
 const Profile: FC = () => {
   const { t } = useTranslation();
-  const { getTeams, teams, user } = useAuth((store) => store);
-  const { getFriends, getFriendRequests, totalCount } = useFriends((store) => store);
+  const { getTeams, teams, user, isTeamFetching } = useAuth((store) => store);
+  const {
+    getFriends,
+    getTotalCount,
+    getFriendRequests,
+    totalCountFriend,
+    isTotalCountFriendsFetching,
+    isFriendsFetching,
+  } = useFriends((store) => store);
 
   const handleOpenModal = (): void => {
     modals.open({
@@ -30,20 +38,22 @@ const Profile: FC = () => {
     });
   };
 
-  useEffect(() => {
-    getTeams();
-    if (user) {
-      getFriends(user.id);
-      getFriendRequests(user.id, FriendStatus.sent);
-    }
-  }, [getTeams, getFriendRequests, getFriends, user]);
-
   const teamsItems: ReactElement[] = teams.map((team) => (
     <TeamLink key={team.id} teamData={team} />
   ));
+  const isLoading = isTotalCountFriendsFetching || isFriendsFetching || isTeamFetching;
+
+  useEffect(() => {
+    if (user) {
+      getTotalCount(user.id);
+      getTeams(user.id);
+      getFriends(user.id);
+      getFriendRequests(user.id, FriendStatus.sent);
+    }
+  }, [getTeams, getFriendRequests, getFriends, getTotalCount, user]);
 
   return (
-    <>
+    <RenderContentContainer isFetching={isLoading}>
       <Group mih={150} pt="20px" pb="20px">
         <ProfileImageUploader />
         <ProfilePersonalDataForm />
@@ -53,21 +63,13 @@ const Profile: FC = () => {
         <Tabs.List mb={30}>
           <Tabs.Tab
             value={TabsValues.teams}
-            rightSection={
-              <Badge w={16} h={16} variant="filled" size="xs" p={0}>
-                {teams.length}
-              </Badge>
-            }
+            rightSection={<BadgeTotalCount totalCount={teams.length} />}
           >
             {t('profile.profileTeams')}
           </Tabs.Tab>
           <Tabs.Tab
             value={TabsValues.friends}
-            rightSection={
-              <Badge w={16} h={16} variant="filled" size="xs" p={0}>
-                {totalCount}
-              </Badge>
-            }
+            rightSection={<BadgeTotalCount totalCount={totalCountFriend} />}
           >
             {t('profile.profileFriends')}
           </Tabs.Tab>
@@ -110,7 +112,7 @@ const Profile: FC = () => {
           </Text>
         </Tabs.Panel>
       </Tabs>
-    </>
+    </RenderContentContainer>
   );
 };
 

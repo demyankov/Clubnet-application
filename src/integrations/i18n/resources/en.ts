@@ -23,6 +23,15 @@ export const en = {
       btnCancel: 'Cancel',
     },
 
+    friends: {
+      emptyList: 'The list of friends is empty',
+      emptySentList: 'The list of friend requests received is empty.',
+      emptyRequestList: 'The list of sent friend requests is empty.',
+      confirmRemove: 'Are you sure you want to delete your friend?',
+      removeFriend: 'Remove',
+      cancelRemove: 'Cancel',
+    },
+
     balance: {
       modifyBalance: 'Modify balance',
       currentBalance: 'Current balance',

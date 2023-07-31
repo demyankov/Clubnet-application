@@ -44,7 +44,7 @@ export interface ITeams {
   currentTeam: Nullable<ITeam>;
   members: IUser[];
   addTeam: (teamData: ITeam, resetForm: () => void) => Promise<void>;
-  getTeams: () => Promise<void>;
+  getTeams: (id: string) => Promise<void>;
   getTeamById: (id: string) => Promise<void>;
   updateTeam: (data: ITeamFormValues) => Promise<void>;
   deleteTeam: (teamId: string) => Promise<void>;
@@ -106,7 +106,7 @@ export const teamsSlice: GenericStateCreator<BoundStore> = (set, get) => ({
       modals.close('ProfileCreateTeamModal');
       resetForm();
       successNotification('successAddedTeam');
-      await get().getTeams();
+      await get().getTeams(currentUser.id);
     } catch (error) {
       errorHandler(error as Error);
     } finally {
@@ -118,7 +118,7 @@ export const teamsSlice: GenericStateCreator<BoundStore> = (set, get) => ({
     }
   },
 
-  getTeams: async () => {
+  getTeams: async (id) => {
     set(
       produce((state: BoundStore) => {
         state.isTeamFetching = true;
@@ -126,17 +126,13 @@ export const teamsSlice: GenericStateCreator<BoundStore> = (set, get) => ({
     );
 
     try {
-      const id = get().user?.id;
+      const data = await getFirestoreTeams(DatabasePaths.Users, id);
 
-      if (id) {
-        const data = await getFirestoreTeams(DatabasePaths.Users, id);
-
-        set(
-          produce((state: BoundStore) => {
-            state.teams = data;
-          }),
-        );
-      }
+      set(
+        produce((state: BoundStore) => {
+          state.teams = data;
+        }),
+      );
     } catch (error) {
       errorHandler(error as Error);
     } finally {
@@ -233,10 +229,12 @@ export const teamsSlice: GenericStateCreator<BoundStore> = (set, get) => ({
       }),
     );
     try {
+      const currentUser = get().user as IUser;
+
       await deleteFirestoreData(DatabasePaths.Teams, teamId);
 
       successNotification('successDeletedTeam');
-      get().getTeams();
+      await get().getTeams(currentUser.id);
     } catch (error) {
       errorHandler(error as Error);
     } finally {

@@ -23,6 +23,15 @@ export const ru = {
       btnCancel: 'Отмена',
     },
 
+    friends: {
+      emptyList: 'Cписок друзей пуст',
+      emptySentList: 'Cписок полученных заявок в друзья пуст',
+      emptyRequestList: 'Cписок отправленнх заявок в друзья пуст',
+      confirmRemove: 'Вы уверены, что хотите удалить друга?',
+      removeFriend: 'Удалить',
+      cancelRemove: 'Отменить',
+    },
+
     balance: {
       modifyBalance: 'Изменить баланс',
       currentBalance: 'Текущий баланс',

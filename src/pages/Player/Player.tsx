@@ -1,10 +1,11 @@
 import { FC, ReactElement, useEffect } from 'react';
 
-import { Badge, Group, Tabs, Text, Avatar, Flex } from '@mantine/core';
+import { Group, Tabs, Text, Avatar, Flex } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 
 import { ButtonAddFriend, FriendCard } from 'components/player';
+import { BadgeTotalCount, RenderContentContainer } from 'components/shared';
 import { CardContainer } from 'components/shared/CardContainer/CardContainer';
 import { TeamLink } from 'components/Team';
 import { TabsValues } from 'constants/tabs';
@@ -14,9 +15,10 @@ const Profile: FC = () => {
   const { t } = useTranslation();
 
   const { teams, getTeams, user } = useAuth((store) => store);
-  const { getClientByNickname, client } = useClients((store) => store);
+  const { getClientByNickname, client, isClientsFetching } = useClients((store) => store);
   const {
     getFriends,
+    isFriendsFetching,
     friends,
     getFriendStatus,
     status,
@@ -46,7 +48,7 @@ const Profile: FC = () => {
 
   useEffect(() => {
     if (client && user) {
-      getTeams();
+      getTeams(client.id);
       getFriends(client.id);
       getFriendStatus(user.id, client.id);
     }
@@ -65,10 +67,11 @@ const Profile: FC = () => {
     />
   ));
 
+  const isLoading = isStatusFetching || isFriendsFetching || isClientsFetching;
   const isNotCurrentUserPage = user?.nickName !== nickname;
 
   return (
-    <>
+    <RenderContentContainer isFetching={isLoading}>
       <Flex justify="space-between" align="flex-end">
         <Group pt={20} pb={20}>
           <Avatar
@@ -93,7 +96,6 @@ const Profile: FC = () => {
         {isNotCurrentUserPage && (
           <ButtonAddFriend
             status={status}
-            isFetching={isStatusFetching}
             acceptRequest={handleAcceptRequest}
             declineRequest={handleDeclineRequest}
           />
@@ -104,21 +106,13 @@ const Profile: FC = () => {
         <Tabs.List mb={30}>
           <Tabs.Tab
             value={TabsValues.teams}
-            rightSection={
-              <Badge w={16} h={16} variant="filled" size="xs" p={0}>
-                {teams.length}
-              </Badge>
-            }
+            rightSection={<BadgeTotalCount totalCount={teams.length} />}
           >
             {t('profile.profileTeams')}
           </Tabs.Tab>
           <Tabs.Tab
             value={TabsValues.friends}
-            rightSection={
-              <Badge w={16} h={16} variant="filled" size="xs" p={0}>
-                {friends.length}
-              </Badge>
-            }
+            rightSection={<BadgeTotalCount totalCount={friends.length} />}
           >
             {t('profile.profileFriends')}
           </Tabs.Tab>
@@ -147,7 +141,7 @@ const Profile: FC = () => {
           </Text>
         </Tabs.Panel>
       </Tabs>
-    </>
+    </RenderContentContainer>
   );
 };
 

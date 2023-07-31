@@ -1,17 +1,7 @@
 import { FC } from 'react';
 
-import {
-  ActionIcon,
-  Card,
-  createStyles,
-  Flex,
-  Group,
-  Image,
-  Text,
-  Tooltip,
-} from '@mantine/core';
-import { useTranslation } from 'react-i18next';
-import { IoPersonAddSharp, IoPersonRemoveSharp } from 'react-icons/io5';
+import { ActionIcon, Card, createStyles, Flex, Group, Image, Text } from '@mantine/core';
+import { IoCheckmarkSharp, IoCloseSharp } from 'react-icons/io5';
 import { generatePath, useNavigate } from 'react-router-dom';
 
 import { FriendStatus } from 'constants/friendStatus';
@@ -53,8 +43,6 @@ export const FriendCard: FC<Props> = ({
 
   const { acceptRequest, declineRequest } = useFriends((state) => state);
 
-  const { t } = useTranslation();
-
   const isClientAndPlayer = clientId && playerId;
   const isSent = status === FriendStatus.sent;
 
@@ -94,17 +82,13 @@ export const FriendCard: FC<Props> = ({
         </Group>
         {isSent && (
           <Flex align="center" gap={10} p={10}>
-            <Tooltip.Floating label={t('player.addFriend.')} color="blue">
-              <ActionIcon onClick={handleAccept} variant="filled">
-                <IoPersonAddSharp size="1rem" />
-              </ActionIcon>
-            </Tooltip.Floating>
+            <ActionIcon onClick={handleAccept} color="green">
+              <IoCheckmarkSharp size="1rem" />
+            </ActionIcon>
 
-            <Tooltip.Floating label={t('player.rejectFriend.')} color="blue">
-              <ActionIcon onClick={handleDecline} variant="filled">
-                <IoPersonRemoveSharp size="1rem" />
-              </ActionIcon>
-            </Tooltip.Floating>
+            <ActionIcon onClick={handleDecline} color="red">
+              <IoCloseSharp size="1rem" />
+            </ActionIcon>
           </Flex>
         )}
       </Flex>

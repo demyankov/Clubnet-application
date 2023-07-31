@@ -1,11 +1,14 @@
 import { FC } from 'react';
 
 import { Button, createStyles, Group, rem } from '@mantine/core';
+import { modals } from '@mantine/modals';
 import { useTranslation } from 'react-i18next';
 
 import { BUTTON_TEXT_CONFIG } from 'components/player/config';
+import { RemoveFriendModal } from 'components/player/removeFriendModal/RemoveFriendModal';
 import { FriendStatus } from 'constants/friendStatus';
 import { isDarkTheme } from 'helpers';
+import { IRequestData } from 'store/slices/friends/friendSlice';
 import { useAuth, useClients, useFriends } from 'store/store';
 
 const useStyles = createStyles((theme) => ({
@@ -31,20 +34,14 @@ const useStyles = createStyles((theme) => ({
 
 type Props = {
   status: FriendStatus;
-  isFetching: boolean;
   acceptRequest?: () => void;
   declineRequest?: () => void;
 };
 
-export const ButtonAddFriend: FC<Props> = ({
-  status,
-  isFetching,
-  acceptRequest,
-  declineRequest,
-}) => {
+export const ButtonAddFriend: FC<Props> = ({ status, acceptRequest, declineRequest }) => {
   const { classes } = useStyles();
 
-  const { addFriend, removeFriend } = useFriends();
+  const { addFriend } = useFriends();
   const { client } = useClients();
   const { user } = useAuth();
 
@@ -53,6 +50,15 @@ export const ButtonAddFriend: FC<Props> = ({
   const isUserClient = client && user;
   const isUnknownStatus = status === FriendStatus.unknown;
   const isFriendStatus = status === FriendStatus.friend;
+
+  const handleOpenModal = ({ clientId, playerId }: IRequestData): void => {
+    modals.open({
+      modalId: 'removeFriendModal',
+      title: t('friends.confirmRemove'),
+      children: <RemoveFriendModal clientId={clientId} playerId={playerId} />,
+      centered: true,
+    });
+  };
 
   const handleFriend = (): void => {
     if (!isUserClient) {
@@ -64,7 +70,7 @@ export const ButtonAddFriend: FC<Props> = ({
     }
 
     if (isFriendStatus) {
-      removeFriend({ clientId: client.id, playerId: user.id });
+      handleOpenModal({ clientId: client.id, playerId: user.id });
     }
   };
 
@@ -75,17 +81,11 @@ export const ButtonAddFriend: FC<Props> = ({
     <Group noWrap spacing={10}>
       {isSent ? (
         <>
-          <Button
-            loading={isFetching}
-            className={classes.button}
-            onClick={acceptRequest}
-            variant="filled"
-          >
+          <Button className={classes.button} onClick={acceptRequest} variant="filled">
             {t('player.addFriend')}
           </Button>
 
           <Button
-            loading={isFetching}
             className={classes.buttonReject}
             onClick={declineRequest}
             variant="filled"
@@ -95,7 +95,6 @@ export const ButtonAddFriend: FC<Props> = ({
         </>
       ) : (
         <Button
-          loading={isFetching}
           className={classes.button}
           disabled={!isUnknownAndFriendStatus}
           onClick={handleFriend}

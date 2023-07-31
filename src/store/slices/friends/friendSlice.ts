@@ -10,21 +10,20 @@ import {
   query,
   QuerySnapshot,
   Timestamp,
+  Unsubscribe,
 } from 'firebase/firestore';
 import { produce } from 'immer';
 
 import { DatabasePaths } from 'constants/databasePaths';
 import { FriendStatus } from 'constants/friendStatus';
 import { IsViewedActions } from 'constants/isViewedActions';
-import { errorHandler, successNotification } from 'helpers';
+import { errorHandler } from 'helpers';
 import { convertFiltersToArray } from 'helpers/convertFiltersToArray';
 import {
-  deleteFirestoreData,
   Filter,
   getCollectionPathUrl,
   getDataArrayWithRefArray,
   getFirestoreData,
-  setFirestoreData,
   updateFirestoreData,
 } from 'integrations/firebase';
 import { db } from 'integrations/firebase/firebase';
@@ -52,7 +51,7 @@ export interface IFilterFriends {
   [x: string]: string;
 }
 
-interface IRequestData {
+export interface IRequestData {
   clientId: string;
   playerId: string;
 }
@@ -62,26 +61,24 @@ export interface IFriends {
   isFriendRequestsFetching: boolean;
   isGetMoreFetching: boolean;
   isStatusFetching: boolean;
+  isChangeStatusFriendFetching: boolean;
+  isTotalCountFriendsFetching: boolean;
   friends: IFriend[];
   friendRequests: IFriend[];
   notifyFriend: INotifyFriends[];
-  totalCount: number;
+  totalCountFriend: number;
+  totalCountSent: number;
+  totalCountRequest: number;
   totalCountNotify: number;
   showCounter: number;
   querySnapshot: Nullable<QuerySnapshot>;
-  status: FriendStatus;
-  addFriend: (data: IRequestData) => void;
-  removeFriend: (data: IRequestData) => void;
-  acceptRequest: (data: IRequestData) => void;
-  declineRequest: (data: IRequestData) => void;
-  acceptFriendRequest: (nickname: string) => void;
   getMoreFriends: (id: string, filter?: FriendStatus) => void;
   getFriends: (id: string) => void;
   getFriendRequests: (id: string, filter: FriendStatus) => void;
   getFriendStatus: (playerId: string, clientId: string) => void;
+  getTotalCount: (id: string) => void;
+  getNotifyFriend: (id: string) => Unsubscribe;
   isViewedUpdate: (data: IRequestData, action?: IsViewedActions) => void;
-  getNotifyFriend: (id: string) => void;
-  rejectFriendRemoval: (data: IRequestData) => void;
   getFriendsList: (
     id: string,
     filter?: FriendStatus,
@@ -99,14 +96,16 @@ export const friendSlice: GenericStateCreator<BoundStore> = (set, get) => ({
   isFriendsFetching: false,
   isGetMoreFetching: false,
   isStatusFetching: false,
+  isTotalCountFriendsFetching: false,
   friends: [],
   friendRequests: [],
   notifyFriend: [],
   querySnapshot: null,
-  totalCount: 0,
+  totalCountFriend: 0,
+  totalCountSent: 0,
+  totalCountRequest: 0,
   totalCountNotify: 0,
   showCounter: 10,
-  status: FriendStatus.unknown,
 
   getFriendsList: async (id, filter, totalCounter) => {
     const query = [DatabasePaths.Users, id, DatabasePaths.Friends];
@@ -180,9 +179,7 @@ export const friendSlice: GenericStateCreator<BoundStore> = (set, get) => ({
     );
 
     try {
-      const { data, dataFriends, totalCount, querySnapshot } = await get().getFriendsList(
-        id,
-      );
+      const { data, dataFriends, querySnapshot } = await get().getFriendsList(id);
 
       set(
         produce((state: BoundStore) => {
@@ -191,7 +188,6 @@ export const friendSlice: GenericStateCreator<BoundStore> = (set, get) => ({
             status: FriendStatus.friend,
             timestamp: data[index].timestamp,
           }));
-          state.totalCount = totalCount;
           state.showCounter = 10;
           state.querySnapshot = querySnapshot;
         }),
@@ -237,13 +233,48 @@ export const friendSlice: GenericStateCreator<BoundStore> = (set, get) => ({
     }
   },
 
-  getNotifyFriend: async (id) => {
+  getTotalCount: async (id) => {
+    set(
+      produce((state: BoundStore) => {
+        state.isTotalCountFriendsFetching = true;
+      }),
+    );
+    try {
+      const { totalCount: totalCountFriend } = await get().getFriendsList(id);
+      const { totalCount: totalCountSent } = await get().getFriendsList(
+        id,
+        FriendStatus.sent,
+      );
+      const { totalCount: totalCountRequest } = await get().getFriendsList(
+        id,
+        FriendStatus.request,
+      );
+
+      set(
+        produce((state: BoundStore) => {
+          state.totalCountFriend = totalCountFriend;
+          state.totalCountSent = totalCountSent;
+          state.totalCountRequest = totalCountRequest;
+        }),
+      );
+    } catch (error) {
+      errorHandler(error as Error);
+    } finally {
+      set(
+        produce((state: BoundStore) => {
+          state.isTotalCountFriendsFetching = false;
+        }),
+      );
+    }
+  },
+
+  getNotifyFriend: (id) => {
     const query1 = [DatabasePaths.Users, id, DatabasePaths.Friends];
     const path = getCollectionPathUrl(query1);
 
     const q = query(collection(db, path), orderBy('isViewed', 'desc'));
 
-    onSnapshot(q, async (querySnapshot) => {
+    return onSnapshot(q, async (querySnapshot) => {
       const data: DocumentData[] = [];
 
       querySnapshot.forEach((doc) => {
@@ -306,113 +337,5 @@ export const friendSlice: GenericStateCreator<BoundStore> = (set, get) => ({
     await updateFirestoreData(userPath, data.clientId, {
       isViewed: action === IsViewedActions.remove ? deleteField() : true,
     });
-  },
-
-  addFriend: async (data) => {
-    try {
-      const userQuery = [DatabasePaths.Users, data.playerId, DatabasePaths.Friends];
-      const friendQuery = [DatabasePaths.Users, data.clientId, DatabasePaths.Friends];
-      const userPath = getCollectionPathUrl(userQuery);
-      const friendPath = getCollectionPathUrl(friendQuery);
-      const userRef = doc(db, DatabasePaths.Users, data.playerId);
-      const friendRef = doc(db, DatabasePaths.Users, data.clientId);
-      const timestamp = Timestamp.fromDate(new Date());
-
-      const promises = [
-        setFirestoreData(friendPath, data.playerId, {
-          userRef,
-          status: FriendStatus.sent,
-          isViewed: false,
-          timestamp,
-        }),
-        setFirestoreData(userPath, data.clientId, {
-          userRef: friendRef,
-          status: FriendStatus.request,
-          timestamp,
-        }),
-      ];
-
-      await Promise.all(promises);
-      get().getFriendStatus(data.playerId, data.clientId);
-      successNotification('requestSent');
-    } catch (error) {
-      errorHandler(error as Error);
-    }
-  },
-
-  rejectFriendRemoval: async (data: IRequestData) => {
-    const userQuery = [DatabasePaths.Users, data.playerId, DatabasePaths.Friends];
-    const friendQuery = [DatabasePaths.Users, data.clientId, DatabasePaths.Friends];
-    const userPath = getCollectionPathUrl(userQuery);
-    const friendPath = getCollectionPathUrl(friendQuery);
-
-    const promises = [
-      deleteFirestoreData(friendPath, data.playerId),
-      deleteFirestoreData(userPath, data.clientId),
-    ];
-
-    await Promise.all(promises);
-  },
-
-  removeFriend: async (data) => {
-    try {
-      await get().rejectFriendRemoval(data);
-
-      get().getFriendStatus(data.playerId, data.clientId);
-      successNotification('successfullyRemoved');
-      set(
-        produce((state: BoundStore) => {
-          state.status = FriendStatus.unknown;
-        }),
-      );
-    } catch (error) {
-      errorHandler(error as Error);
-    }
-  },
-
-  acceptRequest: async (data) => {
-    try {
-      const userQuery = [DatabasePaths.Users, data.playerId, DatabasePaths.Friends];
-      const friendQuery = [DatabasePaths.Users, data.clientId, DatabasePaths.Friends];
-      const userPath = getCollectionPathUrl(userQuery);
-      const friendPath = getCollectionPathUrl(friendQuery);
-      const timestamp = Timestamp.fromDate(new Date());
-
-      const promises = [
-        updateFirestoreData(friendPath, data.playerId, {
-          status: FriendStatus.friend,
-          timestamp,
-          isViewed: false,
-        }),
-        updateFirestoreData(userPath, data.clientId, {
-          status: FriendStatus.friend,
-          timestamp,
-          isViewed: deleteField(),
-        }),
-      ];
-
-      await Promise.all(promises);
-      get().getFriends(data.clientId);
-      get().getFriendRequests(data.clientId, FriendStatus.request);
-      get().getFriendStatus(data.playerId, data.clientId);
-      successNotification('successfullyAdded');
-    } catch (error) {
-      errorHandler(error as Error);
-    }
-  },
-
-  declineRequest: async (data) => {
-    try {
-      await get().rejectFriendRemoval(data);
-      get().getFriendRequests(data.clientId, FriendStatus.request);
-      successNotification('requestDeclined');
-      set(
-        produce((state: BoundStore) => {
-          state.status = FriendStatus.unknown;
-        }),
-      );
-    } catch (error) {
-      errorHandler(error as Error);
-    }
   },
 });

@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, useEffect } from 'react';
 
 import { ActionIcon, createStyles, Drawer, Group, Indicator } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { IoNotificationsSharp } from 'react-icons/io5';
 
 import { UserNotify } from 'components/layout/Header/HeaderNotify/UserNotify';
-import { useFriends } from 'store/store';
+import { useAuth, useFriends } from 'store/store';
 
 const useStyles = createStyles(() => ({
   content: {
@@ -22,7 +22,20 @@ export const HeaderNotify: FC = () => {
 
   const { classes } = useStyles();
 
-  const { notifyFriend, totalCountNotify } = useFriends((state) => state);
+  const { user } = useAuth((state) => state);
+  const { notifyFriend, totalCountNotify, getNotifyFriend } = useFriends(
+    (state) => state,
+  );
+
+  useEffect(() => {
+    if (user) {
+      const unsubscribe = getNotifyFriend(user?.id);
+
+      return () => {
+        unsubscribe();
+      };
+    }
+  }, [getNotifyFriend, user]);
 
   return (
     <>

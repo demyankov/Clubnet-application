@@ -32,6 +32,10 @@ import {
   ITableActions,
   IOrderActions,
 } from 'store/slices';
+import {
+  friendsRequestsSlice,
+  IFriendsRequests,
+} from 'store/slices/friends/friendsRequestsSlice';
 
 export interface BoundStore
   extends IState,
@@ -43,6 +47,7 @@ export interface BoundStore
     IClients,
     IBalanceHistory,
     IFriends,
+    IFriendsRequests,
     ISearch {}
 
 export interface BookingStore
@@ -110,6 +115,7 @@ export const useFriends = create(
   devtools(
     immer<BoundStore>((...a) => ({
       ...friendSlice(...a),
+      ...friendsRequestsSlice(...a),
     })),
   ),
 );
