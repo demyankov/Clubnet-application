@@ -7,7 +7,7 @@ import { t } from 'i18next';
 import { useNavigate } from 'react-router-dom';
 
 import { Paths } from 'constants/paths';
-import { dateFormatting } from 'helpers/dateFormatting';
+import { dateFormatting } from 'helpers';
 import { useRole } from 'hooks';
 import { ITournamentData } from 'store/slices';
 import { useTournaments } from 'store/store';
@@ -61,7 +61,7 @@ export const TournamentItem: FC<{ data: ITournamentData }> = ({ data }) => {
       <Group position="apart" noWrap>
         <div>
           <Text c="dimmed" fz="xs">
-            {dateFormatting(data.expectedDate)}
+            {dateFormatting(new Date(data.expectedDate))}
           </Text>
           <Text fw={700} lineClamp={2}>
             {data.name}

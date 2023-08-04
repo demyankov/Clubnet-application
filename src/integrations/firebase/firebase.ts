@@ -10,7 +10,7 @@ const firebaseConfig = {
   storageBucket: import.meta.env.VITE_STORAGE_BUCKET,
   messagingSenderId: import.meta.env.VITE_MESSAGING_SENDER_ID,
   appId: import.meta.env.VITE_APP_ID,
-  databaseURL: 'https://auth-398b3-default-rtdb.firebaseio.com',
+  databaseURL: import.meta.env.VITE_DB_URL,
 };
 
 const app = initializeApp(firebaseConfig);

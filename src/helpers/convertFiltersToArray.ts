@@ -1,4 +1,4 @@
-import { formatPhoneNumber } from 'helpers/formatters';
+import { formatPhoneNumber } from 'helpers';
 
 export const convertFiltersToArray = <F, T extends { [x: string]: T[keyof T] }>(
   filter?: T,

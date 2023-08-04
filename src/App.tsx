@@ -4,8 +4,12 @@ import { AppShell } from '@mantine/core';
 import { Notifications } from '@mantine/notifications';
 import { Route, Routes } from 'react-router-dom';
 
-import { HeaderMegaMenu, NavbarMegaMenu } from 'components';
-import { LoaderScreen, RenderContentContainer } from 'components/shared';
+import {
+  HeaderMegaMenu,
+  NavbarMegaMenu,
+  LoaderScreen,
+  RenderContentContainer,
+} from 'components';
 import { routes } from 'routes/routes';
 import { useAuth } from 'store/store';
 

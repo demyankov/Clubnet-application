@@ -1,5 +1,5 @@
-import { IHourValue } from 'components';
-import { getDayjsValue, getWorkingHour } from 'helpers';
+import { IHourValue } from 'components/bookings/types';
+import { getDayjsValue, getWeekDay } from 'helpers';
 import { IOrder, IWorkingHours } from 'store/slices/bookings/types';
 
 export const getFinishValues = (
@@ -19,7 +19,7 @@ export const getFinishValues = (
     return res;
   }
 
-  const { finish } = workingHours[getWorkingHour(day)];
+  const { finish } = workingHours[getWeekDay(day)];
 
   if (todaysOrders.length) {
     const startIndex = startValues.findIndex((hour) => hour.value === start);

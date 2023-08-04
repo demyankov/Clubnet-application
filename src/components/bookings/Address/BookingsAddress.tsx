@@ -24,8 +24,8 @@ import {
   BookingsAddressLabel,
   BookingsTable,
   BookingsOrderList,
+  RenderContentContainer,
 } from 'components';
-import { RenderContentContainer } from 'components/shared';
 import { Paths } from 'constants/paths';
 import { isDarkTheme } from 'helpers';
 import { useRole } from 'hooks';

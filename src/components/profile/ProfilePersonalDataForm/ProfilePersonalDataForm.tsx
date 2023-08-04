@@ -5,7 +5,7 @@ import { modals } from '@mantine/modals';
 import { IconPhoneCall, IconSettings } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
 
-import { ProfileUpdateUserModal } from 'components/profile';
+import { ProfileUpdateUserModal } from 'components';
 import { IUser } from 'store/slices/auth/types';
 import { useAuth } from 'store/store';
 

@@ -5,7 +5,7 @@ import { useClickOutside, useDebouncedValue } from '@mantine/hooks';
 import { useTranslation } from 'react-i18next';
 import { IoClose, IoSearch } from 'react-icons/io5';
 
-import { SearchClient } from 'components/layout/Header/HeaderSearch/SearchClient';
+import { SearchClient } from 'components';
 import { useSearch } from 'store/store';
 
 const useStyles = createStyles(() => ({

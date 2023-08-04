@@ -12,7 +12,7 @@ import { useTranslation } from 'react-i18next';
 import { FaUsers } from 'react-icons/fa';
 import { GiConsoleController } from 'react-icons/gi';
 
-import { NavbarLink, useStyles } from 'components/layout/Navbar/NavbarLink/NavbarLink';
+import { NavbarLink, useStyles } from 'components';
 import { Paths } from 'constants/paths';
 import { isDarkTheme } from 'helpers';
 import { useRole } from 'hooks';

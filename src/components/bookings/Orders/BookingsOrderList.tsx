@@ -6,8 +6,7 @@ import { useTranslation } from 'react-i18next';
 
 import { BookingsOrderItem } from 'components';
 import { DateFormats } from 'constants/dateFormats';
-import { getWeekendDays } from 'helpers';
-import { formatDate } from 'helpers/formatDate';
+import { getWeekendDays, dateFormatting } from 'helpers';
 import { useBookings } from 'store/store';
 
 export const BookingsOrderList: FC = () => {
@@ -19,7 +18,7 @@ export const BookingsOrderList: FC = () => {
   const { t, i18n } = useTranslation();
   const weekendDays = getWeekendDays(currentAddress!.workingHours);
   const fetchOrders = useCallback(async () => {
-    const date = formatDate(currentDate!, DateFormats.DayMonthYear);
+    const date = dateFormatting(currentDate!, DateFormats.DayMonthYear);
 
     await getOrders(currentAddress!.id, date);
   }, [currentDate, currentAddress, getOrders]);
@@ -37,6 +36,7 @@ export const BookingsOrderList: FC = () => {
       <LoadingOverlay zIndex={220} visible={isOrderFetching} />
 
       <DateInput
+        valueFormat={DateFormats.MonthDayYear}
         hideOutsideDates
         minDate={new Date()}
         value={currentDate}

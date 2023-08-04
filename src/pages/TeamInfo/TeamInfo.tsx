@@ -6,8 +6,12 @@ import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 
 import teamBgHeader from 'assets/images/shared/teamBgHeader.jpg';
-import { RenderContentContainer } from 'components/shared';
-import { TeamInfoPanel, TeamSettingsPanel, TeamStatsPanel } from 'components/Team';
+import {
+  RenderContentContainer,
+  TeamInfoPanel,
+  TeamSettingsPanel,
+  TeamStatsPanel,
+} from 'components';
 import { GAMES } from 'constants/games';
 import { Roles } from 'constants/userRoles';
 import { isDarkTheme } from 'helpers';

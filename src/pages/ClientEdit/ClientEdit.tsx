@@ -2,7 +2,7 @@ import { FC, useEffect } from 'react';
 
 import { useParams } from 'react-router-dom';
 
-import { ClientsEdit } from 'components/clients/Edit/ClientsEdit';
+import { ClientsEdit } from 'components';
 import { useClients } from 'store/store';
 
 const ClientEdit: FC = () => {

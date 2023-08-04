@@ -5,11 +5,8 @@ import { useForm } from '@mantine/form';
 import { IconArrowLeft } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
 
-import {
-  BookingsWorkingDaysInputs,
-  AddAddressSteps,
-  AddressStepsProps,
-} from 'components';
+import { BookingsWorkingDaysInputs } from 'components';
+import { AddAddressSteps, AddressStepsProps } from 'components/bookings/types';
 import { initialValues } from 'constants/initialValues';
 import { weekdays } from 'constants/weekdays';
 import { IWorkingHours, WeekDays } from 'store/slices/bookings/types';

@@ -1,11 +1,11 @@
 import dayjs, { Dayjs } from 'dayjs';
 
-export const getDayjsValue = (day: Date, strValue: string): Dayjs => {
-  const [strHours, strMinutes] = strValue.split(':');
+export const getDayjsValue = (day: Date, stringValue: string): Dayjs => {
+  const [stringHours, stringMinutes] = stringValue.split(':');
 
   return dayjs(day)
-    .hour(Number(strHours))
-    .minute(Number(strMinutes))
+    .hour(Number(stringHours))
+    .minute(Number(stringMinutes))
     .second(0)
     .millisecond(0);
 };

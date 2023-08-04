@@ -3,7 +3,7 @@ import { FC } from 'react';
 import { Badge, Group, Text } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
 
-import { TeamUserItem } from 'components/Team';
+import { TeamUserItem } from 'components';
 import { useAuth } from 'store/store';
 
 export const TeamInfoPanel: FC = () => {

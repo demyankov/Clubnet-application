@@ -3,7 +3,7 @@ import { FC } from 'react';
 import { Avatar, Box, createStyles, Flex, Group, Text } from '@mantine/core';
 import { useNavigate } from 'react-router-dom';
 
-import { UserBalance } from 'components/shared';
+import { UserBalance } from 'components';
 import { Paths } from 'constants/paths';
 import { useAuth } from 'store/store';
 

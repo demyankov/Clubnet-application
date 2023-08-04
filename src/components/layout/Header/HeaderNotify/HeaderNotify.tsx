@@ -5,8 +5,8 @@ import { useDisclosure } from '@mantine/hooks';
 import { useTranslation } from 'react-i18next';
 import { IoNotificationsSharp } from 'react-icons/io5';
 
-import { UserNotify } from 'components/layout/Header/HeaderNotify/UserNotify';
-import { useAuth, useFriends } from 'store/store';
+import { UserNotify } from 'components';
+import { useFriends, useAuth } from 'store/store';
 
 const useStyles = createStyles(() => ({
   content: {

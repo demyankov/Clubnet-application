@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
 
-import { IHourValue } from 'components';
-import { getDayjsValue, getWorkingHour } from 'helpers';
+import { IHourValue } from 'components/bookings/types';
+import { getDayjsValue, getWeekDay } from 'helpers';
 import { IOrder, IWorkingHours } from 'store/slices/bookings/types';
 
 export const getStartValues = (
@@ -19,7 +19,7 @@ export const getStartValues = (
     return res;
   }
 
-  const { isAvailable, start, finish } = workingHours[getWorkingHour(day)];
+  const { isAvailable, start, finish } = workingHours[getWeekDay(day)];
   let startValue = getDayjsValue(day, start);
   const finishValue = getDayjsValue(day, finish);
   const now = dayjs();

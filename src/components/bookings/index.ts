@@ -13,5 +13,3 @@ export * from 'components/bookings/Table/BookingsTable';
 export * from 'components/bookings/Table/BookingsOrderSuccessModal';
 export * from 'components/bookings/Orders/BookingsOrderList';
 export * from 'components/bookings/Orders/BookingsOrderItem';
-export * from 'components/bookings/config';
-export * from 'components/bookings/types';

@@ -4,8 +4,7 @@ import { Button, Center, Divider, Group, Text, Title } from '@mantine/core';
 import { modals } from '@mantine/modals';
 import { useTranslation } from 'react-i18next';
 
-import { RenderContentContainer } from 'components/shared';
-import { TournamentItem, TournamentsModal } from 'components/tournaments';
+import { RenderContentContainer, TournamentItem, TournamentsModal } from 'components';
 import { groupByDate } from 'helpers/groupByDate';
 import { useRole } from 'hooks';
 import { ITournamentData } from 'store/slices';

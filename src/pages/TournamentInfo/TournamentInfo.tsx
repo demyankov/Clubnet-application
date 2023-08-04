@@ -22,10 +22,8 @@ import {
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 
-import { RenderContentContainer } from 'components/shared';
-import { TournamentsInfoItem } from 'components/tournaments';
-import { isDarkTheme } from 'helpers';
-import { dateFormatting } from 'helpers/dateFormatting';
+import { RenderContentContainer, TournamentsInfoItem } from 'components';
+import { isDarkTheme, dateFormatting } from 'helpers';
 import { useTournaments } from 'store/store';
 
 const TournamentInfo: FC = () => {
@@ -63,7 +61,7 @@ const TournamentInfo: FC = () => {
         <Group position="apart" mb="30px">
           <div>
             <Text c="dimmed" fz="xl">
-              {dateFormatting(currentTournament?.expectedDate)}
+              {dateFormatting(new Date(currentTournament?.expectedDate || ''))}
             </Text>
             <Text fw={700} fz="30px">
               {currentTournament?.name}
@@ -107,7 +105,7 @@ const TournamentInfo: FC = () => {
 
             <Grid mt="10px" gutter="xl">
               <TournamentsInfoItem
-                title={t('modals.game')}
+                title={t('modals.games')}
                 text={currentTournament?.game}
                 Icon={IconDeviceGamepad2}
               />
@@ -123,12 +121,12 @@ const TournamentInfo: FC = () => {
               />
               <TournamentsInfoItem
                 title={t('tournaments.tournamentRegistration')}
-                text={dateFormatting(currentTournament?.registrationDate)}
+                text={dateFormatting(new Date(currentTournament?.registrationDate || ''))}
                 Icon={IconWriting}
               />
               <TournamentsInfoItem
                 title={t('modals.startTime')}
-                text={dateFormatting(currentTournament?.expectedDate)}
+                text={dateFormatting(new Date(currentTournament?.expectedDate || ''))}
                 Icon={IconClockHour2}
               />
             </Grid>

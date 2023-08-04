@@ -1,4 +1,6 @@
 export enum DateFormats {
   DayMonthYear = 'DD.MM.YYYY',
-  DayMonthYearTime = 'DD.MM.YYYY HH:mm',
+  WeekDayDayMonthYearTime = 'dd, DD MMM YYYY, HH:mm',
+  MonthDayYear = 'MMMM D, YYYY',
+  DayMonthYearTime = 'DD.MM.YYYY, HH:mm',
 }

@@ -1,6 +1,6 @@
 import { t } from 'i18next';
 
-import { formatPhoneNumber } from 'helpers/formatters';
+import { formatPhoneNumber } from 'helpers';
 
 export const validatePhone = (value: string): string | null => {
   if (!value) {

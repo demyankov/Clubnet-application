@@ -6,10 +6,10 @@ import { useForm } from '@mantine/form';
 import { IconUpload } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
 
-import { SelectItem } from 'components/shared';
-import { TOURNAMENTS_CONFIG } from 'components/tournaments/Modal/config';
+import { SelectItem, TOURNAMENTS_CONFIG } from 'components';
 import { ALLOWED_IMAGE_FORMATS } from 'constants/allowedImageFormats';
 import { DatabaseId } from 'constants/databaseId';
+import { DateFormats } from 'constants/dateFormats';
 import { GAMES } from 'constants/games';
 import { uniqueIdGenerator } from 'helpers';
 import { requiredFieldsGenerator } from 'helpers/requiredFieldsGenerator';
@@ -91,7 +91,7 @@ export const TournamentsModal: FC = () => {
 
         <Select
           withAsterisk
-          label={t('modals.game')}
+          label={t('modals.games')}
           itemComponent={SelectItem}
           data={GAMES}
           {...form.getInputProps('game')}
@@ -123,7 +123,7 @@ export const TournamentsModal: FC = () => {
           locale={i18n.language}
           minDate={new Date()}
           withAsterisk
-          valueFormat="DD.MM.YYYY, HH:mm"
+          valueFormat={DateFormats.DayMonthYearTime}
           label={t('modals.startTime')}
           {...form.getInputProps('expectedDate')}
         />

@@ -11,6 +11,7 @@ export * from 'helpers/formatters';
 export * from 'helpers/generateHours';
 export * from 'helpers/getStartValues';
 export * from 'helpers/getFinishValues';
-export * from 'helpers/getWorkingHour';
+export * from 'helpers/getWeekDay';
 export * from 'helpers/getTodaysOrders';
 export * from 'helpers/getWeekendDays';
+export * from 'helpers/dateFormatting';

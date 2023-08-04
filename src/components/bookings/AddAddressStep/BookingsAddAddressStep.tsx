@@ -6,7 +6,7 @@ import { IconArrowRight } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
 import { IMaskInput } from 'react-imask';
 
-import { AddAddressSteps, AddressStepsProps } from 'components';
+import { AddAddressSteps, AddressStepsProps } from 'components/bookings/types';
 import { validatePhone, formatPhoneNumber } from 'helpers';
 import { useBookings } from 'store/store';
 

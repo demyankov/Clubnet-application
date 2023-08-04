@@ -4,9 +4,14 @@ import 'dayjs/locale/ru';
 import 'dayjs/locale/en';
 import i18next from 'i18next';
 
-export const dateFormatting = (date?: string): string => {
+import { DateFormats } from 'constants/dateFormats';
+
+export const dateFormatting = (
+  date: Date,
+  format: DateFormats = DateFormats.WeekDayDayMonthYearTime,
+): string => {
   dayjs.extend(localizedFormat);
   dayjs.locale(i18next.language === 'en' ? 'en' : 'ru');
 
-  return dayjs(date).format('ddd, DD MMM YYYY, HH:mm');
+  return dayjs(date).format(format);
 };

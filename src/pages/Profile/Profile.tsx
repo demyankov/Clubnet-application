@@ -9,10 +9,11 @@ import {
   ProfileCreateTeamModal,
   ProfileImageUploader,
   ProfilePersonalDataForm,
-} from 'components/profile';
-import { ProfileFriends } from 'components/profile/ProfileFriends/ProfileFriends';
-import { BadgeTotalCount, RenderContentContainer } from 'components/shared';
-import { TeamLink } from 'components/Team';
+  ProfileFriends,
+  TeamLink,
+  BadgeTotalCount,
+  RenderContentContainer,
+} from 'components';
 import { FriendStatus } from 'constants/friendStatus';
 import { TabsValues } from 'constants/tabs';
 import { useAuth, useFriends } from 'store/store';

@@ -17,9 +17,13 @@ import { modals } from '@mantine/modals';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
-import { UpdateBalanceModal, ClientsFilter, UserBalance } from 'components';
-import { ClientsModal } from 'components/clients';
-import { RenderContentContainer } from 'components/shared';
+import {
+  UpdateBalanceModal,
+  ClientsFilter,
+  UserBalance,
+  ClientsModal,
+  RenderContentContainer,
+} from 'components';
 import { Paths } from 'constants/paths';
 import { Roles } from 'constants/userRoles';
 import { isDarkTheme } from 'helpers';

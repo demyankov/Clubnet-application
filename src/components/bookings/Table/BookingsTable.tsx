@@ -28,8 +28,8 @@ import {
   getStartValues,
   getWeekendDays,
   validatePhone,
+  dateFormatting,
 } from 'helpers';
-import { formatDate } from 'helpers/formatDate';
 import { useRole } from 'hooks';
 import { getDocumentReference } from 'integrations/firebase';
 import { IUser } from 'store/slices/auth/types';
@@ -76,7 +76,7 @@ export const BookingsTable: FC<Props> = ({ close }) => {
 
   const { workingHours } = currentAddress!;
   const { day, start, finish, name, phone } = values;
-  const HOURS = generateHours();
+  const hours = useMemo(() => generateHours(), []);
   const setUserRefAsOwner = useCallback(async () => {
     const userRef = await getDocumentReference<IUser>(DatabasePaths.Users, user!.id);
 
@@ -117,40 +117,20 @@ export const BookingsTable: FC<Props> = ({ close }) => {
     });
   };
 
-  useEffect(() => {
-    if (user && isUser) {
-      setValues({
-        name: user.name || '',
-        phone: user.phone || '',
-      });
-    }
-    setUserRefAsOwner();
-  }, [isUser, setUserRefAsOwner, setValues, user]);
-
   const date = useMemo(() => {
-    return formatDate(day, DateFormats.DayMonthYear);
+    return dateFormatting(day, DateFormats.DayMonthYear);
   }, [day]);
-
-  useEffect(() => {
-    setValues({
-      start: '',
-      finish: '',
-    });
-    if (currentTable?.ordersCount) {
-      getOrders(currentTable!.id, date);
-    }
-  }, [date, currentTable, getOrders, setValues]);
 
   const weekendDays = getWeekendDays(workingHours);
 
   const startValues = useMemo(
-    () => getStartValues(day, reset, workingHours, orders, HOURS),
-    [day, reset, workingHours, orders, HOURS],
+    () => getStartValues(day, reset, workingHours, orders, hours),
+    [day, reset, workingHours, orders, hours],
   );
 
   const finishValues = useMemo(
-    () => getFinishValues(day, reset, workingHours, orders, startValues, start, HOURS),
-    [day, reset, start, startValues, orders, workingHours, HOURS],
+    () => getFinishValues(day, reset, workingHours, orders, startValues, start, hours),
+    [day, reset, start, startValues, orders, workingHours, hours],
   );
 
   const handleClear = (): void => {
@@ -158,7 +138,7 @@ export const BookingsTable: FC<Props> = ({ close }) => {
   };
 
   const handleSubmit = (values: { start: Timestamp; finish: Timestamp }): void => {
-    const date = formatDate(day, DateFormats.DayMonthYear);
+    const date = dateFormatting(day, DateFormats.DayMonthYear);
     const orderToAdd = {
       ...values,
       tableId: currentTable!.id,
@@ -170,6 +150,26 @@ export const BookingsTable: FC<Props> = ({ close }) => {
 
     addOrder(orderToAdd, reset, openModalSuccess);
   };
+
+  useEffect(() => {
+    if (user && isUser) {
+      setValues({
+        name: user.name || '',
+        phone: user.phone || '',
+      });
+    }
+    setUserRefAsOwner();
+  }, [isUser, setUserRefAsOwner, setValues, user]);
+
+  useEffect(() => {
+    setValues({
+      start: '',
+      finish: '',
+    });
+    if (currentTable?.ordersCount) {
+      getOrders(currentTable!.id, date);
+    }
+  }, [date, currentTable, getOrders, setValues]);
 
   return (
     <>
@@ -189,10 +189,10 @@ export const BookingsTable: FC<Props> = ({ close }) => {
         <LoadingOverlay visible={isOrderFetching} zIndex={220} />
         <Center>
           <DatePicker
+            locale={i18n.language}
             weekendDays={weekendDays}
             allowDeselect
             hideOutsideDates
-            locale={i18n.language}
             minDate={new Date()}
             mb="md"
             {...getInputProps('day')}

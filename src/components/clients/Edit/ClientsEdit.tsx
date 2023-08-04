@@ -6,8 +6,8 @@ import { useTranslation } from 'react-i18next';
 import { IMaskInput } from 'react-imask';
 import { useNavigate } from 'react-router-dom';
 
+import { SelectItem } from 'components';
 import { ROLES_DATA } from 'components/clients/config';
-import { SelectItem } from 'components/shared';
 import { Paths } from 'constants/paths';
 import { Roles } from 'constants/userRoles';
 import { isDarkTheme } from 'helpers';

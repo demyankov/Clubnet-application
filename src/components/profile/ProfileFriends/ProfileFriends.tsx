@@ -3,12 +3,12 @@ import { FC } from 'react';
 import { Button, Center, createStyles, Tabs } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
 
-import { FriendCard } from 'components/player';
 import {
+  FriendCard,
   RenderContentContainer,
-  BadgeTotalCount,
   CardContainer,
-} from 'components/shared';
+  BadgeTotalCount,
+} from 'components';
 import { FriendStatus } from 'constants/friendStatus';
 import { TabsValues } from 'constants/tabs';
 import { useFriends } from 'store/store';

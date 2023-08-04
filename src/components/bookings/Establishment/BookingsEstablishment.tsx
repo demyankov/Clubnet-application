@@ -17,8 +17,8 @@ import {
   BookingEstablishmentLabel,
   BookingsEstablishmentName,
   BookingsAddressCards,
+  RenderContentContainer,
 } from 'components';
-import { RenderContentContainer } from 'components/shared';
 import { isDarkTheme } from 'helpers';
 import { useRole } from 'hooks';
 import { useBookings } from 'store/store';

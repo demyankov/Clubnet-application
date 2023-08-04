@@ -3,9 +3,7 @@ import { FC } from 'react';
 import { Box, Group, Text } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
 
-import { DateFormats } from 'constants/dateFormats';
-import { getDayjsValue } from 'helpers';
-import { formatDate } from 'helpers/formatDate';
+import { getDayjsValue, dateFormatting } from 'helpers';
 
 type Props = {
   tableName: number;
@@ -24,14 +22,8 @@ export const BookingsOrderSuccessModal: FC<Props> = ({
   phone,
 }) => {
   const { t } = useTranslation();
-  const startDate = formatDate(
-    getDayjsValue(day, start).toDate(),
-    DateFormats.DayMonthYearTime,
-  );
-  const finishDate = formatDate(
-    getDayjsValue(day, finish).toDate(),
-    DateFormats.DayMonthYearTime,
-  );
+  const startDate = dateFormatting(getDayjsValue(day, start).toDate());
+  const finishDate = dateFormatting(getDayjsValue(day, finish).toDate());
 
   return (
     <>

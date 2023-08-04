@@ -1,7 +1,6 @@
 import { lazy, ReactElement } from 'react';
 
-import { BookingsAddress } from 'components';
-import { ProtectedRoute } from 'components/shared';
+import { BookingsAddress, ProtectedRoute } from 'components';
 import { Paths } from 'constants/paths';
 import { Roles } from 'constants/userRoles';
 
@@ -18,7 +17,7 @@ const TeamInfo = lazy(() => import('pages/TeamInfo/TeamInfo'));
 const Bookings = lazy(() => import('pages/Bookings/Bookings'));
 const NotFound = lazy(() => import('pages/NotFound/NotFound'));
 
-const DEFAULT_ROLES = [Roles.USER, Roles.ADMIN];
+const DEFAULT_ROLES = Object.values(Roles);
 
 interface IRoutes {
   path: string;

@@ -4,10 +4,14 @@ import { Group, Tabs, Text, Avatar, Flex } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 
-import { ButtonAddFriend, FriendCard } from 'components/player';
-import { BadgeTotalCount, RenderContentContainer } from 'components/shared';
-import { CardContainer } from 'components/shared/CardContainer/CardContainer';
-import { TeamLink } from 'components/Team';
+import {
+  ButtonAddFriend,
+  FriendCard,
+  CardContainer,
+  TeamLink,
+  BadgeTotalCount,
+  RenderContentContainer,
+} from 'components';
 import { TabsValues } from 'constants/tabs';
 import { useAuth, useClients, useFriends } from 'store/store';
 

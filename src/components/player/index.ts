@@ -1,2 +1,2 @@
-export * from './ButtonAddFriend/ButtonAddFriend';
-export * from './FriendCard/FriendCard';
+export * from 'components/player/ButtonAddFriend/ButtonAddFriend';
+export * from 'components/player/FriendCard/FriendCard';

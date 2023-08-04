@@ -2,7 +2,7 @@ import { modals } from '@mantine/modals';
 import { DocumentData, DocumentReference } from 'firebase/firestore';
 import { produce } from 'immer';
 
-import { ITeamFormValues } from 'components/Team';
+import { ITeamFormValues } from 'components';
 import { DatabasePaths } from 'constants/databasePaths';
 import { StorageFolders } from 'constants/storageFolders';
 import { Roles } from 'constants/userRoles';

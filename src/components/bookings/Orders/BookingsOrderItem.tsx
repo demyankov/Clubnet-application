@@ -4,8 +4,7 @@ import { Card, createStyles, Group, Loader, Text } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
 
 import { DatabasePaths } from 'constants/databasePaths';
-import { DateFormats } from 'constants/dateFormats';
-import { formatDate } from 'helpers/formatDate';
+import { dateFormatting } from 'helpers';
 import { getFireStoreDataByFieldName } from 'integrations/firebase/database';
 import { IOrder, ITable } from 'store/slices/bookings/types';
 
@@ -31,8 +30,6 @@ export const BookingsOrderItem: FC<Props> = ({ order }) => {
   } = order;
   const { t } = useTranslation();
   const { classes } = useStyles();
-  const startDate = formatDate(start.toDate(), DateFormats.DayMonthYearTime);
-  const finishDate = formatDate(finish.toDate(), DateFormats.DayMonthYearTime);
   const getTableName = useCallback(async () => {
     const tableData = await getFireStoreDataByFieldName<ITable>(
       DatabasePaths.Tables,
@@ -56,11 +53,11 @@ export const BookingsOrderItem: FC<Props> = ({ order }) => {
       </Group>
       <Group>
         <Text fw={700}>{t('tables.start')}: </Text>
-        <Text>{startDate}</Text>
+        <Text>{dateFormatting(start.toDate())}</Text>
       </Group>
       <Group>
         <Text fw={700}>{t('tables.end')}: </Text>
-        <Text>{finishDate}</Text>
+        <Text>{dateFormatting(finish.toDate())}</Text>
       </Group>
       <Group>
         <Text fw={700}>{t('tables.customerName')}: </Text>

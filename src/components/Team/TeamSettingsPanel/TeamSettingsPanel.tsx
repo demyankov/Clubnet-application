@@ -5,7 +5,7 @@ import { useForm } from '@mantine/form';
 import { IconUpload } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
 
-import { SelectItem } from 'components/shared';
+import { SelectItem } from 'components';
 import { ALLOWED_IMAGE_FORMATS } from 'constants/allowedImageFormats';
 import { GAMES } from 'constants/games';
 import { useAuth } from 'store/store';
@@ -47,7 +47,7 @@ export const TeamSettingsPanel: FC = () => {
         />
 
         <Select
-          label={t('modals.game')}
+          label={t('modals.games')}
           itemComponent={SelectItem}
           data={GAMES}
           {...form.getInputProps('game')}

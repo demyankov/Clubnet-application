@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 
-import { IHourValue } from 'components';
+import { IHourValue } from 'components/bookings/types';
 
 export const generateHours = (): IHourValue[] => {
   const start = dayjs().hour(0).minute(0);

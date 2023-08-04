@@ -4,7 +4,7 @@ import { Button, Group, Select, Stack, TextInput } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { useTranslation } from 'react-i18next';
 
-import { SelectItem } from 'components/shared';
+import { SelectItem } from 'components';
 import { DatabaseId } from 'constants/databaseId';
 import { GAMES } from 'constants/games';
 import { uniqueIdGenerator } from 'helpers';
@@ -61,7 +61,7 @@ export const ProfileCreateTeamModal: FC = () => {
 
         <Select
           withAsterisk
-          label={t('modals.game')}
+          label={t('modals.games')}
           itemComponent={SelectItem}
           data={GAMES}
           {...form.getInputProps('game')}

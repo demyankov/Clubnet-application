@@ -2,7 +2,7 @@ import { FC } from 'react';
 
 import { Box } from '@mantine/core';
 
-import { TournamentsList } from 'components/tournaments';
+import { TournamentsList } from 'components';
 
 const Tournaments: FC = () => {
   return (
