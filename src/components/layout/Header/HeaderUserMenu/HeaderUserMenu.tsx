@@ -9,7 +9,7 @@ import { useAuth } from 'store/store';
 
 const useStyles = createStyles((theme) => ({
   hiddenMobile: {
-    [theme.fn.smallerThan(370)]: {
+    [theme.fn.smallerThan(350)]: {
       display: 'none',
     },
   },

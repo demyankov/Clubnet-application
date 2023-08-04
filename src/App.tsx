@@ -31,7 +31,7 @@ const App: FC = () => {
 
   return (
     <AppShell
-      navbarOffsetBreakpoint="700"
+      navbarOffsetBreakpoint="736"
       padding="md"
       navbar={<NavbarMegaMenu />}
       header={<HeaderMegaMenu />}

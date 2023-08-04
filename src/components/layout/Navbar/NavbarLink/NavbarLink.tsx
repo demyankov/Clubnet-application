@@ -29,7 +29,7 @@ export const useStyles = createStyles((theme) => ({
       : theme.colors.gray[0],
   },
   hiddenMobile: {
-    [theme.fn.smallerThan(700)]: {
+    [theme.fn.smallerThan(736)]: {
       display: 'none',
     },
   },

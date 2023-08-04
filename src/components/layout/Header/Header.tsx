@@ -63,10 +63,14 @@ const useStyles = createStyles((theme) => ({
     justifyContent: 'space-between',
     alignItems: 'center',
     padding: '0 16px',
+    [theme.fn.smallerThan(370)]: {
+      justifyContent: 'center',
+      padding: '0 6px',
+    },
   },
 
   hiddenMobile: {
-    [theme.fn.smallerThan(700)]: {
+    [theme.fn.smallerThan(736)]: {
       display: 'none',
     },
   },
@@ -75,8 +79,7 @@ const useStyles = createStyles((theme) => ({
     justifyContent: 'flex-end',
     width: '62%',
     gap: '3%',
-    [theme.fn.largerThan(700)]: {
-      backgroundColor: 'green',
+    [theme.fn.largerThan(736)]: {
       display: 'none',
     },
   },
@@ -150,7 +153,7 @@ export const HeaderMegaMenu: FC = () => {
         size="100%"
         padding="25px 0"
         className={classes.hiddenDesktop}
-        zIndex={150}
+        zIndex={-1}
       >
         {isAuth && (
           <>
