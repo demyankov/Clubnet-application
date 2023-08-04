@@ -11,6 +11,7 @@ VITE_PROJECT_ID=firebase-app-project-id
 VITE_STORAGE_BUCKET=firebase-app-storage-bucket
 VITE_MESSAGING_SENDER_ID=firebase-app-messaging-sender-id
 VITE_APP_ID=firebase-app-id
+VITE_DB_URL=firebase-db-url
 ```
 
 4. Run the project `yarn dev`
