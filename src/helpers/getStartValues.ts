@@ -32,8 +32,18 @@ export const getStartValues = (
     reset();
   }
 
-  if (todaysOrders.length) {
-    let currentOrderIndex: number = 0;
+  // eslint-disable-next-line no-labels,no-restricted-syntax
+  hasOrders: if (todaysOrders.length) {
+    let currentOrderIndex = todaysOrders.findIndex((order) => {
+      const orderStart = getDayjsValue(order.start.toDate());
+
+      return orderStart.isAfter(startValue);
+    });
+
+    if (currentOrderIndex === -1) {
+      // eslint-disable-next-line no-labels
+      break hasOrders;
+    }
 
     hours.forEach((hour) => {
       const hourValue = getDayjsValue(day, hour.value);

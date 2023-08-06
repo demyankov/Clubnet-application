@@ -25,10 +25,12 @@ import { Roles } from 'constants/userRoles';
 import { db } from 'integrations/firebase/firebase';
 import { ITeam, ITeamMember } from 'store/slices';
 
-export interface Filter<T> {
-  field: keyof T;
-  value: T[keyof T];
-}
+export type Filter<T> = {
+  [K in keyof T]: {
+    field: K;
+    value: T[K];
+  };
+}[keyof T];
 
 type FirestoreOutput<T> = {
   data: T[];

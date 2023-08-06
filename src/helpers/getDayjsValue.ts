@@ -1,6 +1,9 @@
 import dayjs, { Dayjs } from 'dayjs';
 
-export const getDayjsValue = (day: Date, stringValue: string): Dayjs => {
+export const getDayjsValue = (day: Date, stringValue?: string): Dayjs => {
+  if (!stringValue) {
+    return dayjs(day);
+  }
   const [stringHours, stringMinutes] = stringValue.split(':');
 
   return dayjs(day)
