@@ -42,6 +42,7 @@ const TeamInfo: FC = () => {
       <Box pos="relative">
         <Image src={teamBgHeader} alt="image" width="100%" height="300px" />
         <Overlay
+          zIndex={0}
           gradient={`linear-gradient(180deg, rgba(34, 34, 34, 0) 0%, ${
             isDarkTheme(theme.colorScheme) ? '#1A1B1E' : theme.white
           } 100%)`}

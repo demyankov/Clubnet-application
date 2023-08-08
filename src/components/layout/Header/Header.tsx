@@ -116,7 +116,7 @@ export const HeaderMegaMenu: FC = () => {
   );
 
   return (
-    <Header height={60} zIndex={100}>
+    <Header height={60} zIndex={240}>
       <Group sx={{ height: '100%' }} className={classes.inner}>
         <ActionIcon onClick={handleLogoClick} className={classes.logo}>
           <AppLogo />
