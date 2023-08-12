@@ -188,6 +188,7 @@ export const ru = {
       addedFriend: 'Добавил вас в друзья',
       wantsAdded: 'Хочет добавить вас в друзья',
       notifications: 'Уведомления',
+      emptyNotifications: 'Нет новых уведомлений',
       daysAgo: 'д. назад',
       hoursAgo: 'ч. назад',
       minutes: 'м. назад',

@@ -1,6 +1,14 @@
 import { FC, useEffect } from 'react';
 
-import { ActionIcon, createStyles, Drawer, Group, Indicator } from '@mantine/core';
+import {
+  ActionIcon,
+  Center,
+  createStyles,
+  Drawer,
+  Group,
+  Indicator,
+  Text,
+} from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { useTranslation } from 'react-i18next';
 import { IoNotificationsSharp } from 'react-icons/io5';
@@ -12,6 +20,11 @@ const useStyles = createStyles(() => ({
   content: {
     height: 'calc(100% - 60px)',
     marginTop: 60,
+  },
+
+  isEmpty: {
+    height: 'calc(100vh - 150px)',
+    opacity: 0.3,
   },
 }));
 
@@ -47,9 +60,21 @@ export const HeaderNotify: FC = () => {
         classNames={{ content: classes.content }}
         title={t('profile.notifications')}
       >
-        {notifyFriend.map((friend) => (
-          <UserNotify key={friend.id} onClose={close} userFriend={friend} />
-        ))}
+        {!notifyFriend.length && (
+          <Center className={classes.isEmpty} maw={400} mx="auto">
+            <IoNotificationsSharp size={50} />
+            <Text p={10} fz="1.1em" fw={500} align="center">
+              {t('profile.emptyNotifications')}
+            </Text>
+          </Center>
+        )}
+        {!!notifyFriend.length && (
+          <>
+            {notifyFriend.map((friend) => (
+              <UserNotify key={friend.id} onClose={close} userFriend={friend} />
+            ))}
+          </>
+        )}
       </Drawer>
 
       <Group position="center">

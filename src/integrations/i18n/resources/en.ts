@@ -194,6 +194,7 @@ export const en = {
       addedFriend: 'Added you to friends',
       wantsAdded: 'Wants to add you as a friend',
       notifications: 'Notifications',
+      emptyNotifications: 'No New Notifications',
       daysAgo: 'd. ago',
       hoursAgo: 'h. ago',
       minutes: 'm. ago',
