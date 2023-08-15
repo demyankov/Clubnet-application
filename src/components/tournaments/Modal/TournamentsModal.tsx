@@ -91,7 +91,7 @@ export const TournamentsModal: FC = () => {
 
         <Select
           withAsterisk
-          label={t('modals.games')}
+          label={t('modals.typeGames')}
           itemComponent={SelectItem}
           data={GAMES}
           {...form.getInputProps('game')}
