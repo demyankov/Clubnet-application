@@ -3,7 +3,7 @@ import { FC } from 'react';
 import { Avatar, Box, createStyles, Flex, Group, Text } from '@mantine/core';
 import { useNavigate } from 'react-router-dom';
 
-import { UserBalance } from 'components';
+import { BalanceWithIcon } from 'components';
 import { Paths } from 'constants/paths';
 import { useAuth } from 'store/store';
 
@@ -14,10 +14,13 @@ const useStyles = createStyles((theme) => ({
     },
   },
   avatarContainer: {
-    cursor: 'pointer',
     display: 'flex',
     justifyContent: 'center',
     width: '47px',
+  },
+
+  userMenuContainer: {
+    cursor: 'pointer',
   },
 }));
 
@@ -33,9 +36,9 @@ export const HeaderUserMenu: FC = () => {
   };
 
   return (
-    <Group spacing="sm">
+    <Group onClick={navigateToProfile} className={classes.userMenuContainer} spacing="sm">
       <Box className={classes.avatarContainer}>
-        <Avatar src={user?.image} onClick={navigateToProfile} />
+        <Avatar src={user?.image} />
       </Box>
 
       <Flex direction="column">
@@ -43,7 +46,7 @@ export const HeaderUserMenu: FC = () => {
           {user?.nickName}
         </Text>
 
-        <UserBalance balance={user?.balance} />
+        <BalanceWithIcon balance={user?.balance} />
       </Flex>
     </Group>
   );

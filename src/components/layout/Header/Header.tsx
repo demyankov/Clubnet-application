@@ -2,71 +2,36 @@ import React, { FC } from 'react';
 
 import {
   ActionIcon,
+  Box,
   Burger,
-  Button,
   createStyles,
-  Divider,
-  Drawer,
+  Flex,
   Group,
   Header,
-  rem,
+  Indicator,
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import { useTranslation } from 'react-i18next';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import { ReactComponent as AppLogo } from 'assets/logo.svg';
 import {
+  HeaderBasket,
   HeaderLanguageSwitcher,
-  HeaderThemeToggler,
-  HeaderUserMenu,
   HeaderNotify,
   HeaderSearch,
+  HeaderThemeToggler,
+  HeaderUserMenu,
+  HeaderDrawer,
 } from 'components';
 import { Paths } from 'constants/paths';
-import { isDarkTheme } from 'helpers';
-import { useRole } from 'hooks';
-import { useAuth } from 'store/store';
+import { useAuth, useFriends, useShop } from 'store/store';
 
 const useStyles = createStyles((theme) => ({
-  link: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'flex-start',
-    flexWrap: 'wrap',
-    alignContent: 'flex-start',
-    justifyContent: 'center',
-    height: '100%',
-    paddingLeft: theme.spacing.md,
-    paddingRight: theme.spacing.md,
-    textDecoration: 'none',
-    color: isDarkTheme(theme.colorScheme) ? theme.white : theme.black,
-    fontWeight: 500,
-    fontSize: theme.fontSizes.sm,
-
-    [theme.fn.smallerThan('md')]: {
-      height: rem(42),
-      display: 'flex',
-      alignItems: 'center',
-      width: '100%',
-    },
-
-    ...theme.fn.hover({
-      backgroundColor: isDarkTheme(theme.colorScheme)
-        ? theme.colors.dark[6]
-        : theme.colors.gray[0],
-    }),
-  },
-
   inner: {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
     padding: '0 16px',
-    [theme.fn.smallerThan(370)]: {
-      justifyContent: 'center',
-      padding: '0 6px',
-    },
   },
 
   hiddenMobile: {
@@ -77,10 +42,17 @@ const useStyles = createStyles((theme) => ({
 
   hiddenDesktop: {
     justifyContent: 'flex-end',
-    width: '62%',
-    gap: '3%',
     [theme.fn.largerThan(736)]: {
       display: 'none',
+    },
+  },
+
+  searchContainer: {
+    display: 'flex',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    [theme.fn.smallerThan(400)]: {
+      width: '100px',
     },
   },
 
@@ -95,25 +67,20 @@ export const HeaderMegaMenu: FC = () => {
 
   const [drawerOpened, { toggle: toggleDrawer, close: handleCloseDrawer }] =
     useDisclosure(false);
-  const { classes, theme } = useStyles();
 
-  const {
-    isAuth,
-    signOut: { signOut },
-  } = useAuth((state) => state);
-  const { isAdmin } = useRole();
-  const { t } = useTranslation();
+  const { classes } = useStyles();
 
-  const handleSignOut = (): void => {
-    signOut();
-  };
+  const { isAuth } = useAuth((state) => state);
+  const { basketTotalCounter } = useShop();
+  const { totalCountNotify } = useFriends();
+  const { usersConfirmTotalCount } = useShop();
 
   const handleLogoClick = (): void => {
     navigate(Paths.home);
   };
-  const dividerForMobile = (
-    <Divider my="sm" color={isDarkTheme(theme.colorScheme) ? 'dark.5' : 'gray.1'} />
-  );
+
+  const isIndicatorVisible =
+    basketTotalCounter || totalCountNotify || usersConfirmTotalCount;
 
   return (
     <Header height={60} zIndex={240}>
@@ -122,81 +89,33 @@ export const HeaderMegaMenu: FC = () => {
           <AppLogo />
         </ActionIcon>
 
-        <Group position="apart" className={classes.hiddenMobile}>
-          {isAuth && <HeaderSearch />}
+        <Flex align="center" gap={10}>
+          <Box className={classes.searchContainer}>{isAuth && <HeaderSearch />}</Box>
 
-          <HeaderLanguageSwitcher />
+          <Group className={classes.hiddenDesktop}>
+            <Indicator size={15} withBorder disabled={!isIndicatorVisible} offset={5}>
+              <Burger opened={drawerOpened} onClick={toggleDrawer} />
+            </Indicator>
+          </Group>
 
-          <HeaderThemeToggler />
+          <Group position="apart" className={classes.hiddenMobile}>
+            <HeaderLanguageSwitcher />
 
-          {isAuth && (
-            <>
-              <HeaderNotify />
+            <HeaderThemeToggler />
 
-              <HeaderUserMenu />
-            </>
-          )}
-        </Group>
+            {isAuth && (
+              <>
+                <HeaderBasket />
 
-        <Group className={classes.hiddenDesktop}>
-          <HeaderLanguageSwitcher />
+                <HeaderNotify />
 
-          <HeaderThemeToggler />
-
-          <Burger opened={drawerOpened} onClick={toggleDrawer} />
-        </Group>
-      </Group>
-
-      <Drawer
-        opened={drawerOpened}
-        onClose={handleCloseDrawer}
-        size="100%"
-        padding="25px 0"
-        className={classes.hiddenDesktop}
-        zIndex={-1}
-      >
-        {isAuth && (
-          <>
-            <Link onClick={handleCloseDrawer} to={Paths.profile} className={classes.link}>
-              <HeaderUserMenu />
-            </Link>
-            {dividerForMobile}
-            <Link
-              onClick={handleCloseDrawer}
-              to={Paths.tournaments}
-              className={classes.link}
-            >
-              {t('navbar.tournaments')}
-            </Link>
-
-            <Link
-              onClick={handleCloseDrawer}
-              to={Paths.bookings}
-              className={classes.link}
-            >
-              {t('navbar.bookings')}
-            </Link>
-            {isAdmin && (
-              <Link
-                onClick={handleCloseDrawer}
-                to={Paths.clients}
-                className={classes.link}
-              >
-                {t('navbar.clients')}
-              </Link>
+                <HeaderUserMenu />
+              </>
             )}
-          </>
-        )}
-        {dividerForMobile}
-        <Group position="center" grow pb="xl" px="md">
-          {!isAuth && (
-            <Button onClick={handleCloseDrawer} component={Link} to={Paths.signin}>
-              {t('navbar.signin')}
-            </Button>
-          )}
-          {isAuth && <Button onClick={handleSignOut}>{t('navbar.signout')}</Button>}
-        </Group>
-      </Drawer>
+          </Group>
+        </Flex>
+      </Group>
+      <HeaderDrawer drawerOpened={drawerOpened} handleCloseDrawer={handleCloseDrawer} />
     </Header>
   );
 };

@@ -29,7 +29,7 @@ export const ProfileImageUploader: FC = () => {
       <Avatar src={currentUser.image} size={200} radius="100%" alt="no avatar" />
       {hovered && !isUserImageFetching && (
         <Overlay opacity={0.5} center radius="100%">
-          <FileButton onChange={handleUpload} accept={ALLOWED_IMAGE_FORMATS.join(',')}>
+          <FileButton onChange={handleUpload} accept={ALLOWED_IMAGE_FORMATS}>
             {(props) => (
               <Button {...props} mr="xs">
                 <BiUpload size="1.2rem" />

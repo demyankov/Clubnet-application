@@ -40,6 +40,34 @@ export const en = {
       exceededLimit: `Limit ${MAX_BALANCE} exceeded`,
     },
 
+    shop: {
+      shop: 'Shop',
+      add: 'Add',
+      name: 'Name',
+      addCategory: 'Add category',
+      quantity: 'Quantity',
+      price: 'Price',
+      addProduct: 'Add product',
+      outOfStock: 'Out of Stock',
+      addToBasket: 'Add to Basket',
+    },
+
+    basket: {
+      clearBasket: 'Clear basket',
+      purchase: 'Purchase',
+      totalCost: 'Total cost',
+      isEmpty: 'Basket is Empty',
+      basketContents: 'Basket contents',
+      item: 'pc.',
+      remove: 'Remove',
+      insufficientBalance: 'Please, recharge your balance',
+    },
+
+    adminPanel: {
+      awaitConfirm: 'Awaiting confirmation',
+      isEmpty: 'Confirmation Purchase List is Empty',
+    },
+
     common: {
       total: 'Total: ',
       search: 'Search',
@@ -115,6 +143,7 @@ export const en = {
       signout: 'Sign out',
       profile: 'Profile',
       bookings: 'Bookings',
+      adminPanel: 'Admin panel',
     },
 
     login: {
@@ -171,6 +200,13 @@ export const en = {
       successfullyAddBalance: 'Balance successfully replenished',
       successfullyDebitBalance: 'Balance successfully debited',
       bookingPlaced: 'Booking successfully placed',
+      addToBasket: 'Product added to basket',
+      productOutOfStock: 'Product out of stock',
+      purchased: 'Item Purchased, Please Contact Administrator',
+      addProductNotification: 'Product successfully added',
+      addCategoryNotification: 'Category successfully added',
+      insufficientBalance: 'Please, recharge your balance',
+      basketFull: 'Basket is full',
     },
 
     orders: {

@@ -20,7 +20,7 @@ import { useNavigate } from 'react-router-dom';
 import {
   UpdateBalanceModal,
   ClientsFilter,
-  UserBalance,
+  BalanceWithIcon,
   ClientsModal,
   RenderContentContainer,
 } from 'components';
@@ -177,7 +177,7 @@ export const ClientsList: FC = () => {
                       className={classes.balance}
                       onClick={(e) => handleBalanceUpdate(e, id, balance)}
                     >
-                      <UserBalance balance={balance} />
+                      <BalanceWithIcon balance={balance} />
                     </Box>
                   </td>
                 </tr>

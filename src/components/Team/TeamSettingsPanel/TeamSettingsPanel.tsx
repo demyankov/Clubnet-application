@@ -56,7 +56,7 @@ export const TeamSettingsPanel: FC = () => {
         <Textarea label={t('teams.aboutTeam')} {...form.getInputProps('about')} />
 
         <FileInput
-          accept={ALLOWED_IMAGE_FORMATS.join(',')}
+          accept={ALLOWED_IMAGE_FORMATS}
           label={t('teams.teamImage')}
           icon={<IconUpload size={15} />}
           {...form.getInputProps('image')}

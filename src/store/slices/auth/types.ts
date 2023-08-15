@@ -1,5 +1,6 @@
 import { DocumentReference } from 'firebase/firestore';
 
+import { purchaseAwaitingConfirm } from 'constants/purchaseAwaitingConfirm';
 import { Roles } from 'constants/userRoles';
 
 export interface IUser {
@@ -10,6 +11,7 @@ export interface IUser {
   image: Nullable<string>;
   balance?: number;
   balanceHistory: DocumentReference[];
+  purchaseAwaitingConfirm: purchaseAwaitingConfirm;
   role: Roles;
 }
 

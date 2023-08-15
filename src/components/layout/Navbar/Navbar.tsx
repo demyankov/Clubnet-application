@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 
-import { Divider, Navbar, rem, Stack } from '@mantine/core';
+import { Divider, Indicator, Navbar, rem, Stack } from '@mantine/core';
 import {
   IconCalendarStats,
   IconHome2,
@@ -11,12 +11,13 @@ import {
 import { useTranslation } from 'react-i18next';
 import { FaUsers } from 'react-icons/fa';
 import { GiConsoleController } from 'react-icons/gi';
+import { IoPersonSharp, IoStorefrontSharp } from 'react-icons/io5';
 
 import { NavbarLink, useStyles } from 'components';
 import { Paths } from 'constants/paths';
 import { isDarkTheme } from 'helpers';
 import { useRole } from 'hooks';
-import { useAuth } from 'store/store';
+import { useAuth, useShop } from 'store/store';
 
 export const NavbarMegaMenu: FC = () => {
   const { classes, theme } = useStyles();
@@ -27,6 +28,7 @@ export const NavbarMegaMenu: FC = () => {
     isAuth,
     signOut: { signOut },
   } = useAuth((state) => state);
+  const { usersConfirmTotalCount } = useShop();
 
   const { isAdmin } = useRole();
 
@@ -55,9 +57,28 @@ export const NavbarMegaMenu: FC = () => {
               icon={IconCalendarStats}
               label={t('navbar.bookings')}
             />
+            <NavbarLink to={Paths.shop} icon={IoStorefrontSharp} label={t('shop.shop')} />
 
             {isAdmin && (
-              <NavbarLink to={Paths.clients} icon={FaUsers} label={t('navbar.clients')} />
+              <>
+                <Indicator
+                  size={15}
+                  withBorder
+                  offset={5}
+                  disabled={!usersConfirmTotalCount}
+                >
+                  <NavbarLink
+                    to={Paths.adminPanel}
+                    icon={IoPersonSharp}
+                    label={t('navbar.adminPanel')}
+                  />
+                </Indicator>
+                <NavbarLink
+                  to={Paths.clients}
+                  icon={FaUsers}
+                  label={t('navbar.clients')}
+                />
+              </>
             )}
           </Stack>
         </Navbar.Section>

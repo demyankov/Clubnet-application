@@ -130,7 +130,7 @@ export const TournamentsModal: FC = () => {
 
         <FileInput
           withAsterisk
-          accept={ALLOWED_IMAGE_FORMATS.join(',')}
+          accept={ALLOWED_IMAGE_FORMATS}
           label={t('modals.addImage')}
           icon={<IconUpload size={15} />}
           {...form.getInputProps('image')}

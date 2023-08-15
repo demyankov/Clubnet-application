@@ -1,23 +1,26 @@
+import { OrderByDirection } from '@firebase/firestore';
 import {
   collection,
   deleteDoc,
   doc,
   DocumentData,
+  DocumentReference,
+  endAt,
   getCountFromServer,
   getDoc,
   getDocs,
   limit,
+  onSnapshot,
   orderBy,
   query,
   QueryDocumentSnapshot,
   QuerySnapshot,
   setDoc,
   startAfter,
+  startAt,
+  Unsubscribe,
   updateDoc,
   where,
-  DocumentReference,
-  startAt,
-  endAt,
 } from 'firebase/firestore';
 
 import { DatabasePaths } from 'constants/databasePaths';
@@ -37,6 +40,8 @@ type FirestoreOutput<T> = {
   totalCount: number;
   querySnapshot: QuerySnapshot;
 };
+
+type FirestoreFilteredOutput<T> = Omit<FirestoreOutput<T>, 'totalCount'>;
 
 const defaultLimit = 10;
 
@@ -118,7 +123,7 @@ export const getFirestoreData = async <T>(
 };
 
 export const getFireStoreDataByFieldName = async <T>(
-  path: DatabasePaths,
+  path: DatabasePaths | string,
   identifier: string,
   field: string = 'id',
 ): Promise<T | undefined> => {
@@ -244,8 +249,82 @@ export const getDataArrayWithRefArray = async <T extends DocumentData>(
 };
 
 export const getDocumentReference = async <T extends DocumentData>(
-  path: DatabasePaths,
+  path: DatabasePaths | string,
   id: string,
 ): Promise<DocumentReference<T>> => {
   return doc(db, path, id) as DocumentReference<T>;
+};
+
+export const getPaginationByFieldNameAndFieldValue = async <T extends DocumentData>(
+  collectionPath: DatabasePaths | string,
+  fieldName: string,
+  fieldValue: string,
+  lastVisible: Nullable<QueryDocumentSnapshot> = null,
+  limitCount: number = defaultLimit,
+): Promise<FirestoreFilteredOutput<T>> => {
+  const getMoreProduct = query(
+    collection(db, collectionPath),
+    where(fieldName, '==', fieldValue),
+    orderBy(fieldName, 'asc'),
+    startAfter(lastVisible),
+    limit(limitCount),
+  );
+
+  const querySnapshot = await getDocs(getMoreProduct);
+  const data: T[] = [];
+
+  querySnapshot.forEach((doc) => {
+    data.push(doc.data() as T);
+  });
+
+  return {
+    data,
+    querySnapshot,
+  };
+};
+
+export const getAllCollection = async <T extends DocumentData>(
+  collectionPath: DatabasePaths | string,
+  orderByField: string = 'id',
+): Promise<T[]> => {
+  const queryRef = query(collection(db, collectionPath), orderBy(orderByField, 'asc'));
+
+  const querySnapshot = await getDocs(queryRef);
+  const data: T[] = [];
+
+  querySnapshot.forEach((doc) => {
+    data.push(doc.data() as T);
+  });
+
+  return data;
+};
+
+export const subscribeToCollection = <T extends DocumentData>(
+  collectionPath: DatabasePaths | string,
+  filters: Filter<T>[] = [],
+  dataCallback: (data: T[]) => void,
+  orderByField: string = 'id',
+  orderByDirection: OrderByDirection = 'asc',
+): Unsubscribe => {
+  const collectionRef = collection(db, collectionPath);
+
+  let queryRef = query(collectionRef, orderBy(orderByField, orderByDirection));
+
+  filters.forEach((filter) => {
+    queryRef = query(
+      collectionRef,
+      where(filter.field as string, '==', filter.value),
+      orderBy(filter.field as string),
+    );
+  });
+
+  return onSnapshot(queryRef, (querySnapshot) => {
+    const data: T[] = [];
+
+    querySnapshot.forEach((doc) => {
+      data.push(doc.data() as T);
+    });
+
+    dataCallback(data);
+  });
 };

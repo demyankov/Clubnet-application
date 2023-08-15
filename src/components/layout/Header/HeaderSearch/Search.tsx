@@ -8,17 +8,38 @@ import { IoClose, IoSearch } from 'react-icons/io5';
 import { SearchClient } from 'components';
 import { useSearch } from 'store/store';
 
-const useStyles = createStyles(() => ({
+const useStyles = createStyles((theme) => ({
+  container: {
+    width: '230px',
+    [theme.fn.smallerThan(820)]: {
+      width: '150px',
+    },
+    [theme.fn.smallerThan(400)]: {
+      width: '100px',
+    },
+  },
+
   wrapper: {
     position: 'relative',
     minWidth: '230px',
     width: '100%',
+    [theme.fn.smallerThan(820)]: {
+      minWidth: '150px',
+      width: '100%',
+    },
+    [theme.fn.smallerThan(400)]: {
+      minWidth: '100px',
+      width: '70%',
+    },
   },
   dropdown: {
     position: 'absolute',
     maxWidth: '230px',
     width: '100%',
     cursor: 'pointer',
+    [theme.fn.smallerThan(735)]: {
+      right: 20,
+    },
   },
 }));
 
@@ -57,7 +78,7 @@ export const HeaderSearch: FC = () => {
   }, [debounced, onSearch]);
 
   return (
-    <div ref={searchRef}>
+    <div ref={searchRef} className={classes.container}>
       <TextInput
         className={classes.wrapper}
         onChange={(e) => setSearchValue(e.currentTarget.value)}

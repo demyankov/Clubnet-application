@@ -40,6 +40,34 @@ export const ru = {
       exceededLimit: `Лимит ${MAX_BALANCE} превышен`,
     },
 
+    shop: {
+      shop: 'Магазин',
+      add: 'Добавить',
+      name: 'Название',
+      addCategory: 'Добавить категорию',
+      quantity: 'Количество',
+      price: 'Стоимость',
+      addProduct: 'Добавить продукт',
+      outOfStock: 'Распроданно',
+      addToBasket: 'Добавить в корзину',
+    },
+
+    basket: {
+      clearBasket: 'Очистить корзину',
+      purchase: 'Купить',
+      totalCost: 'Общая стоимость',
+      isEmpty: 'Корзина пуста',
+      basketContents: 'Содержимое корзины',
+      item: 'шт.',
+      remove: 'Удалить',
+      insufficientBalance: 'Пожалуйста, пополните баланс',
+    },
+
+    adminPanel: {
+      awaitConfirm: 'Ожидают подтверждения',
+      isEmpty: 'Список подтверждения покупок пуст',
+    },
+
     common: {
       total: 'Всего: ',
       search: 'Поиск',
@@ -104,6 +132,7 @@ export const ru = {
       signout: 'Выйти',
       profile: 'Профиль',
       bookings: 'Бронирования',
+      adminPanel: 'Панель администратора',
     },
 
     login: {
@@ -165,6 +194,13 @@ export const ru = {
       successfullyAddBalance: 'Баланс успешно добавлен',
       successfullyDebitBalance: 'Баланс успешно списан',
       bookingPlaced: 'Бронирование успешно размещено',
+      addToBasket: 'Товар добавлен в корзину',
+      productOutOfStock: 'Товара нет в наличии',
+      purchased: 'Товар куплен, обратитесь к администратору',
+      addProductNotification: 'Продукт успешно добавлен',
+      addCategoryNotification: 'Категория успешно добавлен',
+      insufficientBalance: 'Пожалуйста, пополните баланс',
+      basketFull: 'Корзина заполнена',
     },
 
     orders: {

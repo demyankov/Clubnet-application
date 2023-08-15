@@ -3,6 +3,9 @@ import { lazy, ReactElement } from 'react';
 import { BookingsAddress, ProtectedRoute } from 'components';
 import { Paths } from 'constants/paths';
 import { Roles } from 'constants/userRoles';
+import { AdminPanel } from 'pages/AdminPanel/AdminPanel';
+import { Basket } from 'pages/Basket/Basket';
+import { Shop } from 'pages/Shop/Shop';
 
 const Home = lazy(() => import('pages/Home/Home'));
 const Login = lazy(() => import('pages/Login/Login'));
@@ -90,6 +93,30 @@ export const routes: IRoutes[] = [
     element: (
       <ProtectedRoute isPrivate roles={DEFAULT_ROLES}>
         <Player />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: Paths.shop,
+    element: (
+      <ProtectedRoute isPrivate roles={DEFAULT_ROLES}>
+        <Shop />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: Paths.basket,
+    element: (
+      <ProtectedRoute isPrivate roles={DEFAULT_ROLES}>
+        <Basket />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: Paths.adminPanel,
+    element: (
+      <ProtectedRoute isPrivate roles={[Roles.ADMIN]}>
+        <AdminPanel />
       </ProtectedRoute>
     ),
   },

@@ -7,5 +7,8 @@ export enum Paths {
   teams = '/teams',
   clients = '/clients',
   bookings = '/bookings',
+  shop = '/shop',
+  basket = '/basket',
+  adminPanel = '/adminPanel',
   notFound = '*',
 }

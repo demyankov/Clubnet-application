@@ -1,5 +1,5 @@
 import { modals } from '@mantine/modals';
-import { arrayUnion, doc, increment, Timestamp } from 'firebase/firestore';
+import { Timestamp, arrayUnion, increment } from 'firebase/firestore';
 import { produce } from 'immer';
 
 import { DatabaseId } from 'constants/databaseId';
@@ -7,11 +7,11 @@ import { DatabasePaths } from 'constants/databasePaths';
 import { errorHandler, successNotification, uniqueIdGenerator } from 'helpers';
 import {
   getDataArrayWithRefArray,
+  getDocumentReference,
   getFireStoreDataByFieldName,
   setFirestoreData,
   updateFirestoreData,
 } from 'integrations/firebase';
-import { db } from 'integrations/firebase/firebase';
 import { IUser } from 'store/slices/auth/types';
 import { BoundStore } from 'store/store';
 import { GenericStateCreator } from 'store/types';
@@ -50,8 +50,8 @@ export const balanceHistorySlice: GenericStateCreator<BoundStore> = (set, get) =
       }),
     );
     try {
-      const userRef = doc(db, DatabasePaths.Users, userId);
-      const adminRef = doc(db, DatabasePaths.Users, adminId);
+      const userRef = await getDocumentReference(DatabasePaths.Users, userId);
+      const adminRef = await getDocumentReference(DatabasePaths.Users, adminId);
 
       await updateFirestoreData(DatabasePaths.Users, userId, {
         balance: increment(balance),

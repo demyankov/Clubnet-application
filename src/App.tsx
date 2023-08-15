@@ -10,12 +10,16 @@ import {
   LoaderScreen,
   RenderContentContainer,
 } from 'components';
+import { useRole } from 'hooks';
 import { routes } from 'routes/routes';
-import { useAuth } from 'store/store';
+import { useAuth, useShop } from 'store/store';
 
 const App: FC = () => {
   const { getUser, isFetching, isAuthInitialized } = useAuth((state) => state);
   const { isCompletedRegistration } = useAuth((state) => state.signIn);
+  const { getUsersAwaitConfirm } = useShop();
+
+  const { isUser } = useRole();
 
   const fetchUserData = useCallback(() => {
     getUser();
@@ -24,6 +28,18 @@ const App: FC = () => {
   useEffect(() => {
     fetchUserData();
   }, [fetchUserData, isCompletedRegistration]);
+
+  useEffect(() => {
+    if (isUser) {
+      return;
+    }
+
+    const unsubscribe = getUsersAwaitConfirm();
+
+    return () => {
+      unsubscribe();
+    };
+  }, [getUsersAwaitConfirm, isUser]);
 
   if (!isAuthInitialized) {
     return <LoaderScreen />;

@@ -8,4 +8,8 @@ export enum DatabasePaths {
   Orders = 'orders',
   BalanceHistory = 'balanceHistory',
   Friends = 'friends',
+  Categories = 'categories',
+  Products = 'products',
+  Basket = 'basket',
+  OrderConfirmation = 'orderConfirmation',
 }

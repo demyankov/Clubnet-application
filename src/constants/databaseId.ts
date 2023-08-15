@@ -7,4 +7,7 @@ export enum DatabaseId {
   BalanceHistory = 'balanceHistory',
   Tables = 'table',
   Orders = 'order',
+  Categories = 'categories',
+  Products = 'products',
+  OrderConfirmation = 'orderConfirmation',
 }

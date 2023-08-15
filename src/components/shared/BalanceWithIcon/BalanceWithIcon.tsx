@@ -18,7 +18,7 @@ type Props = {
   balance?: number;
 };
 
-export const UserBalance: FC<Props> = ({ balance = 0 }) => {
+export const BalanceWithIcon: FC<Props> = ({ balance = 0 }) => {
   const { classes } = useStyles();
 
   return (

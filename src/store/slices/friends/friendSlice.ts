@@ -1,16 +1,10 @@
 import {
-  collection,
-  deleteField,
-  doc,
-  DocumentData,
   DocumentReference,
-  getDoc,
-  onSnapshot,
-  orderBy,
-  query,
   QuerySnapshot,
   Timestamp,
   Unsubscribe,
+  deleteField,
+  getDoc,
 } from 'firebase/firestore';
 import { produce } from 'immer';
 
@@ -23,10 +17,11 @@ import {
   Filter,
   getCollectionPathUrl,
   getDataArrayWithRefArray,
+  getDocumentReference,
   getFirestoreData,
+  subscribeToCollection,
   updateFirestoreData,
 } from 'integrations/firebase';
-import { db } from 'integrations/firebase/firebase';
 import { IUser } from 'store/slices/auth/types';
 import { BoundStore } from 'store/store';
 import { GenericStateCreator } from 'store/types';
@@ -40,6 +35,10 @@ interface IFriendRequest {
 interface IFriend extends IUser {
   status: FriendStatus;
   timestamp: Timestamp;
+}
+
+interface INotifyFriendRequest extends IFriendRequest {
+  isViewed: boolean;
 }
 
 export interface INotifyFriends extends IFriend {
@@ -81,7 +80,7 @@ export interface IFriends {
   isViewedUpdate: (data: IRequestData, action?: IsViewedActions) => void;
   getFriendsList: (
     id: string,
-    filter?: FriendStatus,
+    filter: Nullable<FriendStatus>,
     totalCounter?: number,
   ) => Promise<{
     data: IFriendRequest[];
@@ -144,7 +143,7 @@ export const friendSlice: GenericStateCreator<BoundStore> = (set, get) => ({
       const totalCounter = get().showCounter * MORE_FRIEND;
       const { data, dataFriends, querySnapshot } = await get().getFriendsList(
         id,
-        undefined,
+        null,
         totalCounter,
       );
       const moreFriends = dataFriends.map((friend, index) => ({
@@ -179,7 +178,7 @@ export const friendSlice: GenericStateCreator<BoundStore> = (set, get) => ({
     );
 
     try {
-      const { data, dataFriends, querySnapshot } = await get().getFriendsList(id);
+      const { data, dataFriends, querySnapshot } = await get().getFriendsList(id, null);
 
       set(
         produce((state: BoundStore) => {
@@ -240,7 +239,7 @@ export const friendSlice: GenericStateCreator<BoundStore> = (set, get) => ({
       }),
     );
     try {
-      const { totalCount: totalCountFriend } = await get().getFriendsList(id);
+      const { totalCount: totalCountFriend } = await get().getFriendsList(id, null);
       const { totalCount: totalCountSent } = await get().getFriendsList(
         id,
         FriendStatus.sent,
@@ -272,31 +271,29 @@ export const friendSlice: GenericStateCreator<BoundStore> = (set, get) => ({
     const query1 = [DatabasePaths.Users, id, DatabasePaths.Friends];
     const path = getCollectionPathUrl(query1);
 
-    const q = query(collection(db, path), orderBy('isViewed', 'desc'));
+    return subscribeToCollection<INotifyFriendRequest>(
+      path,
+      [],
+      async (data: INotifyFriendRequest[]) => {
+        const dataFriends = await getDataArrayWithRefArray<IUser>(
+          data.map((friend) => friend.userRef),
+        );
 
-    return onSnapshot(q, async (querySnapshot) => {
-      const data: DocumentData[] = [];
-
-      querySnapshot.forEach((doc) => {
-        data.push(doc.data());
-      });
-
-      const dataFriends = await getDataArrayWithRefArray<IUser>(
-        data.map((friend) => friend.userRef),
-      );
-
-      set(
-        produce((state: BoundStore) => {
-          state.notifyFriend = dataFriends.map((friend, index) => ({
-            ...friend,
-            status: data[index].status,
-            timestamp: data[index].timestamp,
-            isViewed: data[index].isViewed,
-          }));
-          state.totalCountNotify = data.length;
-        }),
-      );
-    });
+        set(
+          produce((state: BoundStore) => {
+            state.notifyFriend = dataFriends.map((friend, index) => ({
+              ...friend,
+              status: data[index].status,
+              timestamp: data[index].timestamp,
+              isViewed: data[index].isViewed,
+            }));
+            state.totalCountNotify = data.length;
+          }),
+        );
+      },
+      'isViewed',
+      'desc',
+    );
   },
 
   getFriendStatus: async (playerId, clientId) => {
@@ -310,9 +307,9 @@ export const friendSlice: GenericStateCreator<BoundStore> = (set, get) => ({
       const query = [DatabasePaths.Users, playerId, DatabasePaths.Friends];
       const path = getCollectionPathUrl(query);
 
-      const docRef = doc(db, path, clientId);
+      const clientRef = await getDocumentReference(path, clientId);
 
-      const docSnap = await getDoc(docRef);
+      const docSnap = await getDoc(clientRef);
 
       set(
         produce((state: BoundStore) => {
