@@ -282,6 +282,7 @@ export const ru = {
       showMore: 'Показать еще',
       totalCount: 'Всего',
       maxCount: 'Макс. количество: ',
+      editTournament: 'Редактировать',
     },
 
     workingDays: {

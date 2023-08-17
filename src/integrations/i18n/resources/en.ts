@@ -287,6 +287,7 @@ export const en = {
       showMore: 'Show more',
       totalCount: 'Total',
       maxCount: 'Maximum count: ',
+      editTournament: 'Edit',
     },
 
     workingDays: {

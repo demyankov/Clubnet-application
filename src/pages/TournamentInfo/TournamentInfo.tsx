@@ -8,6 +8,7 @@ import {
   Group,
   Image,
   Overlay,
+  Stack,
   Tabs,
   Text,
   useMantineTheme,
@@ -70,10 +71,14 @@ const TournamentInfo: FC = () => {
               {currentTournament?.game} · {currentTournament?.format}
             </Text>
           </div>
-
-          <Button color="green" variant="outline">
-            {t('tournaments.submit')}
-          </Button>
+          <Stack>
+            <Button w={140} color="green" variant="outline">
+              {t('tournaments.submit')}
+            </Button>
+            <Button w={140} mt={20} color="red" variant="outline">
+              {t('tournaments.editTournament')}
+            </Button>
+          </Stack>
         </Group>
         <Tabs defaultValue="match">
           <Tabs.List>
