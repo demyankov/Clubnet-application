@@ -1,10 +1,21 @@
 import React, { FC } from 'react';
 
-import { Box, Button, Group, Input, Select, TextInput } from '@mantine/core';
+import {
+  Box,
+  Button,
+  createStyles,
+  Grid,
+  Group,
+  Input,
+  Select,
+  Text,
+  TextInput,
+} from '@mantine/core';
 import { useForm } from '@mantine/form';
+import { IconArrowLeft } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
 import { IMaskInput } from 'react-imask';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 import { SelectItem } from 'components';
 import { ROLES_DATA } from 'components/clients/config';
@@ -13,7 +24,23 @@ import { Roles } from 'constants/userRoles';
 import { isDarkTheme } from 'helpers';
 import { useClients } from 'store/store';
 
+const useStyles = createStyles((theme) => ({
+  editContainer: {
+    alignItems: 'flex-end',
+  },
+  goBack: {
+    paddingLeft: theme.spacing.xs,
+    paddingRight: theme.spacing.xs,
+  },
+  btnText: {
+    [theme.fn.smallerThan('sm')]: {
+      display: 'none',
+    },
+  },
+}));
+
 export const ClientsEdit: FC = () => {
+  const { classes } = useStyles();
   const { client, updateClientData, isClientsFetching } = useClients((state) => state);
 
   const navigate = useNavigate();
@@ -40,10 +67,16 @@ export const ClientsEdit: FC = () => {
     updateClientData(values, form.setFieldError, navigate);
   };
 
-  const handleCancelButton = (): void => navigate(`${Paths.clients}`);
-
   return (
     <form onSubmit={form.onSubmit(handleSubmit)}>
+      <Grid align="center">
+        <Grid.Col span={4}>
+          <Button component={Link} to={Paths.clients} className={classes.goBack}>
+            <IconArrowLeft size={20} />
+            <Text className={classes.btnText}>{t('clients.back')}</Text>
+          </Button>
+        </Grid.Col>
+      </Grid>
       <Box
         mt="xl"
         sx={(theme) => ({
@@ -54,18 +87,15 @@ export const ClientsEdit: FC = () => {
           borderRadius: theme.radius.md,
         })}
       >
-        <Group>
+        <Group className={classes.editContainer}>
           <TextInput label={t('common.fullName')} {...form.getInputProps('name')} />
-
           <Select
             label={t('common.role')}
             itemComponent={SelectItem}
             data={ROLES_DATA}
             {...form.getInputProps('role')}
           />
-
           <TextInput label={t('common.nickname')} {...form.getInputProps('nickName')} />
-
           <Input.Wrapper id="phone-input" label={t('common.phone')} inputMode="tel">
             <Input
               disabled
@@ -76,12 +106,8 @@ export const ClientsEdit: FC = () => {
             />
             <Input.Error>{form.errors.phone}</Input.Error>
           </Input.Wrapper>
-
           <Button type="submit" loading={isClientsFetching}>
             {t('clients.btnSave')}
-          </Button>
-          <Button loading={isClientsFetching} onClick={handleCancelButton}>
-            {t('clients.btnCancel')}
           </Button>
         </Group>
       </Box>

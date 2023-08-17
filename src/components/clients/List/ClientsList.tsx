@@ -1,4 +1,4 @@
-import { FC, useCallback, MouseEvent } from 'react';
+import { FC, MouseEvent, useCallback, useState } from 'react';
 
 import {
   Avatar,
@@ -15,16 +15,20 @@ import {
 } from '@mantine/core';
 import { modals } from '@mantine/modals';
 import { useTranslation } from 'react-i18next';
+import { BsCaretDownSquare, BsCaretUpSquare } from 'react-icons/bs';
 import { useNavigate } from 'react-router-dom';
 
 import {
-  UpdateBalanceModal,
-  ClientsFilter,
   BalanceWithIcon,
+  ClientsFilter,
   ClientsModal,
   RenderContentContainer,
+  UpdateBalanceModal,
 } from 'components';
+import { TABLE_HEADERS } from 'components/clients/config';
+import { ISortFields, useSortedClients } from 'components/clients/hooks/useSortedClients';
 import { Paths } from 'constants/paths';
+import { SortData } from 'constants/sortData';
 import { Roles } from 'constants/userRoles';
 import { isDarkTheme } from 'helpers';
 import { useBalanceHistory, useClients } from 'store/store';
@@ -49,6 +53,17 @@ const useStyles = createStyles((theme) => ({
   },
   tableContainer: {
     tableLayout: 'fixed',
+    '& th:nth-of-type(1)': {
+      width: '25%',
+    },
+  },
+  tableHeader: {
+    width: '16px',
+    height: '16px',
+    cursor: 'pointer',
+  },
+  sortButton: {
+    marginLeft: '5px',
   },
 }));
 
@@ -101,6 +116,30 @@ export const ClientsList: FC = () => {
     });
   };
 
+  const [sort, setSort] = useState<{ field: ISortFields; direction: SortData }>({
+    field: 'name',
+    direction: SortData.Increase,
+  });
+  const toggleSort = (field: ISortFields): void => {
+    setSort((prev) => ({
+      ...prev,
+      field,
+      direction:
+        prev.direction === SortData.Increase ? SortData.Descending : SortData.Increase,
+    }));
+  };
+  const handleShowMore = useCallback(() => {
+    const { field } = sort;
+
+    getMoreClients();
+    setSort((prev) => ({
+      ...prev,
+      field,
+    }));
+  }, [getMoreClients, sort]);
+
+  const sortedClients = useSortedClients(clients, sort);
+
   return (
     <>
       <Title mb="mb" order={2}>
@@ -131,63 +170,114 @@ export const ClientsList: FC = () => {
           >
             <thead>
               <tr>
-                <th>{t('common.fullName')}</th>
-                <th>{t('common.role')}</th>
-                <th>{t('common.nickname')}</th>
-                <th>{t('common.phone')}</th>
-                <th>{t('common.balance')}</th>
+                {TABLE_HEADERS.map(({ field, label }) => (
+                  <th key={field} onClick={() => toggleSort(field as ISortFields)}>
+                    {t(label)}
+                    {sort.field === field && sort.direction === SortData.Increase ? (
+                      <BsCaretDownSquare className={classes.sortButton} size={13} />
+                    ) : (
+                      <BsCaretUpSquare className={classes.sortButton} size={13} />
+                    )}
+                  </th>
+                ))}
               </tr>
             </thead>
 
             <tbody>
-              {clients?.map(({ id, name, nickName, phone, role, image, balance }) => (
-                <tr
-                  className={classes.clientContainer}
-                  onClick={() => handleClientClick(nickName!)}
-                  key={id}
-                >
-                  <td>
-                    <Group spacing="sm">
-                      <Avatar size={30} src={image} radius={30} variant="gradient" />
+              {sortedClients.map(
+                ({ id, nickName, image, name, role, phone, balance }) => (
+                  <tr
+                    className={classes.clientContainer}
+                    onClick={() => handleClientClick(nickName!)}
+                    key={id}
+                  >
+                    <td>
+                      <Group spacing="sm">
+                        <Avatar size={30} src={image} radius={30} variant="gradient" />
+                        <Text fz="sm" fw={500}>
+                          {name}
+                        </Text>
+                      </Group>
+                    </td>
+                    <td>
+                      <Badge
+                        color={roleColors[role]}
+                        variant={isDarkTheme(theme.colorScheme) ? 'light' : 'outline'}
+                      >
+                        {role}
+                      </Badge>
+                    </td>
+                    <td>
                       <Text fz="sm" fw={500}>
-                        {name}
+                        {nickName}
                       </Text>
-                    </Group>
-                  </td>
-                  <td>
-                    <Badge
-                      color={roleColors[role]}
-                      variant={isDarkTheme(theme.colorScheme) ? 'light' : 'outline'}
-                    >
-                      {role}
-                    </Badge>
-                  </td>
-                  <td>
-                    <Text fz="sm" fw={500}>
-                      {nickName}
-                    </Text>
-                  </td>
-                  <td>
-                    <Text fz="sm" c="dimmed">
-                      {phone}
-                    </Text>
-                  </td>
-                  <td>
-                    <Box
-                      className={classes.balance}
-                      onClick={(e) => handleBalanceUpdate(e, id, balance)}
-                    >
-                      <BalanceWithIcon balance={balance} />
-                    </Box>
-                  </td>
-                </tr>
-              ))}
+                    </td>
+                    <td>
+                      <Text fz="sm" c="dimmed">
+                        {phone}
+                      </Text>
+                    </td>
+                    <td>
+                      <Box
+                        className={classes.balance}
+                        onClick={(e) => handleBalanceUpdate(e, id, balance)}
+                      >
+                        <BalanceWithIcon balance={balance} />
+                      </Box>
+                    </td>
+                  </tr>
+                ),
+              )}
+              {sortedClients.map(
+                ({ id, name, nickName, phone, role, image, balance }) => (
+                  <tr
+                    className={classes.clientContainer}
+                    onClick={() => handleClientClick(nickName!)}
+                    key={id}
+                  >
+                    <td>
+                      <Group spacing="sm">
+                        <Avatar size={30} src={image} radius={30} variant="gradient" />
+                        <Text fz="sm" fw={500}>
+                          {name}
+                        </Text>
+                      </Group>
+                    </td>
+                    <td>
+                      <Badge
+                        color={roleColors[role]}
+                        variant={isDarkTheme(theme.colorScheme) ? 'light' : 'outline'}
+                      >
+                        {role}
+                      </Badge>
+                    </td>
+                    <td>
+                      <Text fz="sm" fw={500}>
+                        {nickName}
+                      </Text>
+                    </td>
+                    <td>
+                      <Text fz="sm" c="dimmed">
+                        {phone}
+                      </Text>
+                    </td>
+                    <td>
+                      <Box
+                        className={classes.balance}
+                        onClick={(e) => handleBalanceUpdate(e, id, balance)}
+                      >
+                        <BalanceWithIcon balance={balance} />
+                      </Box>
+                    </td>
+                  </tr>
+                ),
+              )}
             </tbody>
           </Table>
 
           <Center mb="xl">
             {IsShowMoreButtonShown && (
-              <Button onClick={getMoreClients} loading={isGetMoreFetching}>
+              <Button onClick={handleShowMore} loading={isGetMoreFetching}>
                 {t('tournaments.showMore')}
               </Button>
             )}

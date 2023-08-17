@@ -62,7 +62,7 @@ export const TeamSettingsPanel: FC = () => {
           {...form.getInputProps('image')}
         />
 
-        <Button type="submit" mt={10} loading={isUpdateTeamFetching}>
+        <Button type="submit" mb={40} mt={10} loading={isUpdateTeamFetching}>
           {t('profile.save')}
         </Button>
       </Stack>
