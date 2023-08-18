@@ -228,50 +228,6 @@ export const ClientsList: FC = () => {
                   </tr>
                 ),
               )}
-              {sortedClients.map(
-                ({ id, name, nickName, phone, role, image, balance }) => (
-                  <tr
-                    className={classes.clientContainer}
-                    onClick={() => handleClientClick(nickName!)}
-                    key={id}
-                  >
-                    <td>
-                      <Group spacing="sm">
-                        <Avatar size={30} src={image} radius={30} variant="gradient" />
-                        <Text fz="sm" fw={500}>
-                          {name}
-                        </Text>
-                      </Group>
-                    </td>
-                    <td>
-                      <Badge
-                        color={roleColors[role]}
-                        variant={isDarkTheme(theme.colorScheme) ? 'light' : 'outline'}
-                      >
-                        {role}
-                      </Badge>
-                    </td>
-                    <td>
-                      <Text fz="sm" fw={500}>
-                        {nickName}
-                      </Text>
-                    </td>
-                    <td>
-                      <Text fz="sm" c="dimmed">
-                        {phone}
-                      </Text>
-                    </td>
-                    <td>
-                      <Box
-                        className={classes.balance}
-                        onClick={(e) => handleBalanceUpdate(e, id, balance)}
-                      >
-                        <BalanceWithIcon balance={balance} />
-                      </Box>
-                    </td>
-                  </tr>
-                ),
-              )}
             </tbody>
           </Table>
 
