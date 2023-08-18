@@ -21,6 +21,7 @@ export const en = {
       btnEdit: 'Edit',
       btnSave: 'Save',
       btnCancel: 'Cancel',
+      btnBack: 'Back to clients',
     },
 
     friends: {

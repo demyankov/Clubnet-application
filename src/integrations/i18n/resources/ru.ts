@@ -21,6 +21,7 @@ export const ru = {
       btnEdit: 'Изменить',
       btnSave: 'Сохранить',
       btnCancel: 'Отмена',
+      btnBack: 'Назад к клиентам',
     },
 
     friends: {

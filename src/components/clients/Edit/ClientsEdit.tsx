@@ -73,7 +73,7 @@ export const ClientsEdit: FC = () => {
         <Grid.Col span={4}>
           <Button component={Link} to={Paths.clients} className={classes.goBack}>
             <IconArrowLeft size={20} />
-            <Text className={classes.btnText}>{t('clients.back')}</Text>
+            <Text className={classes.btnText}>{t('clients.btnBack')}</Text>
           </Button>
         </Grid.Col>
       </Grid>
