@@ -10,6 +10,7 @@ export interface IUser {
   name: Nullable<string>;
   image: Nullable<string>;
   balance?: number;
+  invitation?: string[];
   balanceHistory: DocumentReference[];
   purchaseAwaitingConfirm: purchaseAwaitingConfirm;
   role: Roles;

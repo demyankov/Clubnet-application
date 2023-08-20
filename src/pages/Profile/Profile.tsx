@@ -1,18 +1,14 @@
-import { FC, ReactElement, useEffect } from 'react';
+import { FC, useEffect } from 'react';
 
-import { Button, Group, Tabs, Text } from '@mantine/core';
-import { modals } from '@mantine/modals';
-import { IconPlus } from '@tabler/icons-react';
+import { Box, Group, Tabs, Text } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
 
 import {
-  ProfileCreateTeamModal,
   ProfileImageUploader,
   ProfilePersonalDataForm,
   ProfileFriends,
-  TeamLink,
+  ProfileTeams,
   BadgeTotalCount,
-  RenderContentContainer,
 } from 'components';
 import { FriendStatus } from 'constants/friendStatus';
 import { TabsValues } from 'constants/tabs';
@@ -20,41 +16,22 @@ import { useAuth, useFriends } from 'store/store';
 
 const Profile: FC = () => {
   const { t } = useTranslation();
-  const { getTeams, teams, user, isTeamFetching } = useAuth((store) => store);
-  const {
-    getFriends,
-    getTotalCount,
-    getFriendRequests,
-    totalCountFriend,
-    isTotalCountFriendsFetching,
-    isFriendsFetching,
-  } = useFriends((store) => store);
+  const { user, teams } = useAuth((store) => store);
 
-  const handleOpenModal = (): void => {
-    modals.open({
-      modalId: 'ProfileCreateTeamModal',
-      title: t('teams.modalTitle'),
-      children: <ProfileCreateTeamModal />,
-      centered: true,
-    });
-  };
-
-  const teamsItems: ReactElement[] = teams.map((team) => (
-    <TeamLink key={team.id} teamData={team} />
-  ));
-  const isLoading = isTotalCountFriendsFetching || isFriendsFetching || isTeamFetching;
+  const { getFriends, getTotalCount, getFriendRequests, totalCountFriend } = useFriends(
+    (store) => store,
+  );
 
   useEffect(() => {
     if (user) {
       getTotalCount(user.id);
-      getTeams(user.id);
       getFriends(user.id);
       getFriendRequests(user.id, FriendStatus.sent);
     }
-  }, [getTeams, getFriendRequests, getFriends, getTotalCount, user]);
+  }, [getFriendRequests, getFriends, getTotalCount, user]);
 
   return (
-    <RenderContentContainer isFetching={isLoading}>
+    <Box>
       <Group mih={150} pt="20px" pb="20px">
         <ProfileImageUploader />
         <ProfilePersonalDataForm />
@@ -78,29 +55,7 @@ const Profile: FC = () => {
         </Tabs.List>
 
         <Tabs.Panel value={TabsValues.teams} mih={350} mb={60}>
-          <Group mb={30} align="center">
-            <Text fz="xl" fw={700} inline align="center">
-              {t('profile.profileTeams')}
-            </Text>
-
-            <Button
-              onClick={handleOpenModal}
-              variant="light"
-              w={30}
-              h={30}
-              p={0}
-              radius="100%"
-            >
-              <IconPlus size={15} />
-            </Button>
-          </Group>
-          {teams.length ? (
-            teamsItems
-          ) : (
-            <Text fz="xl" fw={700} mb={10}>
-              {t('profile.createTeam')}
-            </Text>
-          )}
+          <ProfileTeams />
         </Tabs.Panel>
 
         <Tabs.Panel value={TabsValues.friends} mih={350} mb={60}>
@@ -113,7 +68,7 @@ const Profile: FC = () => {
           </Text>
         </Tabs.Panel>
       </Tabs>
-    </RenderContentContainer>
+    </Box>
   );
 };
 

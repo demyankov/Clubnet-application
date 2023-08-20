@@ -61,7 +61,7 @@ export const ProfileCreateTeamModal: FC = () => {
 
         <Select
           withAsterisk
-          label={t('modals.games')}
+          label={t('modals.game')}
           itemComponent={SelectItem}
           data={GAMES}
           {...form.getInputProps('game')}

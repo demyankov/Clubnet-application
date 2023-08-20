@@ -1,7 +1,6 @@
 export * from 'components/layout/Header/Header';
 export * from 'components/layout/Header/HeaderNotify/HeaderNotify';
 export * from 'components/layout/Header/HeaderNotify/UserNotify';
-export * from 'components/layout/Header/HeaderSearch/Search';
 export * from 'components/layout/Header/HeaderSearch/SearchClient';
 export * from 'components/layout/Header/HeaderThemeToggler/HeaderThemeToggler';
 export * from 'components/layout/Header/HeaderUserMenu/HeaderUserMenu';
@@ -10,3 +9,4 @@ export * from 'components/layout/Header/HeaderBasket/HeaderBasket';
 export * from 'components/layout/Header/HeaderDrawer/HeaderDrawer';
 export * from 'components/layout/Navbar/Navbar';
 export * from 'components/layout/Navbar/NavbarLink/NavbarLink';
+export * from 'components/layout/Header/HeaderSearch/HeaderSearch';

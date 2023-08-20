@@ -12,4 +12,5 @@ export enum DatabasePaths {
   Products = 'products',
   Basket = 'basket',
   OrderConfirmation = 'orderConfirmation',
+  Invite = 'invite',
 }

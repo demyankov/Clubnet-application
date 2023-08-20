@@ -19,7 +19,7 @@ import { useAuth } from 'store/store';
 
 const TeamInfo: FC = () => {
   const { id } = useParams();
-  const { user, getTeamById, currentTeam, members, isTeamFetching } = useAuth(
+  const { user, getTeamById, currentTeam, membersInTeam, isTeamFetching } = useAuth(
     (store) => store,
   );
   const { t } = useTranslation();
@@ -33,7 +33,7 @@ const TeamInfo: FC = () => {
 
   const currentGame = GAMES.find((game) => game.label === currentTeam?.game);
 
-  const isCaptain: boolean = members.some(
+  const isCaptain: boolean = membersInTeam.some(
     (member) => member.id === user?.id && member.role === Roles.CAPTAIN,
   );
 

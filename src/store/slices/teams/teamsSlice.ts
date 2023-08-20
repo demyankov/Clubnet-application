@@ -1,5 +1,11 @@
 import { modals } from '@mantine/modals';
-import { DocumentData, DocumentReference } from 'firebase/firestore';
+import {
+  arrayRemove,
+  arrayUnion,
+  doc,
+  DocumentData,
+  DocumentReference,
+} from 'firebase/firestore';
 import { produce } from 'immer';
 
 import { ITeamFormValues } from 'components';
@@ -18,6 +24,7 @@ import {
   uploadImageAndGetURL,
   deleteFirestoreData,
 } from 'integrations/firebase';
+import { db } from 'integrations/firebase/firebase';
 import { IUser } from 'store/slices/auth/types';
 import { BoundStore } from 'store/store';
 import { GenericStateCreator } from 'store/types';
@@ -42,12 +49,15 @@ export interface ITeams {
   isUpdateTeamFetching: boolean;
   teams: ITeam[];
   currentTeam: Nullable<ITeam>;
-  members: IUser[];
+  memberInvitedTeams: ITeam[];
+  membersInTeam: IUser[];
   addTeam: (teamData: ITeam, resetForm: () => void) => Promise<void>;
   getTeams: (id: string) => Promise<void>;
   getTeamById: (id: string) => Promise<void>;
+  getMemberInvitedTeams: (user: IUser) => Promise<void>;
   updateTeam: (data: ITeamFormValues) => Promise<void>;
   deleteTeam: (teamId: string) => Promise<void>;
+  addMember: (teamId: string) => Promise<void>;
 }
 
 export const teamsSlice: GenericStateCreator<BoundStore> = (set, get) => ({
@@ -56,7 +66,8 @@ export const teamsSlice: GenericStateCreator<BoundStore> = (set, get) => ({
   isUpdateTeamFetching: false,
   teams: [],
   currentTeam: null,
-  members: [],
+  memberInvitedTeams: [],
+  membersInTeam: [],
 
   addTeam: async (teamData: ITeam, resetForm: () => void) => {
     set(
@@ -158,12 +169,12 @@ export const teamsSlice: GenericStateCreator<BoundStore> = (set, get) => ({
       );
 
       if (currentTeam && currentTeam.members?.length) {
-        const members = await getFirestoreTeamMembers(currentTeam.members);
+        const membersInTeam = await getFirestoreTeamMembers(currentTeam.members);
 
         set(
           produce((state: BoundStore) => {
             state.currentTeam = currentTeam;
-            state.members = members;
+            state.membersInTeam = membersInTeam;
           }),
         );
       }
@@ -223,11 +234,6 @@ export const teamsSlice: GenericStateCreator<BoundStore> = (set, get) => ({
   },
 
   deleteTeam: async (teamId) => {
-    set(
-      produce((state: BoundStore) => {
-        state.isTeamFetching = true;
-      }),
-    );
     try {
       const currentUser = get().user as IUser;
 
@@ -237,12 +243,57 @@ export const teamsSlice: GenericStateCreator<BoundStore> = (set, get) => ({
       await get().getTeams(currentUser.id);
     } catch (error) {
       errorHandler(error as Error);
-    } finally {
+    }
+  },
+
+  getMemberInvitedTeams: async (user) => {
+    try {
+      const teamsIdList = user.invitation;
+      let teams = [] as ITeam[];
+
+      if (teamsIdList) {
+        teams = await teamsIdList.reduce(async (acc, teamId) => {
+          const prevTeams = await acc;
+
+          await get().getTeamById(teamId);
+          const team = get().currentTeam;
+
+          return [...prevTeams, team];
+        }, Promise.resolve([]) as any);
+      }
       set(
         produce((state: BoundStore) => {
-          state.isTeamFetching = false;
+          state.memberInvitedTeams = teams;
         }),
       );
+    } catch (error) {
+      errorHandler(error as Error);
+    }
+  },
+
+  addMember: async (teamId) => {
+    const currentUser = get().user as IUser;
+    const userId = currentUser.id;
+
+    try {
+      const userRef = doc(db, DatabasePaths.Users, userId);
+
+      const memberData: ITeamMember = {
+        userLink: userRef,
+        role: Roles.USER,
+      };
+
+      await updateFirestoreData(DatabasePaths.Teams, teamId, {
+        members: arrayUnion(memberData),
+      });
+
+      successNotification('successAcceptInvitation');
+
+      await updateFirestoreData(DatabasePaths.Users, userId, {
+        invitation: arrayRemove(teamId),
+      });
+    } catch (error) {
+      errorHandler(error as Error);
     }
   },
 });

@@ -19,7 +19,6 @@ import {
   friendSlice,
   basketSlice,
   shopSlice,
-  friendsRequestsSlice,
   paymentConfirmSlice,
   ITournaments,
   IState,
@@ -35,11 +34,16 @@ import {
   IAddressActions,
   ITableActions,
   IOrderActions,
+  IInviteMember,
+  inviteMemberSlice,
   IBasket,
   IPaymentConfirm,
   IShop,
-  IFriendsRequests,
 } from 'store/slices';
+import {
+  friendsRequestsSlice,
+  IFriendsRequests,
+} from 'store/slices/friends/friendsRequestsSlice';
 
 export interface BoundStore
   extends IState,
@@ -55,6 +59,7 @@ export interface BoundStore
     IShop,
     IBasket,
     IPaymentConfirm,
+    IInviteMember,
     ISearch {}
 
 export interface BookingStore
@@ -79,6 +84,22 @@ export const useTournaments = create(
   devtools(
     immer<BoundStore>((...a) => ({
       ...tournamentsSlice(...a),
+    })),
+  ),
+);
+
+export const useTeams = create(
+  devtools(
+    immer<BoundStore>((...a) => ({
+      ...teamsSlice(...a),
+    })),
+  ),
+);
+
+export const useInviteMembers = create(
+  devtools(
+    immer<BoundStore>((...a) => ({
+      ...inviteMemberSlice(...a),
     })),
   ),
 );

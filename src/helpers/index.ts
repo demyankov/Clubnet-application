@@ -15,3 +15,5 @@ export * from 'helpers/getWeekDay';
 export * from 'helpers/getTodaysOrders';
 export * from 'helpers/getWeekendDays';
 export * from 'helpers/dateFormatting';
+export * from 'helpers/getMembersIdList';
+export * from 'helpers/isIncluded';

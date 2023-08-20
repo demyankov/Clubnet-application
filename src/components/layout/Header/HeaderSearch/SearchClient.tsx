@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import { FC } from 'react';
 
 import { Avatar, Group, Text } from '@mantine/core';
 import { generatePath, useNavigate } from 'react-router-dom';

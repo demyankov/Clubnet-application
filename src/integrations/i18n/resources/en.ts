@@ -165,6 +165,7 @@ export const en = {
       successDeletedTeam: 'The team was successfully deleted',
       btnDelete: 'Delete',
       btnCancel: 'Cancel',
+      btnInvite: 'Invite',
       agreeToDelete:
         'Are you sure you want to delete this tournament? This action is irrevocable!',
       agreeToDeleteTeam:
@@ -172,6 +173,14 @@ export const en = {
       requiredField: 'This field is required!',
       shouldBeMultiple: 'The value must be a multiple of the specified game mode',
       typeGames: 'Game selection',
+      inviteMembers: 'Invite members',
+      btnAccept: 'Accept',
+      btnRefuse: 'Refuse',
+      removeInvitationTitle: 'Remove invitation',
+      agreeToRemoveInvitation:
+        'Are you sure you want to delete this invitation? This action is irrevocable!',
+      acceptInvitationTitle: 'Accept invitation',
+      acceptInvitation: 'Are you sure you want to accept this invitation?',
     },
 
     notifications: {
@@ -208,6 +217,11 @@ export const en = {
       addCategoryNotification: 'Category successfully added',
       insufficientBalance: 'Please, recharge your balance',
       basketFull: 'Basket is full',
+      successfullySendInvitation: 'The invitation successfully sent',
+      successfullyRemoveInvitation: 'The invitation successfully removed',
+      successAcceptInvitation: 'The invitation successfully accepted',
+      nobodyToAddInTheTeam: 'Nobody selected to add in the team. Select a gamer',
+      isAlreadyInTeam: 'Selected gamer is already in this team',
     },
 
     orders: {
@@ -223,6 +237,7 @@ export const en = {
       update: 'Update',
       save: 'Save',
       profileTeams: 'Teams',
+      profileInvitations: 'Invitations',
       profileFriends: 'Friends',
       profileStats: 'Stats',
       createTeam: 'Create a team and participate in tournaments',
@@ -249,6 +264,8 @@ export const en = {
       modalNameLabel: 'Enter name',
       modalTagLabel: 'Enter tag',
       createButtonText: 'Create team',
+      inviteMembersButtonText: 'Invite members',
+      inviteMembersText: 'No members added',
       maxLength: 'Max length: ',
       aboutTeam: 'About',
       teamInfo: 'Information',
