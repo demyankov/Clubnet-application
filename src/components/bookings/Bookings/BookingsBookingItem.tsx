@@ -6,10 +6,10 @@ import { useTranslation } from 'react-i18next';
 import { DatabasePaths } from 'constants/databasePaths';
 import { dateFormatting } from 'helpers';
 import { getFireStoreDataByFieldName } from 'integrations/firebase/database';
-import { IOrder, ITable } from 'store/slices/bookings/types';
+import { IBooking, ITable } from 'store/slices/bookings/types';
 
 const useStyles = createStyles((theme) => ({
-  orderCard: {
+  bookingCard: {
     '&:not(:last-child)': {
       marginBottom: theme.spacing.md,
     },
@@ -17,17 +17,17 @@ const useStyles = createStyles((theme) => ({
 }));
 
 type Props = {
-  order: IOrder;
+  booking: IBooking;
 };
 
-export const BookingsOrderItem: FC<Props> = ({ order }) => {
+export const BookingsBookingItem: FC<Props> = ({ booking }) => {
   const [tableName, setTableName] = useState<string>('');
   const {
     start,
     finish,
     contact: { name, phone },
     tableId,
-  } = order;
+  } = booking;
   const { t } = useTranslation();
   const { classes } = useStyles();
   const getTableName = useCallback(async () => {
@@ -46,9 +46,9 @@ export const BookingsOrderItem: FC<Props> = ({ order }) => {
   }, [getTableName]);
 
   return (
-    <Card withBorder className={classes.orderCard}>
+    <Card withBorder className={classes.bookingCard}>
       <Group>
-        <Text fw={700}>{t('orders.table')}: </Text>
+        <Text fw={700}>{t('bookings.table')}: </Text>
         <Text>{tableName || <Loader size="xs" />}</Text>
       </Group>
       <Group>

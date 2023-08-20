@@ -38,7 +38,7 @@ export type IWorkingHours = Record<WeekDays, IDayHours>;
 export interface ITable {
   id: string;
   name: number;
-  ordersCount: number;
+  bookingsCount: number;
 }
 
 interface IContact {
@@ -46,7 +46,7 @@ interface IContact {
   phone: string;
 }
 
-export interface IOrder {
+export interface IBooking {
   id: string;
   tableId: string;
   addressId: string;

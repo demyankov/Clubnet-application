@@ -9,7 +9,11 @@ import {
   isIncluded,
   errorNotification,
 } from 'helpers';
-import { Filter, getFirestoreData, updateFirestoreData } from 'integrations/firebase';
+import {
+  Filter,
+  getFilteredFirestoreData,
+  updateFirestoreData,
+} from 'integrations/firebase';
 import { IUser } from 'store/slices/auth/types';
 import { BoundStore } from 'store/store';
 import { GenericStateCreator } from 'store/types';
@@ -60,7 +64,10 @@ export const inviteMemberSlice: GenericStateCreator<BoundStore> = (set, get) => 
 
       const userId = user?.id || '';
 
-      const { data } = await getFirestoreData<IUser>(DatabasePaths.Users, filters);
+      const { data } = await getFilteredFirestoreData<IUser>(
+        DatabasePaths.Users,
+        filters,
+      );
 
       const membersIdForAdding = get().membersList.map(({ id }) => id);
 

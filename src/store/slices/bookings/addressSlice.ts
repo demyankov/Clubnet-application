@@ -9,7 +9,7 @@ import {
   deleteFirestoreData,
   Filter,
   getDataArrayWithRefArray,
-  getFirestoreData,
+  getFilteredFirestoreData,
   getFireStoreDataByFieldName,
   setFirestoreData,
   updateFirestoreData,
@@ -18,7 +18,7 @@ import {
   AddressData,
   IAddress,
   IEstablishment,
-  IOrder,
+  IBooking,
   ITable,
 } from 'store/slices/bookings/types';
 import { BookingStore } from 'store/store';
@@ -234,17 +234,18 @@ export const addressSlice: GenericStateCreator<BookingStore> = (set, get) => ({
             tables.forEach(async (table) => {
               await deleteFirestoreData(DatabasePaths.Tables, table.id);
 
-              if (table.ordersCount) {
-                const filter: Filter<IOrder> = {
+              if (table.bookingsCount) {
+                const filter: Filter<IBooking> = {
                   field: 'tableId',
                   value: table.id,
                 };
-                const { data } = await getFirestoreData<IOrder>(DatabasePaths.Orders, [
-                  filter,
-                ]);
+                const { data } = await getFilteredFirestoreData<IBooking>(
+                  DatabasePaths.Bookings,
+                  [filter],
+                );
 
-                data.forEach(async (order) => {
-                  await deleteFirestoreData(DatabasePaths.Orders, order.id);
+                data.forEach(async (booking) => {
+                  await deleteFirestoreData(DatabasePaths.Bookings, booking.id);
                 });
               }
             });

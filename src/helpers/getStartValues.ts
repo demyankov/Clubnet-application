@@ -2,13 +2,13 @@ import dayjs from 'dayjs';
 
 import { IHourValue } from 'components/bookings/types';
 import { getDayjsValue, getWeekDay } from 'helpers';
-import { IOrder, IWorkingHours } from 'store/slices/bookings/types';
+import { IBooking, IWorkingHours } from 'store/slices/bookings/types';
 
 export const getStartValues = (
   day: Date,
   reset: () => void,
   workingHours: IWorkingHours,
-  todaysOrders: IOrder[],
+  todaysBookings: IBooking[],
   hours: IHourValue[],
 ): IHourValue[] => {
   const res: IHourValue[] = [];
@@ -33,59 +33,59 @@ export const getStartValues = (
   }
 
   // eslint-disable-next-line no-labels,no-restricted-syntax
-  hasOrders: if (todaysOrders.length) {
-    let currentOrderIndex = todaysOrders.findIndex((order) => {
-      const orderStart = getDayjsValue(order.start.toDate());
+  hasBookings: if (todaysBookings.length) {
+    let currentBookingIndex = todaysBookings.findIndex((booking) => {
+      const bookingStart = getDayjsValue(booking.start.toDate());
 
-      return orderStart.isAfter(startValue);
+      return bookingStart.isAfter(startValue);
     });
 
-    if (currentOrderIndex === -1) {
+    if (currentBookingIndex === -1) {
       // eslint-disable-next-line no-labels
-      break hasOrders;
+      break hasBookings;
     }
 
     hours.forEach((hour) => {
       const hourValue = getDayjsValue(day, hour.value);
-      const currentOrder = todaysOrders[currentOrderIndex];
-      const orderStart = currentOrder ? dayjs(currentOrder.start.toDate()) : null;
-      const orderFinish = currentOrder ? dayjs(currentOrder.finish.toDate()) : null;
+      const currentBooking = todaysBookings[currentBookingIndex];
+      const bookingStart = currentBooking ? dayjs(currentBooking.start.toDate()) : null;
+      const bookingFinish = currentBooking ? dayjs(currentBooking.finish.toDate()) : null;
 
-      if (!currentOrder && hourValue.isBefore(finishValue)) {
+      if (!currentBooking && hourValue.isBefore(finishValue)) {
         res.push(hour);
       }
 
       if (
-        currentOrder &&
+        currentBooking &&
         (hourValue.isSame(startValue) || hourValue.isAfter(startValue)) &&
-        hourValue.isBefore(orderStart)
+        hourValue.isBefore(bookingStart)
       ) {
         res.push(hour);
       }
 
       if (
-        currentOrder &&
-        (hourValue.isSame(orderStart) || hourValue.isAfter(orderStart)) &&
-        hourValue.isBefore(orderFinish)
+        currentBooking &&
+        (hourValue.isSame(bookingStart) || hourValue.isAfter(bookingStart)) &&
+        hourValue.isBefore(bookingFinish)
       ) {
         res.push({ ...hour, disabled: true });
       }
 
       if (
-        currentOrder &&
-        hourValue.isSame(orderFinish) &&
+        currentBooking &&
+        hourValue.isSame(bookingFinish) &&
         hourValue.isBefore(finishValue)
       ) {
-        const nextOrder = todaysOrders[currentOrderIndex + 1];
-        const nextOrderStart = nextOrder ? dayjs(nextOrder.start.toDate()) : null;
+        const nextBooking = todaysBookings[currentBookingIndex + 1];
+        const nextBookingStart = nextBooking ? dayjs(nextBooking.start.toDate()) : null;
 
-        if (nextOrderStart && hourValue.isSame(nextOrderStart)) {
+        if (nextBookingStart && hourValue.isSame(nextBookingStart)) {
           res.push({ ...hour, disabled: true });
         } else {
           res.push(hour);
         }
 
-        currentOrderIndex += 1;
+        currentBookingIndex += 1;
       }
     });
 

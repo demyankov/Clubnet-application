@@ -23,7 +23,7 @@ import {
   BookingsTableCards,
   BookingsAddressLabel,
   BookingsTable,
-  BookingsOrderList,
+  BookingsBookingList,
   RenderContentContainer,
 } from 'components';
 import { Paths } from 'constants/paths';
@@ -70,11 +70,11 @@ export const BookingsAddress: FC = () => {
   const {
     addressActions: { isAddressFetching, currentAddress, setCurrentAddress },
     tableActions: { isTableFetching, tables, currentTable, addTable, setCurrentTable },
-    orderActions: { resetOrders },
+    bookingActions: { resetBookings },
   } = useBookings((state) => state);
   const [settingsOpened, settingsActions] = useDisclosure(false);
   const [tableOpened, tableActions] = useDisclosure(false);
-  const [ordersOpened, ordersActions] = useDisclosure(false);
+  const [bookingsOpened, bookingsActions] = useDisclosure(false);
   const { id } = useParams();
   const { isAdmin, isManager } = useRole();
   const { t } = useTranslation();
@@ -83,7 +83,7 @@ export const BookingsAddress: FC = () => {
   const handleOnCloseSettings = (): void => {
     tableActions.close();
     setCurrentTable();
-    resetOrders();
+    resetBookings();
   };
 
   useEffect(() => {
@@ -110,7 +110,7 @@ export const BookingsAddress: FC = () => {
         opened={settingsOpened}
         onClose={settingsActions.close}
         title={t('address.addressSettings')}
-        zIndex={150}
+        zIndex={101}
       >
         <BookingsAddressSettings close={settingsActions.close} />
       </Drawer>
@@ -119,19 +119,19 @@ export const BookingsAddress: FC = () => {
         opened={tableOpened}
         onClose={handleOnCloseSettings}
         title={currentTableTitle}
-        zIndex={150}
+        zIndex={101}
       >
         <BookingsTable close={tableActions.close} />
       </Drawer>
 
       <Drawer
-        opened={ordersOpened}
-        onClose={ordersActions.close}
+        opened={bookingsOpened}
+        onClose={bookingsActions.close}
         position="right"
-        title={t('tables.orders')}
-        zIndex={150}
+        title={t('tables.bookings')}
+        zIndex={101}
       >
-        <BookingsOrderList />
+        <BookingsBookingList />
       </Drawer>
 
       <Grid align="center">
@@ -150,9 +150,9 @@ export const BookingsAddress: FC = () => {
 
         {(isAdmin || isManager) && (
           <Grid.Col span={4} ta="right">
-            <Button className={classes.goBack} onClick={ordersActions.open}>
+            <Button className={classes.goBack} onClick={bookingsActions.open}>
               <IconReceipt size={20} />
-              <Text className={classes.btnText}>{t('address.showOrders')}</Text>
+              <Text className={classes.btnText}>{t('address.showBookings')}</Text>
             </Button>
           </Grid.Col>
         )}

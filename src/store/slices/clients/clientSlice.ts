@@ -15,7 +15,7 @@ import { formatPhoneNumber } from 'helpers/formatters';
 import {
   checkFieldValueExists,
   Filter,
-  getFirestoreData,
+  getFilteredFirestoreData,
   getFireStoreDataByFieldName,
   setFirestoreData,
   updateFirestoreData,
@@ -85,7 +85,7 @@ export const clientSlice: GenericStateCreator<BoundStore> = (set, get) => ({
     try {
       const { filters } = get();
 
-      const { data, totalCount, querySnapshot } = await getFirestoreData<IUser>(
+      const { data, totalCount, querySnapshot } = await getFilteredFirestoreData<IUser>(
         DatabasePaths.Users,
         filters,
       );
@@ -152,17 +152,16 @@ export const clientSlice: GenericStateCreator<BoundStore> = (set, get) => ({
 
       const { filters } = get();
 
-      const { data, totalCount, querySnapshot } = await getFirestoreData<IUser>(
+      const { data, querySnapshot } = await getFilteredFirestoreData<IUser>(
         DatabasePaths.Users,
         filters,
+        'and',
         lastVisible,
-        get().totalCount,
       );
 
       set(
         produce((state: BoundStore) => {
           state.clients = filters.length ? data : [...state.clients, ...data];
-          state.totalCount = totalCount;
           state.querySnapshot = querySnapshot;
         }),
       );

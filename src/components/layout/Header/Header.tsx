@@ -83,7 +83,7 @@ export const HeaderMegaMenu: FC = () => {
     basketTotalCounter || totalCountNotify || usersConfirmTotalCount;
 
   return (
-    <Header height={60} zIndex={240}>
+    <Header height={60} zIndex={100}>
       <Group sx={{ height: '100%' }} className={classes.inner}>
         <ActionIcon onClick={handleLogoClick} className={classes.logo}>
           <AppLogo />

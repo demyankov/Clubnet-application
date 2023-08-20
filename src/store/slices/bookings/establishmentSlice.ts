@@ -5,14 +5,15 @@ import { DatabasePaths } from 'constants/databasePaths';
 import { errorHandler } from 'helpers';
 import { uniqueIdGenerator } from 'helpers/uniqueIdGenerator';
 import {
-  getFirestoreData,
+  getFilteredFirestoreData,
   setFirestoreData,
   updateFirestoreData,
   deleteFirestoreData,
   getDataArrayWithRefArray,
+  getFirestoreData,
   Filter,
 } from 'integrations/firebase';
-import { IAddress, IEstablishment, IOrder } from 'store/slices/bookings/types';
+import { IAddress, IEstablishment, IBooking } from 'store/slices/bookings/types';
 import { BookingStore } from 'store/store';
 import { GenericStateCreator } from 'store/types';
 
@@ -208,18 +209,18 @@ export const establishmentSlice: GenericStateCreator<BookingStore> = (set, get) 
                 tables.forEach(async (table) => {
                   await deleteFirestoreData(DatabasePaths.Tables, table.id);
 
-                  if (table.ordersCount) {
-                    const filter: Filter<IOrder> = {
+                  if (table.bookingsCount) {
+                    const filter: Filter<IBooking> = {
                       field: 'tableId',
                       value: table.id,
                     };
-                    const { data } = await getFirestoreData<IOrder>(
-                      DatabasePaths.Orders,
+                    const { data } = await getFilteredFirestoreData<IBooking>(
+                      DatabasePaths.Bookings,
                       [filter],
                     );
 
-                    data.forEach(async (order) => {
-                      await deleteFirestoreData(DatabasePaths.Orders, order.id);
+                    data.forEach(async (booking) => {
+                      await deleteFirestoreData(DatabasePaths.Bookings, booking.id);
                     });
                   }
                 });

@@ -13,8 +13,7 @@ import {
 import {
   Filter,
   getAllCollection,
-  getFirestoreData,
-  getPaginationByFieldNameAndFieldValue,
+  getFilteredFirestoreData,
   setFirestoreData,
   uploadImageAndGetURL,
 } from 'integrations/firebase';
@@ -192,10 +191,11 @@ export const shopSlice: GenericStateCreator<BoundStore> = (set, get) => ({
         dataFilter,
       );
 
-      const { data, querySnapshot, totalCount } = await getFirestoreData<IProductData>(
-        DatabasePaths.Products,
-        productFilter,
-      );
+      const { data, querySnapshot, totalCount } =
+        await getFilteredFirestoreData<IProductData>(
+          DatabasePaths.Products,
+          productFilter,
+        );
 
       set(
         produce((state: BoundStore) => {
@@ -226,17 +226,21 @@ export const shopSlice: GenericStateCreator<BoundStore> = (set, get) => ({
     try {
       const lastVisible = get().querySnapshot?.docs[get().querySnapshot!.docs.length - 1];
 
-      const { data, querySnapshot } =
-        await getPaginationByFieldNameAndFieldValue<IProductData>(
-          DatabasePaths.Products,
-          'categoryId',
-          get().categoryId,
-          lastVisible,
-        );
+      const filter: Filter<IProductData> = {
+        field: 'categoryId',
+        value: get().categoryId,
+      };
+
+      const { data, querySnapshot } = await getFilteredFirestoreData<IProductData>(
+        DatabasePaths.Products,
+        [filter],
+        'and',
+        lastVisible,
+      );
 
       set(
         produce((state: BoundStore) => {
-          state.products = [...get().products, ...data];
+          state.products = [...state.products, ...data];
           state.querySnapshot = querySnapshot;
         }),
       );

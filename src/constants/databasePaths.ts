@@ -5,7 +5,7 @@ export enum DatabasePaths {
   Establishments = 'establishments',
   Addresses = 'addresses',
   Tables = 'tables',
-  Orders = 'orders',
+  Bookings = 'bookings',
   BalanceHistory = 'balanceHistory',
   Friends = 'friends',
   Categories = 'categories',

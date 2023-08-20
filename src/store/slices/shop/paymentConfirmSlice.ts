@@ -8,7 +8,7 @@ import { convertFiltersToArray, errorHandler, uniqueIdGenerator } from 'helpers'
 import {
   Filter,
   deleteFirestoreData,
-  getFirestoreData,
+  getFilteredFirestoreData,
   setFirestoreData,
   subscribeToCollection,
   updateFirestoreData,
@@ -116,7 +116,7 @@ export const paymentConfirmSlice: GenericStateCreator<BoundStore> = (set, get) =
         IFilterProduct
       >(dataFilter);
 
-      const { data } = await getFirestoreData<IOrderConfirmation>(
+      const { data } = await getFilteredFirestoreData<IOrderConfirmation>(
         DatabasePaths.OrderConfirmation,
         productFilter,
       );

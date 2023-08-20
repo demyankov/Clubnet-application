@@ -1,2 +1,4 @@
-export const getCollectionPathUrl = (collections: string[]): string =>
-  collections.join('/');
+import { DatabasePaths } from 'constants/databasePaths';
+
+export const getCollectionPathUrl = (collections: string[]): DatabasePaths =>
+  collections.join('/') as DatabasePaths;

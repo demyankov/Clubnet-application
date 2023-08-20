@@ -1,30 +1,31 @@
 import { OrderByDirection } from '@firebase/firestore';
 import {
+  and,
   collection,
   deleteDoc,
   doc,
-  DocumentData,
-  DocumentReference,
-  endAt,
   getCountFromServer,
   getDoc,
   getDocs,
   limit,
   onSnapshot,
+  or,
   orderBy,
   query,
-  QueryDocumentSnapshot,
-  QuerySnapshot,
   setDoc,
   startAfter,
-  startAt,
-  Unsubscribe,
   updateDoc,
   where,
+  DocumentData,
+  DocumentReference,
+  QueryDocumentSnapshot,
+  QuerySnapshot,
+  Unsubscribe,
 } from 'firebase/firestore';
 
 import { DatabasePaths } from 'constants/databasePaths';
 import { Roles } from 'constants/userRoles';
+import { generateQueryFilterArray } from 'helpers';
 import { db } from 'integrations/firebase/firebase';
 import { ITeam, ITeamMember } from 'store/slices';
 
@@ -41,12 +42,12 @@ type FirestoreOutput<T> = {
   querySnapshot: QuerySnapshot;
 };
 
-type FirestoreFilteredOutput<T> = Omit<FirestoreOutput<T>, 'totalCount'>;
+type QueryType = 'or' | 'and';
 
 const defaultLimit = 10;
 
 export const setFirestoreData = async <T extends DocumentData>(
-  path: DatabasePaths | string,
+  path: DatabasePaths,
   id: string,
   data: T,
 ): Promise<DocumentReference<T>> => {
@@ -58,7 +59,7 @@ export const setFirestoreData = async <T extends DocumentData>(
 };
 
 export const deleteFirestoreData = async (
-  path: DatabasePaths | string,
+  path: DatabasePaths,
   id: string,
 ): Promise<void> => {
   const docRef = doc(db, path, id);
@@ -66,49 +67,22 @@ export const deleteFirestoreData = async (
   await deleteDoc(docRef);
 };
 
-export const getFirestoreData = async <T>(
-  collectionPath: DatabasePaths | string,
-  filters: Filter<T>[] = [],
+export const getFirestoreData = async <T extends { id: string }>(
+  path: DatabasePaths,
   lastVisible: Nullable<QueryDocumentSnapshot> = null,
-  totalCounter?: number,
-  orderByField: string = 'id',
+  orderByField: keyof T = 'id',
+  countLimit?: number,
 ): Promise<FirestoreOutput<T>> => {
-  const collectionRef = collection(db, collectionPath);
-
-  let queryRef = query(
-    collectionRef,
-    orderBy(orderByField, 'asc'),
-    startAfter(lastVisible || 0),
-    limit(defaultLimit),
-  );
-
+  const collectionRef = collection(db, path);
   const countFromServer = await getCountFromServer(collectionRef);
-
-  filters.forEach((filter) => {
-    queryRef = query(
-      collectionRef,
-      orderBy(filter.field as string),
-      startAt(filter.value),
-      endAt(`${filter?.value}\uf8ff`),
-    );
-  });
-
-  const fullQuerySnapshot = await getDocs(queryRef);
-  const filteredTotalCounter = fullQuerySnapshot.size;
-
-  const totalCount = filters.length ? filteredTotalCounter : countFromServer.data().count;
-
-  filters.forEach((filter) => {
-    queryRef = query(
-      collectionRef,
-      orderBy(filter.field as string),
-      startAt(filter.value),
-      endAt(`${filter?.value}\uf8ff`),
-      limit(totalCounter || defaultLimit),
-    );
-  });
-
-  const querySnapshot = await getDocs(queryRef);
+  const { count } = countFromServer.data();
+  const q = query(
+    collectionRef,
+    orderBy(orderByField as string),
+    startAfter(lastVisible || 0),
+    limit(countLimit || defaultLimit),
+  );
+  const querySnapshot = await getDocs(q);
   const data: T[] = [];
 
   querySnapshot.forEach((doc) => {
@@ -116,18 +90,77 @@ export const getFirestoreData = async <T>(
   });
 
   return {
-    totalCount,
     data,
+    totalCount: count,
     querySnapshot,
   };
 };
 
-export const getFireStoreDataByFieldName = async <T>(
-  path: DatabasePaths | string,
-  identifier: string,
-  field: string = 'id',
+export const getFilteredFirestoreData = async <T extends { id: string }>(
+  path: DatabasePaths,
+  filters: Filter<T>[],
+  queryType: QueryType = 'and',
+  lastVisible: Nullable<QueryDocumentSnapshot> = null,
+  orderByField: keyof T = 'id',
+  countLimit?: number,
+): Promise<FirestoreOutput<T>> => {
+  const collectionRef = collection(db, path);
+  const queryFilter = generateQueryFilterArray<T>(filters);
+  const queryConstraints = queryType === 'and' ? and(...queryFilter) : or(...queryFilter);
+
+  let q = query(collectionRef, queryConstraints);
+  const fullQuerySnapshot = await getDocs(q);
+  const count = fullQuerySnapshot.size;
+
+  q = query(
+    collectionRef,
+    queryConstraints,
+    orderBy(orderByField as string),
+    startAfter(lastVisible || 0),
+    limit(countLimit || defaultLimit),
+  );
+  const querySnapshot = await getDocs(q);
+  const data: T[] = [];
+
+  querySnapshot.forEach((doc) => {
+    data.push(doc.data() as T);
+  });
+
+  return {
+    data,
+    totalCount: count,
+    querySnapshot,
+  };
+};
+
+export const getFirestoreDataBySubstring = async <T extends { id: string }>(
+  path: DatabasePaths,
+  filter: Filter<T>,
+): Promise<T[]> => {
+  const { field, value } = filter;
+  const collectionRef = collection(db, path);
+  const q = query(
+    collectionRef,
+    where(field as string, '>=', value),
+    where(field as string, '<=', `${value}\uf8ff`),
+    orderBy(field as string),
+  );
+  const querySnapshot = await getDocs(q);
+  const data: T[] = [];
+
+  querySnapshot.forEach((doc) => {
+    data.push(doc.data() as T);
+  });
+
+  return data;
+};
+
+export const getFireStoreDataByFieldName = async <T extends { id: string }>(
+  path: DatabasePaths,
+  identifier: T[keyof T],
+  field: keyof T = 'id',
 ): Promise<T | undefined> => {
-  const queryRef = query(collection(db, path), where(field, '==', identifier));
+  const queryRef = query(collection(db, path), where(field as string, '==', identifier));
 
   const querySnapshot = await getDocs(queryRef);
 
@@ -139,7 +172,7 @@ export const getFireStoreDataByFieldName = async <T>(
 };
 
 export const updateFirestoreData = async (
-  path: DatabasePaths | string,
+  path: DatabasePaths,
   id: string,
   propToUpdate: { [x: string]: any },
 ): Promise<void> => {
@@ -230,13 +263,11 @@ export const getFirestoreTeamMembers = async (
   const promises = refArray.map((item) => getDoc(item.userLink!));
   const docs = await Promise.all(promises);
 
-  const result = docs.map((doc, index) => {
+  return docs.map((doc, index) => {
     const data = doc.data();
 
     return { ...data, role: refArray[index].role };
   });
-
-  return result;
 };
 
 export const getDataArrayWithRefArray = async <T extends DocumentData>(
@@ -249,42 +280,14 @@ export const getDataArrayWithRefArray = async <T extends DocumentData>(
 };
 
 export const getDocumentReference = async <T extends DocumentData>(
-  path: DatabasePaths | string,
+  path: DatabasePaths,
   id: string,
 ): Promise<DocumentReference<T>> => {
   return doc(db, path, id) as DocumentReference<T>;
 };
 
-export const getPaginationByFieldNameAndFieldValue = async <T extends DocumentData>(
-  collectionPath: DatabasePaths | string,
-  fieldName: string,
-  fieldValue: string,
-  lastVisible: Nullable<QueryDocumentSnapshot> = null,
-  limitCount: number = defaultLimit,
-): Promise<FirestoreFilteredOutput<T>> => {
-  const getMoreProduct = query(
-    collection(db, collectionPath),
-    where(fieldName, '==', fieldValue),
-    orderBy(fieldName, 'asc'),
-    startAfter(lastVisible),
-    limit(limitCount),
-  );
-
-  const querySnapshot = await getDocs(getMoreProduct);
-  const data: T[] = [];
-
-  querySnapshot.forEach((doc) => {
-    data.push(doc.data() as T);
-  });
-
-  return {
-    data,
-    querySnapshot,
-  };
-};
-
 export const getAllCollection = async <T extends DocumentData>(
-  collectionPath: DatabasePaths | string,
+  collectionPath: DatabasePaths,
   orderByField: string = 'id',
 ): Promise<T[]> => {
   const queryRef = query(collection(db, collectionPath), orderBy(orderByField, 'asc'));
@@ -300,7 +303,7 @@ export const getAllCollection = async <T extends DocumentData>(
 };
 
 export const subscribeToCollection = <T extends DocumentData>(
-  collectionPath: DatabasePaths | string,
+  collectionPath: DatabasePaths,
   filters: Filter<T>[] = [],
   dataCallback: (data: T[]) => void,
   orderByField: string = 'id',

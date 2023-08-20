@@ -14,7 +14,7 @@ import {
   clientSlice,
   searchSlice,
   tableSlice,
-  orderSlice,
+  bookingSlice,
   balanceHistorySlice,
   friendSlice,
   basketSlice,
@@ -33,7 +33,7 @@ import {
   IFriends,
   IAddressActions,
   ITableActions,
-  IOrderActions,
+  IBookingActions,
   IInviteMember,
   inviteMemberSlice,
   IBasket,
@@ -66,7 +66,7 @@ export interface BookingStore
   extends IEstablishmentActions,
     IAddressActions,
     ITableActions,
-    IOrderActions {}
+    IBookingActions {}
 
 export const useAuth = create(
   devtools(
@@ -126,7 +126,7 @@ export const useBookings = create(
       ...establishmentSlice(...a),
       ...addressSlice(...a),
       ...tableSlice(...a),
-      ...orderSlice(...a),
+      ...bookingSlice(...a),
     })),
   ),
 );

@@ -18,7 +18,7 @@ import {
   getCollectionPathUrl,
   getDataArrayWithRefArray,
   getDocumentReference,
-  getFirestoreData,
+  getFilteredFirestoreData,
   subscribeToCollection,
   updateFirestoreData,
 } from 'integrations/firebase';
@@ -27,6 +27,7 @@ import { BoundStore } from 'store/store';
 import { GenericStateCreator } from 'store/types';
 
 interface IFriendRequest {
+  id: string;
   userRef: DocumentReference<IUser>;
   status: FriendStatus;
   timestamp: Timestamp;
@@ -117,12 +118,15 @@ export const friendSlice: GenericStateCreator<BoundStore> = (set, get) => ({
       dataFilter,
     );
 
-    const { data, totalCount, querySnapshot } = await getFirestoreData<IFriendRequest>(
-      path,
-      friendFilter,
-      null,
-      totalCounter,
-    );
+    const { data, totalCount, querySnapshot } =
+      await getFilteredFirestoreData<IFriendRequest>(
+        path,
+        friendFilter,
+        'and',
+        null,
+        'id',
+        totalCounter,
+      );
 
     const dataFriends = await getDataArrayWithRefArray<IUser>(
       data.map((friendRequest) => friendRequest.userRef),

@@ -4,36 +4,36 @@ import { LoadingOverlay, Text } from '@mantine/core';
 import { DateInput } from '@mantine/dates';
 import { useTranslation } from 'react-i18next';
 
-import { BookingsOrderItem } from 'components';
+import { BookingsBookingItem } from 'components';
 import { DateFormats } from 'constants/dateFormats';
 import { getWeekendDays, dateFormatting } from 'helpers';
 import { useBookings } from 'store/store';
 
-export const BookingsOrderList: FC = () => {
+export const BookingsBookingList: FC = () => {
   const [currentDate, setCurrentDate] = useState<Date | null>(new Date());
   const {
     addressActions: { currentAddress },
-    orderActions: { orders, getOrders, isOrderFetching, resetOrders },
+    bookingActions: { bookings, getBookings, isBookingFetching, resetBookings },
   } = useBookings((state) => state);
   const { t, i18n } = useTranslation();
   const weekendDays = getWeekendDays(currentAddress!.workingHours);
-  const fetchOrders = useCallback(async () => {
+  const fetchBookings = useCallback(async () => {
     const date = dateFormatting(currentDate!, DateFormats.DayMonthYear);
 
-    await getOrders(currentAddress!.id, date);
-  }, [currentDate, currentAddress, getOrders]);
+    await getBookings(currentAddress!.id, date);
+  }, [currentDate, currentAddress, getBookings]);
 
   useEffect(() => {
-    fetchOrders();
+    fetchBookings();
 
     return () => {
-      resetOrders();
+      resetBookings();
     };
-  }, [fetchOrders, resetOrders]);
+  }, [fetchBookings, resetBookings]);
 
   return (
     <>
-      <LoadingOverlay zIndex={220} visible={isOrderFetching} />
+      <LoadingOverlay zIndex={1} visible={isBookingFetching} />
 
       <DateInput
         valueFormat={DateFormats.MonthDayYear}
@@ -45,9 +45,11 @@ export const BookingsOrderList: FC = () => {
         weekendDays={weekendDays}
         my="md"
       />
-      {orders.length
-        ? orders.map((order) => <BookingsOrderItem key={order.id} order={order} />)
-        : !isOrderFetching && <Text ta="center">{t('orders.noOrders')}</Text>}
+      {bookings.length
+        ? bookings.map((booking) => (
+            <BookingsBookingItem key={booking.id} booking={booking} />
+          ))
+        : !isBookingFetching && <Text ta="center">{t('bookings.noBookings')}</Text>}
     </>
   );
 };

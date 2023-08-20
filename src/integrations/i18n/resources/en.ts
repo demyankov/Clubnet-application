@@ -12,7 +12,7 @@ export const en = {
       applyToAll: 'Apply to all',
       save: 'Save',
       addressSettings: 'Address settings',
-      showOrders: 'Orders',
+      showBookings: 'Bookings',
     },
 
     clients: {
@@ -224,8 +224,8 @@ export const en = {
       isAlreadyInTeam: 'Selected gamer is already in this team',
     },
 
-    orders: {
-      noOrders: 'No orders',
+    bookings: {
+      noBookings: 'No bookings',
       table: 'Table',
     },
 
@@ -276,16 +276,16 @@ export const en = {
     tables: {
       table: 'table #',
       book: 'Book',
-      orders: 'Orders',
+      bookings: 'Bookings',
       start: 'Start',
       end: 'End',
       clear: 'Clear',
       delete: 'Delete table',
       agreeToDeleteTable:
-        'You are about to delete the table. This action is irrevocable and will cause deleting of all the orders of the current table. Are you sure?',
+        'You are about to delete the table. This action is irrevocable and will cause deleting of all the bookings of the current table. Are you sure?',
       customerName: "Customer's name",
-      orderDetails: 'Order details',
-      orderConfirmation: 'You can review, edit or delete the order in you profile.',
+      bookingDetails: 'Booking details',
+      bookingConfirmation: 'You can review, edit or delete the booking in you profile.',
     },
 
     tournaments: {

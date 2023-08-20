@@ -1,12 +1,12 @@
 import { IHourValue } from 'components/bookings/types';
 import { getDayjsValue, getWeekDay } from 'helpers';
-import { IOrder, IWorkingHours } from 'store/slices/bookings/types';
+import { IBooking, IWorkingHours } from 'store/slices/bookings/types';
 
 export const getFinishValues = (
   day: Date,
   reset: () => void,
   workingHours: IWorkingHours,
-  todaysOrders: IOrder[],
+  todaysBookings: IBooking[],
   startValues: IHourValue[],
   start: string,
   hours: IHourValue[],
@@ -21,7 +21,7 @@ export const getFinishValues = (
 
   const { finish } = workingHours[getWeekDay(day)];
 
-  if (todaysOrders.length) {
+  if (todaysBookings.length) {
     const startIndex = startValues.findIndex((hour) => hour.value === start);
 
     for (let i = startIndex + 1; i < startValues.length; i += 1) {

@@ -12,7 +12,7 @@ export * from 'store/slices/bookings/addressSlice';
 export * from 'store/slices/friends/friendSlice';
 export * from 'store/slices/friends/friendsRequestsSlice';
 export * from 'store/slices/bookings/tableSlice';
-export * from 'store/slices/bookings/orderSlice';
+export * from 'store/slices/bookings/bookingSlice';
 export * from 'store/slices/inviteMembers/inviteMembers';
 export * from 'store/slices/shop/shopSlice';
 export * from 'store/slices/shop/basketSlice';

@@ -6,12 +6,12 @@ import { errorHandler, uniqueIdGenerator } from 'helpers';
 import {
   deleteFirestoreData,
   Filter,
-  getFirestoreData,
+  getFilteredFirestoreData,
   getFireStoreDataByFieldName,
   setFirestoreData,
   updateFirestoreData,
 } from 'integrations/firebase';
-import { IAddress, IOrder, ITable } from 'store/slices/bookings/types';
+import { IAddress, IBooking, ITable } from 'store/slices/bookings/types';
 import { BookingStore } from 'store/store';
 import { GenericStateCreator } from 'store/types';
 
@@ -39,7 +39,7 @@ export const tableSlice: GenericStateCreator<BookingStore> = (set, get) => ({
         set(
           produce((state: BookingStore) => {
             state.tableActions.currentTable = null;
-            state.orderActions.orders = [];
+            state.bookingActions.bookings = [];
           }),
         );
 
@@ -89,7 +89,7 @@ export const tableSlice: GenericStateCreator<BookingStore> = (set, get) => ({
         const name = tables.length
           ? tables[tables.length - 1].name + 1
           : tables.length + 1;
-        const table: ITable = { id, name, ordersCount: 0 };
+        const table: ITable = { id, name, bookingsCount: 0 };
 
         try {
           const tableRef = await setFirestoreData<ITable>(
@@ -159,24 +159,25 @@ export const tableSlice: GenericStateCreator<BookingStore> = (set, get) => ({
             );
           }
 
-          if (currentTable.ordersCount) {
-            const filter: Filter<IOrder> = {
+          if (currentTable.bookingsCount) {
+            const filter: Filter<IBooking> = {
               field: 'tableId',
               value: currentTable.id,
             };
-            const { data } = await getFirestoreData<IOrder>(DatabasePaths.Orders, [
-              filter,
-            ]);
+            const { data } = await getFilteredFirestoreData<IBooking>(
+              DatabasePaths.Bookings,
+              [filter],
+            );
 
-            data.forEach(async (order) => {
-              await deleteFirestoreData(DatabasePaths.Orders, order.id);
+            data.forEach(async (booking) => {
+              await deleteFirestoreData(DatabasePaths.Bookings, booking.id);
             });
           }
 
           set(
             produce((state: BookingStore) => {
               state.tableActions.currentTable = null;
-              state.orderActions.orders = [];
+              state.bookingActions.bookings = [];
             }),
           );
 

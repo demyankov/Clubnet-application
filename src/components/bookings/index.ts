@@ -10,6 +10,6 @@ export * from 'components/bookings/Establishment/AddressCards/BookingsAddressCar
 export * from 'components/bookings/Address/TableCards/BookingsTableCards';
 export * from 'components/bookings/Address/AddressLabel/BookingsAddressLabel';
 export * from 'components/bookings/Table/BookingsTable';
-export * from 'components/bookings/Table/BookingsOrderSuccessModal';
-export * from 'components/bookings/Orders/BookingsOrderList';
-export * from 'components/bookings/Orders/BookingsOrderItem';
+export * from 'components/bookings/Table/BookingsBookingSuccessModal';
+export * from 'components/bookings/Bookings/BookingsBookingList';
+export * from 'components/bookings/Bookings/BookingsBookingItem';

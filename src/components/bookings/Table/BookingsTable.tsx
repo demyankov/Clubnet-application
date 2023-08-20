@@ -18,7 +18,7 @@ import { DocumentReference, Timestamp } from 'firebase/firestore';
 import { useTranslation } from 'react-i18next';
 import { IMaskInput } from 'react-imask';
 
-import { BookingsOrderSuccessModal } from 'components';
+import { BookingsBookingSuccessModal } from 'components';
 import { DatabasePaths } from 'constants/databasePaths';
 import { DateFormats } from 'constants/dateFormats';
 import {
@@ -45,7 +45,7 @@ export const BookingsTable: FC<Props> = ({ close }) => {
   const {
     addressActions: { currentAddress },
     tableActions: { currentTable, deleteTable },
-    orderActions: { orders, addOrder, isOrderFetching, getOrders },
+    bookingActions: { bookings, addBooking, isBookingFetching, getBookings },
   } = useBookings((state) => state);
   const { user } = useAuth((state) => state);
   const { isUser, isAdmin } = useRole();
@@ -104,7 +104,7 @@ export const BookingsTable: FC<Props> = ({ close }) => {
     modals.open({
       centered: true,
       children: (
-        <BookingsOrderSuccessModal
+        <BookingsBookingSuccessModal
           tableName={currentTable!.name}
           day={day}
           start={start}
@@ -124,13 +124,13 @@ export const BookingsTable: FC<Props> = ({ close }) => {
   const weekendDays = getWeekendDays(workingHours);
 
   const startValues = useMemo(
-    () => getStartValues(day, reset, workingHours, orders, hours),
-    [day, reset, workingHours, orders, hours],
+    () => getStartValues(day, reset, workingHours, bookings, hours),
+    [day, reset, workingHours, bookings, hours],
   );
 
   const finishValues = useMemo(
-    () => getFinishValues(day, reset, workingHours, orders, startValues, start, hours),
-    [day, reset, start, startValues, orders, workingHours, hours],
+    () => getFinishValues(day, reset, workingHours, bookings, startValues, start, hours),
+    [day, reset, start, startValues, bookings, workingHours, hours],
   );
 
   const handleClear = (): void => {
@@ -139,7 +139,7 @@ export const BookingsTable: FC<Props> = ({ close }) => {
 
   const handleSubmit = (values: { start: Timestamp; finish: Timestamp }): void => {
     const date = dateFormatting(day, DateFormats.DayMonthYear);
-    const orderToAdd = {
+    const bookingToAdd = {
       ...values,
       tableId: currentTable!.id,
       addressId: currentAddress!.id,
@@ -148,7 +148,7 @@ export const BookingsTable: FC<Props> = ({ close }) => {
       date,
     };
 
-    addOrder(orderToAdd, reset, openModalSuccess);
+    addBooking(bookingToAdd, reset, openModalSuccess);
   };
 
   useEffect(() => {
@@ -166,10 +166,10 @@ export const BookingsTable: FC<Props> = ({ close }) => {
       start: '',
       finish: '',
     });
-    if (currentTable?.ordersCount) {
-      getOrders(currentTable!.id, date);
+    if (currentTable?.bookingsCount) {
+      getBookings(currentTable!.id, date);
     }
-  }, [date, currentTable, getOrders, setValues]);
+  }, [date, currentTable, getBookings, setValues]);
 
   return (
     <>
@@ -186,7 +186,7 @@ export const BookingsTable: FC<Props> = ({ close }) => {
         </Button>
       )}
       <form onSubmit={onSubmit(handleSubmit)}>
-        <LoadingOverlay visible={isOrderFetching} zIndex={220} />
+        <LoadingOverlay visible={isBookingFetching} zIndex={1} />
         <Center>
           <DatePicker
             locale={i18n.language}
@@ -204,14 +204,14 @@ export const BookingsTable: FC<Props> = ({ close }) => {
             placeholder={t('tables.start').toString()}
             data={startValues}
             {...getInputProps('start')}
-            disabled={!day || isOrderFetching}
+            disabled={!day || isBookingFetching}
           />{' '}
           -
           <Select
             placeholder={t('tables.end').toString()}
             data={finishValues}
             {...getInputProps('finish')}
-            disabled={!day || !start || isOrderFetching}
+            disabled={!day || !start || isBookingFetching}
           />
         </Flex>
 
@@ -244,7 +244,7 @@ export const BookingsTable: FC<Props> = ({ close }) => {
           <Button mr="sm" disabled={!day} onClick={handleClear}>
             {t('tables.clear')}
           </Button>
-          <Button color="teal" type="submit" disabled={isOrderFetching || !finish}>
+          <Button color="teal" type="submit" disabled={isBookingFetching || !finish}>
             {t('address.save')}
           </Button>
         </Text>

@@ -13,7 +13,7 @@ type Props = {
   name: string;
   phone: string;
 };
-export const BookingsOrderSuccessModal: FC<Props> = ({
+export const BookingsBookingSuccessModal: FC<Props> = ({
   tableName,
   day,
   start,
@@ -27,10 +27,10 @@ export const BookingsOrderSuccessModal: FC<Props> = ({
 
   return (
     <>
-      <Text mb="sm">{t('tables.orderDetails')}</Text>
+      <Text mb="sm">{t('tables.bookingDetails')}</Text>
       <Box mb="sm">
         <Group>
-          <Text fw={700}>{t('orders.table')}: </Text>
+          <Text fw={700}>{t('bookings.table')}: </Text>
           <Text>{tableName}</Text>
         </Group>
         <Group>
@@ -50,7 +50,7 @@ export const BookingsOrderSuccessModal: FC<Props> = ({
           <Text>{phone}</Text>
         </Group>
       </Box>
-      <Text>{t('tables.orderConfirmation')}</Text>
+      <Text>{t('tables.bookingConfirmation')}</Text>
     </>
   );
 };

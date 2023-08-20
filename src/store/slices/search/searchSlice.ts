@@ -3,7 +3,7 @@ import { produce } from 'immer';
 
 import { DatabasePaths } from 'constants/databasePaths';
 import { errorHandler } from 'helpers';
-import { Filter, getFirestoreData } from 'integrations/firebase';
+import { Filter, getFirestoreDataBySubstring } from 'integrations/firebase';
 import { IUser } from 'store/slices/auth/types';
 import { BoundStore } from 'store/store';
 import { GenericStateCreator } from 'store/types';
@@ -32,30 +32,31 @@ export const searchSlice: GenericStateCreator<BoundStore> = (set, get) => ({
         }),
       );
 
-      const filters: Filter<IUser>[] = [];
-
       if (value) {
-        filters.push({
+        const filter: Filter<IUser> = {
           field: 'nickName',
           value,
-        });
-      }
+        };
 
-      const { data } = await getFirestoreData<IUser>(DatabasePaths.Users, filters);
+        const users = await getFirestoreDataBySubstring<IUser>(
+          DatabasePaths.Users,
+          filter,
+        );
 
-      if (!data.length) {
+        if (!users.length) {
+          set(
+            produce((state: BoundStore) => {
+              state.resultText = t('search.empty');
+            }),
+          );
+        }
+
         set(
           produce((state: BoundStore) => {
-            state.resultText = t('search.empty');
+            state.searchResults = users;
           }),
         );
       }
-
-      set(
-        produce((state: BoundStore) => {
-          state.searchResults = data;
-        }),
-      );
     } catch (error) {
       errorHandler(error as Error);
     } finally {
