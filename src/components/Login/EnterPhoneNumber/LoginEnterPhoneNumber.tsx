@@ -3,9 +3,11 @@ import { FC } from 'react';
 import { Input, Group, Button, LoadingOverlay } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { useTranslation } from 'react-i18next';
+import { FaSteam } from 'react-icons/fa';
 import { IMaskInput } from 'react-imask';
 
 import { LoginViewsProps } from 'components/Login/types';
+import { STEAM_AUTH_URL } from 'constants/stemAuthURL';
 import { validatePhone, formatPhoneNumber } from 'helpers';
 import { useAuth } from 'store/store';
 
@@ -64,6 +66,11 @@ export const LoginEnterPhoneNumber: FC<LoginViewsProps> = ({ setTempPhone }) => 
       <Group position="center" mt="xl">
         <Button type="submit" radius="xl" disabled={isFetching}>
           {t('form.sendSMS')}
+        </Button>
+
+        <Button component="a" href={STEAM_AUTH_URL} radius="xl">
+          <FaSteam color="white" size={20} style={{ marginRight: '5px' }} />
+          {t('form.signInSteam')}
         </Button>
       </Group>
     </form>

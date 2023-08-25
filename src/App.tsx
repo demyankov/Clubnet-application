@@ -2,7 +2,7 @@ import { FC, Suspense, useCallback, useEffect } from 'react';
 
 import { AppShell } from '@mantine/core';
 import { Notifications } from '@mantine/notifications';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes, useSearchParams } from 'react-router-dom';
 
 import {
   HeaderMegaMenu,
@@ -11,13 +11,20 @@ import {
   RenderContentContainer,
 } from 'components';
 import { useRole } from 'hooks';
+import { useSteamAuth } from 'hooks/useSteamAuth';
 import { routes } from 'routes/routes';
 import { useAuth, useShop } from 'store/store';
 
 const App: FC = () => {
+  const [params] = useSearchParams();
+  const customToken = params.get('customToken');
+  const steamId = params.get('steamId');
+
   const { getUser, isFetching, isAuthInitialized } = useAuth((state) => state);
   const { isCompletedRegistration } = useAuth((state) => state.signIn);
   const { getUsersAwaitConfirm } = useShop();
+
+  useSteamAuth(steamId, customToken);
 
   const { isUser } = useRole();
 

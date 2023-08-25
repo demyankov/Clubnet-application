@@ -13,6 +13,7 @@ export interface IUser {
   invitation?: string[];
   balanceHistory: DocumentReference[];
   purchaseAwaitingConfirm: purchaseAwaitingConfirm;
+  steamId: Nullable<string>;
   role: Roles;
 }
 

@@ -25,6 +25,9 @@ export const signOutSlice: GenericStateCreator<BoundStore> = (set, get) => ({
 
       try {
         await signOut(auth);
+
+        localStorage.removeItem('userId');
+
         set(
           produce((state: BoundStore) => {
             state.isAuth = false;

@@ -116,6 +116,7 @@ export const ru = {
 
     form: {
       signinHeader: 'Войдите',
+      signInSteam: 'Войти через Steam',
       yourPhone: 'Ваш телефон',
       phoneFormat: 'Неверный формат номера!',
       sendSMS: 'Отправить СМС с кодом',
@@ -222,6 +223,9 @@ export const ru = {
       addCategoryNotification: 'Категория успешно добавлен',
       insufficientBalance: 'Пожалуйста, пополните баланс',
       basketFull: 'Корзина заполнена',
+      addedSteamAccount: 'Стим аккаунт успешно добавлен',
+      errorAuthSteam: 'Пользователь с данным SteamID не найден',
+      errorAddedSteamAccount: 'Пользователь с данным SteamID уже существует',
     },
 
     bookings: {
@@ -248,6 +252,7 @@ export const ru = {
       wantsAdded: 'Хочет добавить вас в друзья',
       notifications: 'Уведомления',
       emptyNotifications: 'Нет новых уведомлений',
+      addedSteamAccount: 'Добавить steam аккаунт',
       daysAgo: 'д. назад',
       hoursAgo: 'ч. назад',
       minutes: 'м. назад',

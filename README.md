@@ -7,6 +7,7 @@
 ```.env
 VITE_API_KEY=firebase-app-api-key
 VITE_AUTH_DOMAIN=firebase-app-auth-domain
+VITE_AUTH_FUNCTION_DOMAIN=firebase-app-function-trigger
 VITE_PROJECT_ID=firebase-app-project-id
 VITE_STORAGE_BUCKET=firebase-app-storage-bucket
 VITE_MESSAGING_SENDER_ID=firebase-app-messaging-sender-id

@@ -53,6 +53,9 @@ export const initSlice: GenericStateCreator<BoundStore> = (set, get) => ({
 
       try {
         const userId = `user-${user.uid}`;
+
+        localStorage.setItem('userId', userId);
+
         const userData = await getFireStoreDataByFieldName<IUser>(
           DatabasePaths.Users,
           userId,

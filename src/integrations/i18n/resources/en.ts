@@ -128,6 +128,7 @@ export const en = {
 
     form: {
       signinHeader: 'Sign in',
+      signInSteam: 'Sign in with Steam',
       yourPhone: 'Your phone',
       phoneFormat: 'Wrong phone number format!',
       sendSMS: 'Send SMS with code',
@@ -228,6 +229,9 @@ export const en = {
       successAcceptInvitation: 'The invitation successfully accepted',
       nobodyToAddInTheTeam: 'Nobody selected to add in the team. Select a gamer',
       isAlreadyInTeam: 'Selected gamer is already in this team',
+      addedSteamAccount: 'Steam account successfully added',
+      errorAuthSteam: 'The user with this SteamID was not found',
+      errorAddedSteamAccount: 'The user with this SteamID already exists',
     },
 
     bookings: {
@@ -254,6 +258,7 @@ export const en = {
       wantsAdded: 'Wants to add you as a friend',
       notifications: 'Notifications',
       emptyNotifications: 'No New Notifications',
+      addedSteamAccount: 'Add steam account',
       daysAgo: 'd. ago',
       hoursAgo: 'h. ago',
       minutes: 'm. ago',

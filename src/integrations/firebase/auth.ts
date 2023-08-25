@@ -1,6 +1,7 @@
 import {
   ConfirmationResult,
   RecaptchaVerifier,
+  signInWithCustomToken,
   signInWithPhoneNumber,
   User,
 } from 'firebase/auth';
@@ -40,6 +41,13 @@ export const appGetOTP = async (phone: string): Promise<void> => {
 
 export const appSignIn = async (code: string): Promise<User> => {
   const { user } = await extendedWindow.confirmationResult.confirm(code);
+
+  return user;
+};
+
+export const loginWithCustomToken = async (token: string): Promise<User> => {
+  const userCredential = await signInWithCustomToken(auth, token);
+  const { user } = userCredential;
 
   return user;
 };
