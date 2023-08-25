@@ -1,6 +1,15 @@
 import { FC } from 'react';
 
-import { Button, Card, createStyles, Flex, Group, Image, rem, Text } from '@mantine/core';
+import {
+  Button,
+  Card,
+  Center,
+  createStyles,
+  Flex,
+  Image,
+  rem,
+  Text,
+} from '@mantine/core';
 import { useTranslation } from 'react-i18next';
 import { IoCloseSharp } from 'react-icons/io5';
 
@@ -63,11 +72,13 @@ export const BasketItem: FC<Props> = ({ id, image, price, name, countProduct }) 
         <Image withPlaceholder src={image} alt={name} height={180} fit="contain" />
       </Card.Section>
 
-      <Group position="apart" p={10}>
-        <Text fw={500} c="dimmed">
+      <Center p={5}>
+        <Text fw={500} c="dimmed" fz="sm">
           {name}
         </Text>
+      </Center>
 
+      <Center p={5}>
         <Flex gap={3} align="center">
           <BalanceWithIcon balance={price} />
           <IoCloseSharp />
@@ -75,7 +86,7 @@ export const BasketItem: FC<Props> = ({ id, image, price, name, countProduct }) 
             {countProduct} {t('basket.item')}
           </Text>
         </Flex>
-      </Group>
+      </Center>
 
       <Card.Section className={classes.section}>
         <Flex justify="space-between">

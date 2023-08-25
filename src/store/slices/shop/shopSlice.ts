@@ -159,7 +159,9 @@ export const shopSlice: GenericStateCreator<BoundStore> = (set, get) => ({
     try {
       const data = await getAllCollection<ICategoryData>(DatabasePaths.Categories);
 
-      get().getProductsByCategoryId(data[0].id, data[0].name);
+      if (data[0]) {
+        get().getProductsByCategoryId(data[0].id, data[0].name);
+      }
       set(
         produce((state: BoundStore) => {
           state.categories = data;

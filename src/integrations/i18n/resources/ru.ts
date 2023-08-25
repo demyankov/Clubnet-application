@@ -51,6 +51,11 @@ export const ru = {
       addProduct: 'Добавить продукт',
       outOfStock: 'Распроданно',
       addToBasket: 'Добавить в корзину',
+      validationAddCategory: 'Название категории обязательно',
+      validationAddProductName: 'Название продукта должно содержать от 3 до 30 символов',
+      validationAddProductQuantity: 'Количество продуктов обязательно',
+      validationAddProductPrice: 'Стоимость продукта обязательно',
+      validationAddProductImage: 'Изображение продукта обязательно',
     },
 
     basket: {

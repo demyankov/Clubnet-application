@@ -16,6 +16,9 @@ export const AddCategoryModal: FC = () => {
     initialValues: {
       name: '',
     },
+    validate: {
+      name: (value) => (value.length <= 0 ? t('shop.validationAddCategory') : null),
+    },
   });
 
   const handleSubmit = ({ name }: typeof values): void => {
@@ -25,7 +28,12 @@ export const AddCategoryModal: FC = () => {
   return (
     <form onSubmit={onSubmit(handleSubmit)}>
       <Stack spacing="xl">
-        <TextInput withAsterisk label={t('shop.name')} {...getInputProps('name')} />
+        <TextInput
+          withAsterisk
+          label={t('shop.name')}
+          placeholder={t('shop.name')!}
+          {...getInputProps('name')}
+        />
 
         <Group position="right" mt="md">
           <Button type="submit" disabled={isAddCategoriesFetching}>

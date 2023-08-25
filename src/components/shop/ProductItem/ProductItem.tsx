@@ -2,9 +2,9 @@ import { FC } from 'react';
 
 import {
   ActionIcon,
-  Box,
   Button,
   Card,
+  Center,
   createStyles,
   Flex,
   Group,
@@ -86,9 +86,9 @@ export const ProductItem: FC<Props> = ({ product }) => {
   };
 
   const moreQuantity = values.countProduct >= quantity;
-  const lessQuantity = values.countProduct <= 0;
+  const lessQuantity = values.countProduct <= 1;
   const isLoadingAddToBasket = currentProductId === id;
-  const disabledButtonAddToBasket = lessQuantity || !quantity;
+  const disabledButtonAddToBasket = !quantity;
 
   return (
     <form onSubmit={onSubmit(handleSubmit)}>
@@ -97,22 +97,22 @@ export const ProductItem: FC<Props> = ({ product }) => {
           <Image withPlaceholder src={image} alt={name} height={180} fit="contain" />
         </Card.Section>
 
-        <Group position="apart" mt="xs" h={60}>
-          <Box>
+        <Center p={5}>
+          <Text fw={500} c="dimmed">
+            {name}
+          </Text>
+        </Center>
+        <Group position="apart" h={50}>
+          <Group mb={5}>
+            <Text fz="xs">{t('shop.quantity')}:</Text>
             <Text fw={500} c="dimmed">
-              {name}
+              {quantity || (
+                <Text fz="xs" color="red">
+                  {t('shop.outOfStock')}
+                </Text>
+              )}
             </Text>
-            <Group mb={5}>
-              <Text fz="xs">{t('shop.quantity')}:</Text>
-              <Text fw={500} c="dimmed">
-                {quantity || (
-                  <Text fz="xs" color="red">
-                    {t('shop.outOfStock')}
-                  </Text>
-                )}
-              </Text>
-            </Group>
-          </Box>
+          </Group>
           {quantity && (
             <Group spacing={5}>
               <ActionIcon
@@ -130,7 +130,7 @@ export const ProductItem: FC<Props> = ({ product }) => {
                 readOnly
                 hideControls
                 max={quantity}
-                min={0}
+                min={1}
                 classNames={{ input: classes.input }}
                 {...getInputProps('countProduct')}
               />
@@ -152,7 +152,7 @@ export const ProductItem: FC<Props> = ({ product }) => {
         <Card.Section className={classes.section}>
           <Flex justify="space-between">
             <Text fz="xl" fw={700}>
-              <BalanceWithIcon balance={price} />
+              <BalanceWithIcon balance={price * values.countProduct} />
             </Text>
 
             <Button

@@ -51,6 +51,12 @@ export const en = {
       addProduct: 'Add product',
       outOfStock: 'Out of Stock',
       addToBasket: 'Add to Basket',
+      validationAddCategory: 'The category name is required',
+      validationAddProductName:
+        'The product name must contain between 3 and 30 characters',
+      validationAddProductQuantity: 'The quantity of products is required',
+      validationAddProductPrice: 'The product cost is required',
+      validationAddProductImage: 'The product image is require',
     },
 
     basket: {

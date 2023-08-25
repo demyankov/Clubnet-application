@@ -1,7 +1,7 @@
 import { FC } from 'react';
 
 import { Button, FileInput, Group, NumberInput, Stack, TextInput } from '@mantine/core';
-import { useForm } from '@mantine/form';
+import { hasLength, useForm } from '@mantine/form';
 import { IconUpload } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
 
@@ -25,6 +25,12 @@ export const AddProductModal: FC<Props> = ({ categoryId }) => {
       price: '',
       image: null,
     },
+    validate: {
+      name: hasLength({ min: 3, max: 30 }, t('shop.validationAddProductName')),
+      quantity: (value) => (+value <= 0 ? t('shop.validationAddProductQuantity') : null),
+      price: (value) => (+value <= 0 ? t('shop.validationAddProductPrice') : null),
+      image: (value) => (value === null ? t('shop.validationAddProductImage') : null),
+    },
   });
 
   const handleSubmit = ({ price, quantity, image, name }: typeof values): void => {
@@ -43,12 +49,18 @@ export const AddProductModal: FC<Props> = ({ categoryId }) => {
   return (
     <form onSubmit={onSubmit(handleSubmit)}>
       <Stack spacing="xl">
-        <TextInput withAsterisk label={t('shop.name')} {...getInputProps('name')} />
+        <TextInput
+          withAsterisk
+          label={t('shop.name')}
+          placeholder={t('shop.name')!}
+          {...getInputProps('name')}
+        />
 
         <NumberInput
           hideControls
           withAsterisk
           type="number"
+          placeholder={t('shop.quantity')!}
           label={t('shop.quantity')}
           {...getInputProps('quantity')}
         />
@@ -57,6 +69,7 @@ export const AddProductModal: FC<Props> = ({ categoryId }) => {
           hideControls
           withAsterisk
           type="number"
+          placeholder={t('shop.price')!}
           label={t('shop.price')}
           {...getInputProps('price')}
         />
@@ -65,6 +78,7 @@ export const AddProductModal: FC<Props> = ({ categoryId }) => {
           withAsterisk
           accept={ALLOWED_IMAGE_FORMATS}
           label={t('modals.addImage')}
+          placeholder={t('modals.addImage')!}
           icon={<IconUpload size={15} />}
           {...getInputProps('image')}
         />

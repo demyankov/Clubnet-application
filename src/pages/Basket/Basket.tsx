@@ -63,7 +63,7 @@ export const Basket: FC = () => {
     clearBasket(userId);
   };
 
-  const insufficientBalance = userBalance && userBalance < totalCost;
+  const insufficientBalance = userBalance < totalCost;
 
   useEffect(() => {
     if (!userId) {
@@ -113,7 +113,7 @@ export const Basket: FC = () => {
         <Button size="md" disabled={isFetchingBasketAction} onClick={handleRemoveBasket}>
           {t('basket.clearBasket')}
         </Button>
-        <Button size="md" onClick={handleBuyProduct} disabled={!!insufficientBalance}>
+        <Button size="md" onClick={handleBuyProduct} disabled={insufficientBalance}>
           {t('basket.purchase')}
         </Button>
       </div>
