@@ -119,6 +119,9 @@ export const paymentConfirmSlice: GenericStateCreator<BoundStore> = (set, get) =
       const { data } = await getFilteredFirestoreData<IOrderConfirmation>(
         DatabasePaths.OrderConfirmation,
         productFilter,
+        'and',
+        null,
+        'userId',
       );
 
       set(
