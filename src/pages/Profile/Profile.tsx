@@ -10,7 +10,6 @@ import {
   ProfileTeams,
   BadgeTotalCount,
 } from 'components';
-import { FriendStatus } from 'constants/friendStatus';
 import { TabsValues } from 'constants/tabs';
 import { useAuth, useFriends } from 'store/store';
 
@@ -18,17 +17,22 @@ const Profile: FC = () => {
   const { t } = useTranslation();
   const { user, teams } = useAuth((store) => store);
 
-  const { getFriends, getTotalCount, getFriendRequests, totalCountFriend } = useFriends(
+  const { getFriends, totalCountFriend, getSentFriend, getRequestFriend } = useFriends(
     (store) => store,
   );
 
   useEffect(() => {
     if (user) {
-      getTotalCount(user.id);
       getFriends(user.id);
-      getFriendRequests(user.id, FriendStatus.sent);
+      const unsubscribeSent = getSentFriend(user.id);
+      const unsubscribeRequest = getRequestFriend(user.id);
+
+      return () => {
+        unsubscribeSent();
+        unsubscribeRequest();
+      };
     }
-  }, [getFriendRequests, getFriends, getTotalCount, user]);
+  }, [getFriends, getSentFriend, getRequestFriend, user]);
 
   return (
     <Box>

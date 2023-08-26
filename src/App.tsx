@@ -26,7 +26,7 @@ const App: FC = () => {
 
   useSteamAuth(steamId, customToken);
 
-  const { isUser } = useRole();
+  const { isAdmin } = useRole();
 
   const fetchUserData = useCallback(() => {
     getUser();
@@ -37,7 +37,7 @@ const App: FC = () => {
   }, [fetchUserData, isCompletedRegistration]);
 
   useEffect(() => {
-    if (isUser) {
+    if (!isAdmin) {
       return;
     }
 
@@ -46,7 +46,7 @@ const App: FC = () => {
     return () => {
       unsubscribe();
     };
-  }, [getUsersAwaitConfirm, isUser]);
+  }, [getUsersAwaitConfirm, isAdmin]);
 
   if (!isAuthInitialized) {
     return <LoaderScreen />;

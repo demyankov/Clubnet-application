@@ -4,7 +4,6 @@ import {
   Timestamp,
   Unsubscribe,
   deleteField,
-  getDoc,
 } from 'firebase/firestore';
 import { produce } from 'immer';
 
@@ -17,7 +16,6 @@ import {
   Filter,
   getCollectionPathUrl,
   getDataArrayWithRefArray,
-  getDocumentReference,
   getFilteredFirestoreData,
   subscribeToCollection,
   updateFirestoreData,
@@ -48,7 +46,12 @@ export interface INotifyFriends extends IFriend {
 
 export interface IFilterFriends {
   status: FriendStatus;
-  [x: string]: string;
+  [key: string]: string;
+}
+
+export interface IFilterStatus {
+  id: string;
+  [key: string]: string;
 }
 
 export interface IRequestData {
@@ -57,27 +60,27 @@ export interface IRequestData {
 }
 
 export interface IFriends {
-  isFriendsFetching: boolean;
-  isFriendRequestsFetching: boolean;
   isGetMoreFetching: boolean;
-  isStatusFetching: boolean;
   isChangeStatusFriendFetching: boolean;
-  isTotalCountFriendsFetching: boolean;
   friends: IFriend[];
-  friendRequests: IFriend[];
+  friendSent: IFriend[];
+  friendRequest: IFriend[];
   notifyFriend: INotifyFriends[];
   totalCountFriend: number;
-  totalCountSent: number;
-  totalCountRequest: number;
   totalCountNotify: number;
   showCounter: number;
   querySnapshot: Nullable<QuerySnapshot>;
   getMoreFriends: (id: string, filter?: FriendStatus) => void;
   getFriends: (id: string) => void;
-  getFriendRequests: (id: string, filter: FriendStatus) => void;
-  getFriendStatus: (playerId: string, clientId: string) => void;
-  getTotalCount: (id: string) => void;
+  getFriendStatus: (playerId: string, clientId: string) => Unsubscribe;
   getNotifyFriend: (id: string) => Unsubscribe;
+  getSentFriend: (id: string) => Unsubscribe;
+  getRequestFriend: (id: string) => Unsubscribe;
+  onSubscribeFriends: (
+    id: string,
+    status: FriendStatus,
+    callBack: (data: IFriendRequest[], dataUser: IUser[]) => void,
+  ) => Unsubscribe;
   isViewedUpdate: (data: IRequestData, action?: IsViewedActions) => void;
   getFriendsList: (
     id: string,
@@ -93,17 +96,13 @@ export interface IFriends {
 
 export const friendSlice: GenericStateCreator<BoundStore> = (set, get) => ({
   ...get(),
-  isFriendsFetching: false,
   isGetMoreFetching: false,
-  isStatusFetching: false,
-  isTotalCountFriendsFetching: false,
   friends: [],
-  friendRequests: [],
+  friendSent: [],
+  friendRequest: [],
   notifyFriend: [],
   querySnapshot: null,
   totalCountFriend: 0,
-  totalCountSent: 0,
-  totalCountRequest: 0,
   totalCountNotify: 0,
   showCounter: 10,
 
@@ -124,7 +123,7 @@ export const friendSlice: GenericStateCreator<BoundStore> = (set, get) => ({
         friendFilter,
         'and',
         null,
-        'id',
+        'status',
         totalCounter,
       );
 
@@ -175,12 +174,6 @@ export const friendSlice: GenericStateCreator<BoundStore> = (set, get) => ({
   },
 
   getFriends: async (id) => {
-    set(
-      produce((state: BoundStore) => {
-        state.isFriendsFetching = true;
-      }),
-    );
-
     try {
       const { data, dataFriends, querySnapshot } = await get().getFriendsList(id, null);
 
@@ -193,82 +186,67 @@ export const friendSlice: GenericStateCreator<BoundStore> = (set, get) => ({
           }));
           state.showCounter = 10;
           state.querySnapshot = querySnapshot;
+          state.totalCountFriend = querySnapshot.size;
         }),
       );
     } catch (error) {
       errorHandler(error as Error);
-    } finally {
-      set(
-        produce((state: BoundStore) => {
-          state.isFriendsFetching = false;
-        }),
-      );
     }
   },
 
-  getFriendRequests: async (id, filter) => {
-    set(
-      produce((state: BoundStore) => {
-        state.isFriendRequestsFetching = true;
-      }),
+  onSubscribeFriends: (id, status, callBack) => {
+    const query1 = [DatabasePaths.Users, id, DatabasePaths.Friends];
+    const path = getCollectionPathUrl(query1);
+
+    const dataFilter: IFilterFriends = {
+      status,
+    };
+
+    const friendFilter = convertFiltersToArray<Filter<IFriendRequest>, IFilterFriends>(
+      dataFilter,
     );
 
-    try {
-      const { data, dataFriends } = await get().getFriendsList(id, filter);
+    return subscribeToCollection<IFriendRequest>(
+      path,
+      friendFilter,
+      async (data: IFriendRequest[]) => {
+        const dataFriends = await getDataArrayWithRefArray<IUser>(
+          data.map((friend) => friend.userRef),
+        );
 
+        callBack(data, dataFriends);
+      },
+      'status',
+      'desc',
+    );
+  },
+
+  getRequestFriend: (id: string) => {
+    return get().onSubscribeFriends(id, FriendStatus.request, (data, dataUser) => {
       set(
         produce((state: BoundStore) => {
-          state.friendRequests = dataFriends.map((friend, index) => ({
+          state.friendRequest = dataUser.map((friend, index) => ({
             ...friend,
-            status: filter,
+            status: data[index].status,
             timestamp: data[index].timestamp,
           }));
         }),
       );
-    } catch (error) {
-      errorHandler(error as Error);
-    } finally {
-      set(
-        produce((state: BoundStore) => {
-          state.isFriendRequestsFetching = false;
-        }),
-      );
-    }
+    });
   },
 
-  getTotalCount: async (id) => {
-    set(
-      produce((state: BoundStore) => {
-        state.isTotalCountFriendsFetching = true;
-      }),
-    );
-    try {
-      const { totalCount: totalCountFriend } = await get().getFriendsList(id, null);
-      const { totalCount: totalCountSent } = await get().getFriendsList(
-        id,
-        FriendStatus.sent,
-      );
-      const { totalCount: totalCountRequest } = await get().getFriendsList(
-        id,
-        FriendStatus.request,
-      );
-
+  getSentFriend: (id: string) => {
+    return get().onSubscribeFriends(id, FriendStatus.sent, (data, dataUser) => {
       set(
         produce((state: BoundStore) => {
-          state.totalCountFriend = totalCountFriend;
-          state.totalCountSent = totalCountSent;
-          state.totalCountRequest = totalCountRequest;
+          state.friendSent = dataUser.map((friend, index) => ({
+            ...friend,
+            status: data[index].status,
+            timestamp: data[index].timestamp,
+          }));
         }),
       );
-    } catch (error) {
-      errorHandler(error as Error);
-    } finally {
-      set(
-        produce((state: BoundStore) => {
-          state.isTotalCountFriendsFetching = false;
-        }),
-      );
-    }
+    });
   },
 
   getNotifyFriend: (id) => {
@@ -300,35 +278,29 @@ export const friendSlice: GenericStateCreator<BoundStore> = (set, get) => ({
     );
   },
 
-  getFriendStatus: async (playerId, clientId) => {
-    set(
-      produce((state: BoundStore) => {
-        state.isStatusFetching = true;
-      }),
+  getFriendStatus: (playerId, clientId) => {
+    const query = [DatabasePaths.Users, playerId, DatabasePaths.Friends];
+    const path = getCollectionPathUrl(query);
+
+    const dataFilter: IFilterStatus = {
+      id: clientId,
+    };
+
+    const friendFilter = convertFiltersToArray<Filter<IFriendRequest>, IFilterStatus>(
+      dataFilter,
     );
 
-    try {
-      const query = [DatabasePaths.Users, playerId, DatabasePaths.Friends];
-      const path = getCollectionPathUrl(query);
-
-      const clientRef = await getDocumentReference(path, clientId);
-
-      const docSnap = await getDoc(clientRef);
-
-      set(
-        produce((state: BoundStore) => {
-          state.status = docSnap.exists() ? docSnap.data().status : FriendStatus.unknown;
-        }),
-      );
-    } catch (error) {
-      errorHandler(error as Error);
-    } finally {
-      set(
-        produce((state: BoundStore) => {
-          state.isStatusFetching = false;
-        }),
-      );
-    }
+    return subscribeToCollection<IFriendRequest>(
+      path,
+      friendFilter,
+      async (data: IFriendRequest[]) => {
+        set(
+          produce((state: BoundStore) => {
+            state.status = data[0] ? data[0].status : FriendStatus.unknown;
+          }),
+        );
+      },
+    );
   },
 
   isViewedUpdate: async (data, action) => {

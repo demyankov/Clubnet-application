@@ -11,6 +11,7 @@ import {
   TeamLink,
   BadgeTotalCount,
   RenderContentContainer,
+  IsEmptyContainer,
 } from 'components';
 import { TabsValues } from 'constants/tabs';
 import { useAuth, useClients, useFriends } from 'store/store';
@@ -20,16 +21,8 @@ const Profile: FC = () => {
 
   const { teams, getTeams, user } = useAuth((store) => store);
   const { getClientByNickname, client, isClientsFetching } = useClients((store) => store);
-  const {
-    getFriends,
-    isFriendsFetching,
-    friends,
-    getFriendStatus,
-    status,
-    isStatusFetching,
-    acceptRequest,
-    declineRequest,
-  } = useFriends();
+  const { getFriends, friends, getFriendStatus, status, acceptRequest, declineRequest } =
+    useFriends();
 
   const { nickname } = useParams<{ nickname: string }>();
 
@@ -54,7 +47,11 @@ const Profile: FC = () => {
     if (client && user) {
       getTeams(client.id);
       getFriends(client.id);
-      getFriendStatus(user.id, client.id);
+      const unsubscribe = getFriendStatus(user.id, client.id);
+
+      return () => {
+        unsubscribe();
+      };
     }
   }, [getTeams, client, getFriends, getFriendStatus, user, status]);
 
@@ -71,11 +68,10 @@ const Profile: FC = () => {
     />
   ));
 
-  const isLoading = isStatusFetching || isFriendsFetching || isClientsFetching;
   const isNotCurrentUserPage = user?.nickName !== nickname;
 
   return (
-    <RenderContentContainer isFetching={isLoading}>
+    <RenderContentContainer isFetching={isClientsFetching}>
       <Flex justify="space-between" align="flex-end">
         <Group pt={20} pb={20}>
           <Avatar
@@ -124,25 +120,26 @@ const Profile: FC = () => {
         </Tabs.List>
 
         <Tabs.Panel value={TabsValues.teams} mih={350} mb={60}>
-          <Group mb={20}>
-            <Text fz="xl" fw={700} mb={10}>
-              {t('profile.profileTeams')}
-            </Text>
-          </Group>
-          {teams.length && teamsItems}
+          <IsEmptyContainer isEmpty={!teams.length} emptyTitle={t('profile.emptyTeams')}>
+            {teamsItems}
+          </IsEmptyContainer>
         </Tabs.Panel>
 
         <Tabs.Panel value={TabsValues.friends} mih={350} mb={60}>
-          <Text fz="xl" fw={700} mb={10}>
-            {t('profile.profileFriends')}
-          </Text>
-          <CardContainer>{friends.length && friendsItems}</CardContainer>
+          <IsEmptyContainer
+            isEmpty={!friends.length}
+            emptyTitle={t('profile.emptyFriends')}
+          >
+            <CardContainer>{friendsItems}</CardContainer>
+          </IsEmptyContainer>
         </Tabs.Panel>
 
         <Tabs.Panel value={TabsValues.stats} mih={350} mb={60}>
-          <Text fz="xl" fw={700} mb={10}>
-            {t('profile.profileStats')}
-          </Text>
+          <IsEmptyContainer isEmpty emptyTitle={t('profile.emptyStats')}>
+            <Text fz="xl" fw={700} mb={10}>
+              {t('profile.profileStats')}
+            </Text>
+          </IsEmptyContainer>
         </Tabs.Panel>
       </Tabs>
     </RenderContentContainer>

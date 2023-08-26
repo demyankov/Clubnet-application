@@ -43,12 +43,14 @@ export const friendsRequestsSlice: GenericStateCreator<BoundStore> = (set, get) 
 
       const promises = [
         setFirestoreData(friendPath, data.playerId, {
+          id: data.playerId,
           userRef,
           status: FriendStatus.sent,
           isViewed: false,
           timestamp,
         }),
         setFirestoreData(userPath, data.clientId, {
+          id: data.clientId,
           userRef: friendRef,
           status: FriendStatus.request,
           timestamp,
@@ -122,9 +124,6 @@ export const friendsRequestsSlice: GenericStateCreator<BoundStore> = (set, get) 
 
       await Promise.all(promises);
       get().getFriends(data.clientId);
-      get().getFriendRequests(data.clientId, FriendStatus.sent);
-      get().getTotalCount(data.clientId);
-      get().getFriendStatus(data.playerId, data.clientId);
       successNotification('successfullyAdded');
     } catch (error) {
       errorHandler(error as Error);
@@ -145,9 +144,6 @@ export const friendsRequestsSlice: GenericStateCreator<BoundStore> = (set, get) 
     );
     try {
       await get().rejectFriendRemoval(data);
-      get().getFriendRequests(data.clientId, FriendStatus.sent);
-      get().getTotalCount(data.clientId);
-      get().getFriendStatus(data.playerId, data.clientId);
       successNotification('requestDeclined');
       set(
         produce((state: BoundStore) => {

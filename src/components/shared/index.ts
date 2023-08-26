@@ -6,3 +6,4 @@ export * from 'components/shared/RenderContentContainer/RenderContentContainer';
 export * from 'components/shared/BalanceWithIcon/BalanceWithIcon';
 export * from 'components/shared/BadgeTotalCount/BadgeTotalCount';
 export * from 'components/shared/LoaderContainer/LoaderContainer';
+export * from 'components/shared/IsEmptyContainer/IsEmptyContainer';
