@@ -315,6 +315,7 @@ export const ru = {
       totalCount: 'Всего',
       maxCount: 'Макс. количество: ',
       editTournament: 'Редактировать',
+      game: 'Игра',
     },
 
     workingDays: {

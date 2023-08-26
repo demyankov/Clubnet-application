@@ -110,7 +110,7 @@ const TournamentInfo: FC = () => {
 
             <Grid mt="10px" gutter="xl">
               <TournamentsInfoItem
-                title={t('modals.games')}
+                title={t('tournaments.game')}
                 text={currentTournament?.game}
                 Icon={IconDeviceGamepad2}
               />

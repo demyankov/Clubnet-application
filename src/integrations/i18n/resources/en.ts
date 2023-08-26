@@ -320,6 +320,7 @@ export const en = {
       totalCount: 'Total',
       maxCount: 'Maximum count: ',
       editTournament: 'Edit',
+      game: 'Game',
     },
 
     workingDays: {

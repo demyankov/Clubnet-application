@@ -14,7 +14,7 @@ export const TournamentsInfoItem: FC<Props> = ({ title, text, Icon }) => {
       <Group noWrap>
         <Icon />
         <div>
-          <Text c="dimmed" tt="uppercase" fz="sm">
+          <Text c="dimmed" fz="sm">
             {title}
           </Text>
           <Text fw={700} fz="xs">
