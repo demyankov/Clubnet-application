@@ -23,10 +23,12 @@ type Props = {
   teamData: ITeam;
 };
 
-export const TeamLink: FC<Props> = ({ teamData: { game, id, image, name, tag } }) => {
+export const TeamLink: FC<Props> = ({
+  teamData: { game, id, image, name, tag, members },
+}) => {
   const { classes } = useStyles();
   const navigate = useNavigate();
-  const { deleteTeam } = useAuth((store) => store);
+  const { deleteTeam, user } = useAuth((store) => store);
 
   const handleButtonClick = (e: MouseEvent<HTMLButtonElement>): void => {
     e.stopPropagation();
@@ -39,6 +41,7 @@ export const TeamLink: FC<Props> = ({ teamData: { game, id, image, name, tag } }
       onConfirm: () => deleteTeam(id),
     });
   };
+  const isCurrentUserCreator = user?.id === members?.[0]?.userLink?.id;
 
   return (
     <Card
@@ -62,16 +65,18 @@ export const TeamLink: FC<Props> = ({ teamData: { game, id, image, name, tag } }
           </Text>
         </div>
         <Group pr="16px">
-          <Button
-            variant="light"
-            color="red"
-            size="xs"
-            mr="16px"
-            uppercase
-            onClick={handleButtonClick}
-          >
-            {t('modals.btnDelete')}
-          </Button>
+          {isCurrentUserCreator && (
+            <Button
+              variant="light"
+              color="red"
+              size="xs"
+              mr="16px"
+              uppercase
+              onClick={handleButtonClick}
+            >
+              {t('modals.btnDelete')}
+            </Button>
+          )}
 
           <IconChevronRight size="0.9rem" stroke={1.5} />
         </Group>
