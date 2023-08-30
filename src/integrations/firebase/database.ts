@@ -1,9 +1,11 @@
-import { OrderByDirection } from '@firebase/firestore';
+import { OrderByDirection, WhereFilterOp } from '@firebase/firestore';
 import {
   and,
   collection,
   deleteDoc,
   doc,
+  DocumentData,
+  DocumentReference,
   getCountFromServer,
   getDoc,
   getDocs,
@@ -12,15 +14,13 @@ import {
   or,
   orderBy,
   query,
-  setDoc,
-  startAfter,
-  updateDoc,
-  where,
-  DocumentData,
-  DocumentReference,
   QueryDocumentSnapshot,
   QuerySnapshot,
+  setDoc,
+  startAfter,
   Unsubscribe,
+  updateDoc,
+  where,
 } from 'firebase/firestore';
 
 import { DatabasePaths } from 'constants/databasePaths';
@@ -30,10 +30,7 @@ import { db } from 'integrations/firebase/firebase';
 import { ITeam, ITeamMember } from 'store/slices';
 
 export type Filter<T> = {
-  [K in keyof T]: {
-    field: K;
-    value: T[K];
-  };
+  [K in keyof T]: { field: K; value: T[K] extends Array<infer P> | undefined ? P : T[K] };
 }[keyof T];
 
 type FirestoreOutput<T> = {
@@ -102,10 +99,11 @@ export const getFilteredFirestoreData = async <T extends { id: string }>(
   queryType: QueryType = 'and',
   lastVisible: Nullable<QueryDocumentSnapshot> = null,
   orderByField: keyof T = 'id',
+  filterOperator: WhereFilterOp = '==',
   countLimit?: number,
 ): Promise<FirestoreOutput<T>> => {
   const collectionRef = collection(db, path);
-  const queryFilter = generateQueryFilterArray<T>(filters);
+  const queryFilter = generateQueryFilterArray<T>(filters, filterOperator);
   const queryConstraints = queryType === 'and' ? and(...queryFilter) : or(...queryFilter);
 
   let q = query(collectionRef, queryConstraints);

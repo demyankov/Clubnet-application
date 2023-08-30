@@ -16,13 +16,15 @@ import { errorHandler, errorNotification, successNotification } from 'helpers';
 import {
   addFirestoreTeam,
   checkFieldValueExists,
-  getFireStoreDataByFieldName,
+  deleteFirestoreData,
+  Filter,
+  getFilteredFirestoreData,
   getFirestoreArrayLengthByField,
+  getFireStoreDataByFieldName,
   getFirestoreTeamMembers,
   getFirestoreTeams,
   updateFirestoreData,
   uploadImageAndGetURL,
-  deleteFirestoreData,
 } from 'integrations/firebase';
 import { db } from 'integrations/firebase/firebase';
 import { IUser } from 'store/slices/auth/types';
@@ -237,12 +239,53 @@ export const teamsSlice: GenericStateCreator<BoundStore> = (set, get) => ({
     try {
       const currentUser = get().user as IUser;
 
-      await deleteFirestoreData(DatabasePaths.Teams, teamId);
+      set(
+        produce((state: BoundStore) => {
+          state.isTeamFetching = false;
+        }),
+      );
 
+      await deleteFirestoreData(DatabasePaths.Teams, teamId);
       successNotification('successDeletedTeam');
+
+      const filter: Filter<IUser> = {
+        field: 'invitation',
+        value: teamId,
+      };
+      const { data } = await getFilteredFirestoreData<IUser>(
+        DatabasePaths.Users,
+        [filter],
+        'and',
+        null,
+        'invitation',
+        'array-contains',
+        1000,
+      );
+
+      await Promise.all(
+        data.map(async (userDoc) => {
+          const userId = userDoc.id;
+
+          await updateFirestoreData(DatabasePaths.Users, userId, {
+            invitation: arrayRemove(teamId),
+          });
+        }),
+      );
+
       await get().getTeams(currentUser.id);
+
+      set(
+        produce((state: BoundStore) => {
+          state.isTeamFetching = false;
+        }),
+      );
     } catch (error) {
       errorHandler(error as Error);
+      set(
+        produce((state: BoundStore) => {
+          state.isTeamFetching = false;
+        }),
+      );
     }
   },
 

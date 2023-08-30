@@ -124,6 +124,7 @@ export const friendSlice: GenericStateCreator<BoundStore> = (set, get) => ({
         'and',
         null,
         'status',
+        '==',
         totalCounter,
       );
 
