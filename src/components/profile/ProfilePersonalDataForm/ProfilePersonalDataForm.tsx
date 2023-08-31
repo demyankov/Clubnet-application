@@ -3,11 +3,14 @@ import { FC } from 'react';
 import { Box, Button, Group, Text } from '@mantine/core';
 import { modals } from '@mantine/modals';
 import { IconPhoneCall, IconSettings } from '@tabler/icons-react';
+import { getAuth } from 'firebase/auth';
 import { useTranslation } from 'react-i18next';
 import { FaSteam } from 'react-icons/fa';
 
 import { ProfileUpdateUserModal } from 'components';
+import { DateFormats } from 'constants/dateFormats';
 import { STEAM_AUTH_URL } from 'constants/stemAuthURL';
+import { dateFormatting } from 'helpers';
 import { IUser } from 'store/slices/auth/types';
 import { useAuth } from 'store/store';
 
@@ -25,6 +28,11 @@ export const ProfilePersonalDataForm: FC = () => {
     });
   };
 
+  const creationDate = dateFormatting(
+    getAuth().currentUser?.metadata.creationTime ?? '',
+    DateFormats.DayMonthYearWithoutDot,
+  );
+
   return (
     <Group>
       <div>
@@ -34,6 +42,7 @@ export const ProfilePersonalDataForm: FC = () => {
         <Text size="40px" fw={500} tt="uppercase" mt="-5px">
           {currentUser.nickName}
         </Text>
+        {t('profile.registrationDate')} {creationDate}
         <Group noWrap spacing={10} mt={5}>
           <IconPhoneCall stroke={1.5} size="15px" />
           <Text c="dimmed" size="15px">

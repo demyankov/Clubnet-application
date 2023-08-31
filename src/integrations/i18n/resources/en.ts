@@ -266,6 +266,7 @@ export const en = {
       hoursAgo: 'h. ago',
       minutes: 'm. ago',
       seconds: 's. ago',
+      registrationDate: 'Participates with ',
     },
 
     search: {

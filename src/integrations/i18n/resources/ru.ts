@@ -260,6 +260,7 @@ export const ru = {
       hoursAgo: 'ч. назад',
       minutes: 'м. назад',
       seconds: 'с. назад',
+      registrationDate: 'Участвует с ',
     },
 
     search: {

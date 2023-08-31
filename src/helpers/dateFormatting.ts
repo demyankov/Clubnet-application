@@ -7,7 +7,7 @@ import i18next from 'i18next';
 import { DateFormats } from 'constants/dateFormats';
 
 export const dateFormatting = (
-  date: Date,
+  date: string | Date,
   format: DateFormats = DateFormats.WeekDayDayMonthYearTime,
 ): string => {
   dayjs.extend(localizedFormat);
