@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 
-import { Button } from '@mantine/core';
+import { Box, Button, Grid } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
@@ -17,11 +17,13 @@ export const ClientsItem: FC = () => {
   };
 
   return (
-    <>
-      <div>{client?.nickName}</div>
-      <Button onClick={handleClientClick(client?.nickName)}>
+    <Grid justify="space-between" align="center">
+      <Box mr="xs" ml="xs" mt="xs">
+        {client?.nickName}
+      </Box>
+      <Button mx="xs" mt="xs" onClick={handleClientClick(client?.nickName)}>
         {t('clients.btnEdit')}
       </Button>
-    </>
+    </Grid>
   );
 };

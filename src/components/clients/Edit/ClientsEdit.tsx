@@ -10,6 +10,7 @@ import {
   Select,
   Text,
   TextInput,
+  Title,
 } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { IconArrowLeft } from '@tabler/icons-react';
@@ -27,10 +28,6 @@ import { useClients } from 'store/store';
 const useStyles = createStyles((theme) => ({
   editContainer: {
     alignItems: 'flex-end',
-  },
-  goBack: {
-    paddingLeft: theme.spacing.xs,
-    paddingRight: theme.spacing.xs,
   },
   btnText: {
     [theme.fn.smallerThan('sm')]: {
@@ -70,13 +67,15 @@ export const ClientsEdit: FC = () => {
   return (
     <form onSubmit={form.onSubmit(handleSubmit)}>
       <Grid align="center">
-        <Grid.Col span={4}>
-          <Button component={Link} to={Paths.clients} className={classes.goBack}>
+        <Grid.Col span={3}>
+          <Button component={Link} to={Paths.clients}>
             <IconArrowLeft size={20} />
             <Text className={classes.btnText}>{t('clients.btnBack')}</Text>
           </Button>
         </Grid.Col>
+        <Title order={2}>{t('clients.editClient')}</Title>
       </Grid>
+
       <Box
         mt="xl"
         sx={(theme) => ({
