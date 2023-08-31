@@ -229,7 +229,7 @@ export const signInSlice: GenericStateCreator<BoundStore> = (set, get) => ({
         if (!uid) {
           await sleep(1000);
 
-          errorNotification('errorAddedSteamAccount');
+          errorNotification('errorAuthSteam');
           navigate(Paths.signin);
 
           return;

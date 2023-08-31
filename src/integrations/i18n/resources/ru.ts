@@ -224,7 +224,8 @@ export const ru = {
       insufficientBalance: 'Пожалуйста, пополните баланс',
       basketFull: 'Корзина заполнена',
       addedSteamAccount: 'Стим аккаунт успешно добавлен',
-      errorAuthSteam: 'Пользователь с данным SteamID не найден',
+      errorAuthSteam:
+        'Вход через Steam доступен после регистрации через телефон и привязки Steam аккаунта в вашем профиле',
       errorAddedSteamAccount: 'Пользователь с данным SteamID уже существует',
     },
 

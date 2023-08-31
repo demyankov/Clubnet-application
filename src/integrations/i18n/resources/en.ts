@@ -230,7 +230,8 @@ export const en = {
       nobodyToAddInTheTeam: 'Nobody selected to add in the team. Select a gamer',
       isAlreadyInTeam: 'Selected gamer is already in this team',
       addedSteamAccount: 'Steam account successfully added',
-      errorAuthSteam: 'The user with this SteamID was not found',
+      errorAuthSteam:
+        'Access through Steam is available after registering via your phone and linking your Steam account in your profile',
       errorAddedSteamAccount: 'The user with this SteamID already exists',
     },
 
