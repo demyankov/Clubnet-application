@@ -211,6 +211,7 @@ export const addFirestoreTeam = async <T extends DocumentData>(
 export const getFirestoreTeams = async (
   referencePath: DatabasePaths,
   referenceId: string,
+  role: Roles = Roles.CAPTAIN,
 ): Promise<ITeam[]> => {
   const userRef = doc(db, referencePath, referenceId);
   const collectionRef = collection(db, DatabasePaths.Teams);
@@ -220,7 +221,7 @@ export const getFirestoreTeams = async (
     collectionRef,
     where('members', 'array-contains', {
       userLink: userRef,
-      role: Roles.CAPTAIN,
+      role,
     }),
   );
   const querySnapshot = await getDocs(docsQuery);

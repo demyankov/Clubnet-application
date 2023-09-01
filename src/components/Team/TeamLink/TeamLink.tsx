@@ -1,7 +1,6 @@
 import { FC, MouseEvent } from 'react';
 
 import { Button, Card, createStyles, Group, Image, Text } from '@mantine/core';
-import { modals } from '@mantine/modals';
 import { IconChevronRight } from '@tabler/icons-react';
 import { t } from 'i18next';
 import { useNavigate } from 'react-router-dom';
@@ -21,26 +20,17 @@ const useStyles = createStyles({
 
 type Props = {
   teamData: ITeam;
+  handleDelete?: (e: MouseEvent<HTMLButtonElement>, id: string) => void;
 };
 
 export const TeamLink: FC<Props> = ({
   teamData: { game, id, image, name, tag, members },
+  handleDelete,
 }) => {
   const { classes } = useStyles();
   const navigate = useNavigate();
-  const { deleteTeam, user } = useAuth((store) => store);
+  const { user } = useAuth((store) => store);
 
-  const handleButtonClick = (e: MouseEvent<HTMLButtonElement>): void => {
-    e.stopPropagation();
-    modals.openConfirmModal({
-      title: t('modals.deleteTeam'),
-      centered: true,
-      children: <Text size="sm">{t('modals.agreeToDeleteTeam')}</Text>,
-      labels: { confirm: t('modals.btnDelete'), cancel: t('modals.btnCancel') },
-      confirmProps: { color: 'red' },
-      onConfirm: () => deleteTeam(id),
-    });
-  };
   const isCurrentUserCreator = user?.id === members?.[0]?.userLink?.id;
 
   return (
@@ -65,14 +55,16 @@ export const TeamLink: FC<Props> = ({
           </Text>
         </div>
         <Group pr="16px">
-          {isCurrentUserCreator && (
+          {isCurrentUserCreator && handleDelete && (
             <Button
               variant="light"
               color="red"
               size="xs"
               mr="16px"
               uppercase
-              onClick={handleButtonClick}
+              onClick={(e: MouseEvent<HTMLButtonElement>) => {
+                handleDelete(e, id);
+              }}
             >
               {t('modals.btnDelete')}
             </Button>

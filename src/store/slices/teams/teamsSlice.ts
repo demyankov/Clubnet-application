@@ -22,9 +22,9 @@ import {
   getFirestoreArrayLengthByField,
   getFireStoreDataByFieldName,
   getFirestoreTeamMembers,
-  getFirestoreTeams,
   updateFirestoreData,
   uploadImageAndGetURL,
+  getFirestoreTeams,
 } from 'integrations/firebase';
 import { db } from 'integrations/firebase/firebase';
 import { IUser } from 'store/slices/auth/types';
@@ -56,6 +56,7 @@ export interface ITeams {
   addTeam: (teamData: ITeam, resetForm: () => void) => Promise<void>;
   getTeams: (id: string) => Promise<void>;
   getTeamById: (id: string) => Promise<void>;
+  getTeamsByRole: (id: string, role: Roles) => Promise<void>;
   getMemberInvitedTeams: (user: IUser) => Promise<void>;
   updateTeam: (data: ITeamFormValues) => Promise<void>;
   deleteTeam: (teamId: string) => Promise<void>;
@@ -140,6 +141,32 @@ export const teamsSlice: GenericStateCreator<BoundStore> = (set, get) => ({
 
     try {
       const data = await getFirestoreTeams(DatabasePaths.Users, id);
+
+      set(
+        produce((state: BoundStore) => {
+          state.teams = data;
+        }),
+      );
+    } catch (error) {
+      errorHandler(error as Error);
+    } finally {
+      set(
+        produce((state: BoundStore) => {
+          state.isTeamFetching = false;
+        }),
+      );
+    }
+  },
+
+  getTeamsByRole: async (id, role) => {
+    set(
+      produce((state: BoundStore) => {
+        state.isTeamFetching = true;
+      }),
+    );
+
+    try {
+      const data = await getFirestoreTeams(DatabasePaths.Users, id, role);
 
       set(
         produce((state: BoundStore) => {

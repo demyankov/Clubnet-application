@@ -13,6 +13,7 @@ import {
   setFirestoreData,
   uploadImageAndGetURL,
 } from 'integrations/firebase';
+import { ITeam } from 'store/slices/teams/teamsSlice';
 import { BoundStore } from 'store/store';
 import { GenericStateCreator } from 'store/types';
 
@@ -25,12 +26,14 @@ interface IAddTournamentData {
   registrationDate: string;
   gameMode: string;
   countOfMembers: string;
+  registeredTeams: ITeam[];
   image: Nullable<File>;
 }
 
 export interface ITournamentData extends Omit<IAddTournamentData, 'image'> {
   image: string;
   timestamp: Timestamp;
+  teams: ITeam[];
 }
 
 export interface ITournaments {
@@ -39,6 +42,7 @@ export interface ITournaments {
   isFetching: boolean;
   isGetMoreFetching: boolean;
   currentTournament: Nullable<ITournamentData>;
+  countOfGamersByRules: number;
   addTournament: (data: IAddTournamentData, resetForm: () => void) => Promise<void>;
   getTournaments: () => Promise<void>;
   getMoreTournaments: () => Promise<void>;
@@ -56,6 +60,7 @@ export const tournamentsSlice: GenericStateCreator<BoundStore> = (set, get) => (
   currentTournament: null,
   tournaments: [],
   totalCount: 0,
+  countOfGamersByRules: 1,
   querySnapshot: null,
 
   addTournament: async (data: IAddTournamentData, resetForm: () => void) => {
@@ -74,12 +79,15 @@ export const tournamentsSlice: GenericStateCreator<BoundStore> = (set, get) => (
 
       const date = data.expectedDate ? new Date(data.expectedDate) : new Date();
       const timestamp = Timestamp.fromDate(date);
+      const teams = [] as ITeam[];
 
       await setFirestoreData<ITournamentData>(DatabasePaths.Tournaments, data.id, {
         ...data,
         image,
         timestamp,
+        teams,
       });
+
       modals.close('addTournamentModal');
       resetForm();
       successNotification('tournamentSuccess');
@@ -201,6 +209,7 @@ export const tournamentsSlice: GenericStateCreator<BoundStore> = (set, get) => (
         set(
           produce((state: BoundStore) => {
             state.currentTournament = data;
+            state.countOfGamersByRules = +data.gameMode[0];
           }),
         );
       }

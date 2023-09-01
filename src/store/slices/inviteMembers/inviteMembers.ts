@@ -11,7 +11,7 @@ import {
 } from 'helpers';
 import {
   Filter,
-  getFilteredFirestoreData,
+  getFirestoreDataBySubstring,
   updateFirestoreData,
 } from 'integrations/firebase';
 import { IUser } from 'store/slices/auth/types';
@@ -53,41 +53,39 @@ export const inviteMemberSlice: GenericStateCreator<BoundStore> = (set, get) => 
         }),
       );
 
-      const filters: Filter<IUser>[] = [];
-
       if (value) {
-        filters.push({
+        const filter: Filter<IUser> = {
           field: 'nickName',
           value,
-        });
-      }
+        };
 
-      const userId = user?.id || '';
+        const userId = user?.id || '';
 
-      const { data } = await getFilteredFirestoreData<IUser>(
-        DatabasePaths.Users,
-        filters,
-      );
+        const data = await getFirestoreDataBySubstring<IUser>(
+          DatabasePaths.Users,
+          filter,
+        );
 
-      const membersIdForAdding = get().membersList.map(({ id }) => id);
+        const membersIdForAdding = get().membersList.map(({ id }) => id);
 
-      const noAddedMembers = data.filter(
-        ({ id }) => !membersIdForAdding.includes(id) && id !== userId,
-      );
+        const noAddedMembers = data.filter(
+          ({ id }) => !membersIdForAdding.includes(id) && id !== userId,
+        );
 
-      if (noAddedMembers.length === 0) {
+        if (noAddedMembers.length === 0) {
+          set(
+            produce((state: BoundStore) => {
+              state.searchResultText = 'search.empty';
+            }),
+          );
+        }
+
         set(
           produce((state: BoundStore) => {
-            state.searchResultText = 'search.empty';
+            state.searchResults = noAddedMembers;
           }),
         );
       }
-
-      set(
-        produce((state: BoundStore) => {
-          state.searchResults = noAddedMembers;
-        }),
-      );
     } catch (error) {
       errorHandler(error as Error);
     } finally {

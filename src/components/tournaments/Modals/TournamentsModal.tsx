@@ -13,6 +13,7 @@ import { DateFormats } from 'constants/dateFormats';
 import { GAMES } from 'constants/games';
 import { uniqueIdGenerator } from 'helpers';
 import { requiredFieldsGenerator } from 'helpers/requiredFieldsGenerator';
+import { ITeam } from 'store/slices';
 import { useTournaments } from 'store/store';
 
 interface IFormValues {
@@ -68,6 +69,7 @@ export const TournamentsModal: FC = () => {
       ? new Date(form.values.expectedDate).toString()
       : '';
     const registrationDate = new Date().toString();
+    const registeredTeams = [] as ITeam[];
 
     addTournament(
       {
@@ -75,6 +77,7 @@ export const TournamentsModal: FC = () => {
         id: uniqueIdGenerator(DatabaseId.Tournament),
         expectedDate,
         registrationDate,
+        registeredTeams,
       },
       form.reset,
     );
