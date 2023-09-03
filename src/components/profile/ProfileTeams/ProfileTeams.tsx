@@ -1,4 +1,4 @@
-import { FC, useEffect } from 'react';
+import { FC, MouseEvent, useCallback, useEffect, useMemo } from 'react';
 
 import { Button, createStyles, Group, Tabs, Text } from '@mantine/core';
 import { modals } from '@mantine/modals';
@@ -23,7 +23,7 @@ const useStyles = createStyles({
 });
 
 export const ProfileTeams: FC = () => {
-  const { user, isTeamFetching, teams, getTeams } = useAuth((store) => store);
+  const { user, isTeamFetching, teams, getTeams, deleteTeam } = useAuth((store) => store);
   const { memberInvitedTeams, getMemberInvitedTeams } = useTeams((store) => store);
   const { classes } = useStyles();
 
@@ -42,6 +42,21 @@ export const ProfileTeams: FC = () => {
     });
   };
 
+  const handleDelete = useCallback(
+    (e: MouseEvent<HTMLButtonElement>, id: string): void => {
+      e.stopPropagation();
+      modals.openConfirmModal({
+        title: t('modals.deleteTeam'),
+        centered: true,
+        children: <Text size="sm">{t('modals.agreeToDeleteTeam')}</Text>,
+        labels: { confirm: t('modals.btnDelete'), cancel: t('modals.btnCancel') },
+        confirmProps: { color: 'red' },
+        onConfirm: () => deleteTeam(id),
+      });
+    },
+    [deleteTeam, t],
+  );
+
   const handleGetInvitations = (): void => {
     if (user) {
       getMemberInvitedTeams(user);
@@ -55,12 +70,15 @@ export const ProfileTeams: FC = () => {
     }
   }, [getMemberInvitedTeams, getTeams, teamsIdList.length, user]);
 
-  const teamsItems: JSX.Element = (
-    <>
-      {teams.map((team) => (
-        <TeamLink key={team.id} teamData={team} />
-      ))}
-    </>
+  const teamsItems: JSX.Element = useMemo(
+    () => (
+      <>
+        {teams.map((team) => (
+          <TeamLink key={team.id} teamData={team} handleDelete={handleDelete} />
+        ))}
+      </>
+    ),
+    [teams, handleDelete],
   );
 
   const invitationsList: JSX.Element = (

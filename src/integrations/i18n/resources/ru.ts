@@ -158,9 +158,13 @@ export const ru = {
       addImage: 'Добавьте изображение',
       deleteTournament: 'Удалить турнир',
       deleteTeam: 'Удалить команду',
+      deleteTeamFromTournament: 'Удалить команду из турнира',
       btnDelete: 'Удалить',
       btnInvite: 'Пригласить',
       btnCancel: 'Назад',
+      btnNext: 'Далее',
+      btnBack: 'Назад',
+      btnRegister: 'Зарегистрировать',
       inviteMembers: 'Приглашение игроков в команду',
       agreeToDelete:
         'Вы уверены что хотите удалить этот турнир? Это действие является безвозвратным!',
@@ -176,6 +180,9 @@ export const ru = {
       acceptInvitationTitle: 'Подтверждение приглашения',
       acceptInvitation: 'Вы уверены, что хотите принять приглашение?',
       typeGames: 'Выбор игры',
+      registrationTeamConfirm: 'Подтверждение состава команды',
+      registrationTeamMessage:
+        'Вы уверены, что хотите зарегистрировать команду в данном составе?',
     },
 
     notFound: {
@@ -188,6 +195,7 @@ export const ru = {
       successHeader: 'Успех',
       successDelete: 'Турнир успешно удален',
       successDeletedTeam: 'Команда успешно удалена',
+      successDeletedFromTournament: 'Команда успешно удалена из турнира',
       successAddedTeam: 'Команда успешно создана',
       sameTeam: 'Команда с таким тегом уже существует',
       errorHeader: 'Ошибка',
@@ -228,6 +236,10 @@ export const ru = {
       errorAuthSteam:
         'Вход через Steam доступен после регистрации через телефон и привязки Steam аккаунта в вашем профиле',
       errorAddedSteamAccount: 'Пользователь с данным SteamID уже существует',
+      successfullyRegistered: 'Команда успешно зарегистрирована в турнире',
+      wrongCountOfGamers: 'Выбрано неверное количество игроков в команде',
+      tooMuchGamers: 'Превышено требуемое количество игроков в команде',
+      alreadyInTournament: 'Данная команда уже зарегистрирована в этом турнире',
     },
 
     bookings: {
@@ -313,12 +325,20 @@ export const ru = {
       rules: 'Правила',
       details: 'Подробнее',
       teamSize: 'Размер команды',
-      tournamentRegistration: 'Регистрация',
+      tournamentRegistration: 'Регистрация команды',
       showMore: 'Показать еще',
       totalCount: 'Всего',
       maxCount: 'Макс. количество: ',
       editTournament: 'Редактировать',
       game: 'Игра',
+      registration: 'Регистрация',
+      selectTeam: 'Выбор команды',
+      teamComposition: 'Выбор состава команды',
+      confirmation: 'Подтверждение',
+      registrationTeamTitle: 'Регистрация в турнире',
+      selectTeamForRegistration: 'Выберите команду для регистрации в турнире',
+      selectTeamComposition: 'Выберите состав команды для регистрации',
+      noTeams: 'Вы не являетесь капитаном ни одной команды по данной игре',
     },
 
     workingDays: {

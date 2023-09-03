@@ -10,5 +10,6 @@ export enum Paths {
   shop = '/shop',
   basket = '/basket',
   adminPanel = '/adminPanel',
+  teamRegistration = 'team-registration',
   notFound = '*',
 }

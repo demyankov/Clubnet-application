@@ -6,12 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 
 import teamBgHeader from 'assets/images/shared/teamBgHeader.jpg';
-import {
-  RenderContentContainer,
-  TeamInfoPanel,
-  TeamSettingsPanel,
-  TeamStatsPanel,
-} from 'components';
+import { TeamInfoPanel, TeamSettingsPanel, TeamStatsPanel } from 'components';
 import { GAMES } from 'constants/games';
 import { Roles } from 'constants/userRoles';
 import { isDarkTheme } from 'helpers';
@@ -19,9 +14,7 @@ import { useAuth } from 'store/store';
 
 const TeamInfo: FC = () => {
   const { id } = useParams();
-  const { user, getTeamById, currentTeam, membersInTeam, isTeamFetching } = useAuth(
-    (store) => store,
-  );
+  const { user, getTeamById, currentTeam, membersInTeam } = useAuth((store) => store);
   const { t } = useTranslation();
   const theme = useMantineTheme();
 
@@ -38,7 +31,7 @@ const TeamInfo: FC = () => {
   );
 
   return (
-    <RenderContentContainer isFetching={isTeamFetching}>
+    <>
       <Box pos="relative">
         <Image src={teamBgHeader} alt="image" width="100%" height="300px" />
         <Overlay
@@ -102,7 +95,7 @@ const TeamInfo: FC = () => {
           <TeamSettingsPanel />
         </Tabs.Panel>
       </Tabs>
-    </RenderContentContainer>
+    </>
   );
 };
 

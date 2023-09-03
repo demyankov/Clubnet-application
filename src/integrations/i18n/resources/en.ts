@@ -170,10 +170,14 @@ export const en = {
       addImage: 'Add image',
       deleteTournament: 'Delete tournament',
       deleteTeam: 'Delete team',
+      deleteTeamFromTournament: 'Delete the team from the tournament',
       successDeletedTeam: 'The team was successfully deleted',
       btnDelete: 'Delete',
       btnCancel: 'Cancel',
+      btnBack: 'Back',
       btnInvite: 'Invite',
+      btnNext: 'Next',
+      btnRegister: 'Register',
       agreeToDelete:
         'Are you sure you want to delete this tournament? This action is irrevocable!',
       agreeToDeleteTeam:
@@ -189,6 +193,8 @@ export const en = {
         'Are you sure you want to delete this invitation? This action is irrevocable!',
       acceptInvitationTitle: 'Accept invitation',
       acceptInvitation: 'Are you sure you want to accept this invitation?',
+      registrationTeamConfirm: 'Confirmation the composition of the team',
+      registrationTeamMessage: 'Do you want to register team in the current composition?',
     },
 
     notifications: {
@@ -196,6 +202,7 @@ export const en = {
       errorHeader: 'Error',
       successDelete: 'The tournament was successfully deleted',
       successDeletedTeam: 'The team was successfully deleted',
+      successDeletedFromTournament: 'The team was successfully deleted from tournament',
       successAddedTeam: 'The team was successfully added',
       sameTeam: 'A team with this tag already exists',
       successCommon: 'Congratulations!',
@@ -234,6 +241,10 @@ export const en = {
       errorAuthSteam:
         'Access through Steam is available after registering via your phone and linking your Steam account in your profile',
       errorAddedSteamAccount: 'The user with this SteamID already exists',
+      successfullyRegistered: 'The team has successfully registered in the tournament',
+      wrongCountOfGamers: 'Wront count of selected gamers',
+      tooMuchGamers: 'Exceeded the allowed number of gamers in the team',
+      alreadyInTournament: 'Current team is already registered in this tournament',
     },
 
     bookings: {
@@ -318,12 +329,20 @@ export const en = {
       rules: 'Rules',
       details: 'Details',
       teamSize: 'Team size',
-      tournamentRegistration: 'Registration',
+      tournamentRegistration: 'Team registration',
       showMore: 'Show more',
       totalCount: 'Total',
       maxCount: 'Maximum count: ',
       editTournament: 'Edit',
       game: 'Game',
+      registration: 'Registration',
+      selectTeam: 'Team selection',
+      teamComposition: 'Team composition selection',
+      confirmation: 'Сonfirmation',
+      registrationTeamTitle: 'Registration for the tournament',
+      selectTeamForRegistration: 'Select a team to register for the tournament',
+      selectTeamComposition: 'Select composition of the team for registration',
+      noTeams: 'You are not the captain of any team in this game',
     },
 
     workingDays: {

@@ -39,6 +39,8 @@ import {
   IBasket,
   IPaymentConfirm,
   IShop,
+  registrationForTournamentSlice,
+  IRegistrationForTournament,
 } from 'store/slices';
 import {
   friendsRequestsSlice,
@@ -56,6 +58,7 @@ export interface BoundStore
     IBalanceHistory,
     IFriends,
     IFriendsRequests,
+    IRegistrationForTournament,
     IShop,
     IBasket,
     IPaymentConfirm,
@@ -84,6 +87,7 @@ export const useTournaments = create(
   devtools(
     immer<BoundStore>((...a) => ({
       ...tournamentsSlice(...a),
+      ...registrationForTournamentSlice(...a),
     })),
   ),
 );

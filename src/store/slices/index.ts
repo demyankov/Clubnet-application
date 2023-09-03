@@ -17,3 +17,4 @@ export * from 'store/slices/inviteMembers/inviteMembers';
 export * from 'store/slices/shop/shopSlice';
 export * from 'store/slices/shop/basketSlice';
 export * from 'store/slices/shop/paymentConfirmSlice';
+export * from 'store/slices/tournaments/registrationForTournament';

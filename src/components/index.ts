@@ -7,3 +7,4 @@ export * from 'components/profile';
 export * from 'components/shared';
 export * from 'components/Team';
 export * from 'components/tournaments';
+export * from 'components/tournaments/RegistrationTeam/TeamsList';

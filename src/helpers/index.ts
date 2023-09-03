@@ -18,3 +18,4 @@ export * from 'helpers/getMembersIdList';
 export * from 'helpers/isIncluded';
 export * from 'helpers/generateQueryFilterArray';
 export * from 'helpers/sleep';
+export * from 'helpers/isValueIncludedInObjectsArray';
