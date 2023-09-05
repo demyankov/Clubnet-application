@@ -352,5 +352,9 @@ export const ru = {
       daily: 'Ежедневно',
       monFri: 'Пн-Пт',
     },
+
+    shared: {
+      btnGoBack: 'Вернуться назад',
+    },
   },
 };

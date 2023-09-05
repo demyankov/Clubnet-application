@@ -356,5 +356,9 @@ export const en = {
       daily: 'Daily',
       monFri: 'Mon-Fri',
     },
+
+    shared: {
+      btnGoBack: 'Go back',
+    },
   },
 };
