@@ -16,13 +16,14 @@ VITE_DB_URL=firebase-db-url
 ```
 
 4. Run the project `npm dev`
+5. Used
+REACT, TYPESCRIPT, ZUSTAND, MANTINE, VITE, i18next, FIREBASE, ESLINT, HUSKY
 
+6. Deploy https://deploy-preview-95--thelastandrew-frontendiya.netlify.app. Test account: 256666666, password 111111
+   
 ## This project using LF line separator
 
 1. To install in Webstorm: File -> Settings -> Editor -> Code Style -> Line Separator -> Unix and macOS
 2. To install in VS Code: Ctrl+Shift+P -> `Change End of Line Sequence` -> LF
 
-5. Used
-REACT, TYPESCRIPT, ZUSTAND, MANTINE, VITE, i18next, FIREBASE, ESLINT, HUSKY
 
-6. Deploy https://deploy-preview-95--thelastandrew-frontendiya.netlify.app. Test account: 256666666, password 111111 
