@@ -1,6 +1,6 @@
 ## Setup project
 
-1. Clone this repo `git clone https://github.com/thelastandrew/frontendiya-tech.git`
+1. Clone this repo `git clone https://github.com/demyankov/Clubnet-application.git`
 2. Install dependencies `yarn install`
 3. Create `.env` file, use `.env.example` as an example
 
@@ -15,13 +15,12 @@ VITE_APP_ID=firebase-app-id
 VITE_DB_URL=firebase-db-url
 ```
 
-4. Run the project `yarn dev`
+4. Run the project `npm dev`
 
 ## This project using LF line separator
 
 1. To install in Webstorm: File -> Settings -> Editor -> Code Style -> Line Separator -> Unix and macOS
 2. To install in VS Code: Ctrl+Shift+P -> `Change End of Line Sequence` -> LF
 
-## Bundle Analyzer
-
-To see the application bundle of your project, you can run the command `npm, pnpm or yarn vite-bundle-visualizer` in the root directory of your project. This will launch vite-bundle-visualizer and display an interactive visualization of the contents and size of your bundle.
+5. Used
+REACT, TYPESCRIPT, ZUSTAND, MANTINE, VITE, i18next, FIREBASE, ESLINT, HUSKY
