@@ -1,7 +1,7 @@
 ## Setup project
 
 1. Clone this repo `git clone https://github.com/demyankov/Clubnet-application.git`
-2. Install dependencies `yarn install`
+2. Install dependencies `npm run install`
 3. Create `.env` file, use `.env.example` as an example
 
 ```.env
@@ -24,3 +24,5 @@ VITE_DB_URL=firebase-db-url
 
 5. Used
 REACT, TYPESCRIPT, ZUSTAND, MANTINE, VITE, i18next, FIREBASE, ESLINT, HUSKY
+
+6. Deploy https://deploy-preview-95--thelastandrew-frontendiya.netlify.app. Test account: 256666666, password 111111 
